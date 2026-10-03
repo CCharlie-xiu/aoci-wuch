@@ -1,6 +1,8 @@
 ---
-name: vital-capabilities
+name: aoci-wuch
 description: 个人能力库「至关重要」的入口。当前任务可能复用已有能力时使用：先读远程能力索引，命中后再按需读取对应能力文件，不要一次性加载整个能力库。能力库是 GitHub 上的独立外部仓库，不在当前项目目录里。
+description_zh: 个人能力库「至关重要」——按需读取远程能力索引，复用已沉淀的能力
+description_en: Personal capability library - read the remote index on demand
 ---
 
 # 至关重要 · 个人能力库
