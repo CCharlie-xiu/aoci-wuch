@@ -1,14 +1,13 @@
 ---
 name: aoci-wuch
-description: 个人能力库「至关重要」的入口。当前任务可能复用已有能力时使用：先读远程能力索引，命中后再按需读取对应能力文件，不要一次性加载整个能力库。能力库是 GitHub 上的独立外部仓库，不在当前项目目录里。
+description: 个人能力库「至关重要」的入口。当前任务可能复用已有能力时使用：先读 GitHub 最新索引，命中后再按需读取对应能力文件；本地仓库是编辑工作区和离线副本。
 description_zh: 个人能力库「至关重要」——按需读取远程能力索引，复用已沉淀的能力
 description_en: Personal capability library - read the remote index on demand
 ---
 
 # 至关重要 · 个人能力库
 
-你有一个独立的个人能力库，托管在 GitHub 上，**不在当前项目目录里**。
-不要在项目内寻找 `至关重要/`，也不要假设项目里带了副本。
+能力库同时有本地 Git 工作区和 GitHub 远程仓库。**跨项目复用时 GitHub `main` 是最新发布来源；本地副本用于编辑、提交和离线回退。** 不要假定本地副本一定已同步。
 
 ## 地址
 
@@ -37,15 +36,20 @@ https://github.com/CCharlie-xiu/aoci-wuch
 
 未命中就按常规方式完成当前任务，**不要继续读能力正文**。
 
-## 每次都读远程最新
+## 复用前读取远程最新
 
-能力库会持续新增能力。**不要依赖安装时缓存的能力列表**，每次使用都重新读远程索引。
+能力库会持续更新。每次需要复用能力时，都从远程读取两个索引，不依赖安装时缓存或本地索引：
 
 ```bash
-curl -s "https://raw.githubusercontent.com/CCharlie-xiu/aoci-wuch/main/capabilities/index.md"
+curl -fsSL "https://raw.githubusercontent.com/CCharlie-xiu/aoci-wuch/main/capabilities/index.md"
+curl -fsSL "https://raw.githubusercontent.com/CCharlie-xiu/aoci-wuch/main/capabilities-unstable/index.md"
 ```
 
-公开仓库，无需凭据。取单个能力文件同理，把路径换成 `capabilities/<name>/index.md`。
+命中后，按需从同一远程分支读取 `capabilities/<name>/index.md` 或 `capabilities-unstable/<name>/index.md`，需要深入时再读取该能力目录的其他文件。只读取正式能力进行常规复用；待验证能力只有在任务明确适合试用时才读取。`capabilities-retired/` 仅用于用户明确要求追溯或迁移时。
+
+如果远程不可访问，才回退到本地索引和文件，并在答复中说明无法确认本地副本是最新版本。不要把一次失败的远程请求当成空索引。
+
+对本仓库进行写入时，先检查工作区状态，并读取远程 `main` 上相关规则和目标能力的最新版本；将改动与本地工作区合并考虑，不覆盖用户的未提交修改。新增或修改的能力在提交并推送到 GitHub 前，不算已发布给其他项目使用。
 
 ## 索引行格式
 
@@ -57,7 +61,7 @@ name[tag]: 一句话核心职责
 
 ## 边界
 
-- 写入 / 修改 / 晋升能力前，先读 `follow/write.md`、`follow/update.md`、`follow/promote.md`
+- 写入 / 修改 / 晋升 / 退役能力前，先读对应的 `follow/` 规则
 - **不得自行晋升能力**（`capabilities-unstable/` → `capabilities/` 必须由人确认）
 
 ## 使用标记
