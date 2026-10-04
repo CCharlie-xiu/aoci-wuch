@@ -15,5 +15,4 @@ name[tag]: 一句话核心职责
 ```text
 github-authorize[OA8SH]: 为指定 GitHub 应用执行用户授权流程
 mobile-template-app[KD9SH]: 使用 mobile-template 家族创建原生移动端项目
-ui-design-prompt[KD9SH]: 让 AI 先确认风格再直出可运行的界面设计
 ```

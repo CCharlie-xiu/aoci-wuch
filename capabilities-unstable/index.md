@@ -12,4 +12,6 @@ name[tag]: 一句话核心职责
 
 ## 能力列表
 
-（暂无）
+```text
+ui-design-prompt[KD9DH]: 让 AI 先确认风格再直出可运行的界面设计
+```
