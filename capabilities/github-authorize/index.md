@@ -1,6 +1,6 @@
 # github-authorize
 
-github-authorize[OA8DH]
+github-authorize[OA8SH]
 
 F: 为指定 GitHub 应用执行用户授权流程
 R:

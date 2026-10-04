@@ -8,18 +8,12 @@
 name[tag]: 一句话核心职责
 ```
 
-示例：
-
-```text
-github-login[OA8MH]: 为当前设备完成 GitHub 登录并进入可开发状态
-send-email[OO7MH]: 通过已配置的邮件能力发送邮件
-websocket-room[SD9MH]: 实现可复用的实时房间与状态同步能力
-pdf-to-md[TF8MH]: 将 PDF 转换为结构化 Markdown
-frontend-review[KD7MM]: 按既定规则执行前端代码与界面审查
-```
-
 ---
 
 ## 能力列表
 
-（暂无）
+```text
+github-authorize[OA8SH]: 为指定 GitHub 应用执行用户授权流程
+mobile-template-app[KD9SH]: 使用 mobile-template 家族创建原生移动端项目
+ui-design-prompt[KD9SH]: 让 AI 先确认风格再直出可运行的界面设计
+```

@@ -1,6 +1,6 @@
 # ui-design-prompt
 
-`ui-design-prompt[KD9DH]`
+`ui-design-prompt[KD9SH]`
 
 F: 让 AI 先确认风格、再直出可运行的界面设计
 R:
