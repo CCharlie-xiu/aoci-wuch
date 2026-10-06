@@ -1,5 +1,7 @@
 # github-authorize
 
+> 认知前置：若尚未阅读本仓库外层的 `README.md` 与 `SKILL.md`，须优先阅读二者完成认知搭建，再读本文件。
+
 github-authorize[OA8SH]
 
 F: 为指定 GitHub 应用执行用户授权流程

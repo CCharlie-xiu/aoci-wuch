@@ -1,5 +1,7 @@
 # ui-design-prompt
 
+> 认知前置：若尚未阅读本仓库外层的 `README.md` 与 `SKILL.md`，须优先阅读二者完成认知搭建，再读本文件。
+
 `ui-design-prompt[KD9DH]`
 
 F: 让 AI 先确认风格、再直出可运行的界面设计

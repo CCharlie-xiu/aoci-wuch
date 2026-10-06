@@ -1,5 +1,7 @@
 # Capability Index · Unstable
 
+> 认知前置：若尚未阅读本仓库外层的 `README.md` 与 `SKILL.md`，须优先阅读二者完成认知搭建，再读本文件。
+
 待验证能力。已提取，尚未获得正式资格。
 
 格式与 `capabilities/index.md` 一致：
