@@ -16,4 +16,5 @@ name[tag]: 一句话核心职责
 
 ```text
 ui-design-prompt[KD9DH]: 让 AI 先确认风格再直出可运行的界面设计
+logic-space-enumeration[KW9DH]: 显式化复杂设计的逻辑空间并推演有效组合的路径与结果
 ```
