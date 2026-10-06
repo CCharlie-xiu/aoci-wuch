@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>色阶库 · 56 组</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--page:#0E0E10;--card:#151518;--line:rgba(255,255,255,.10);--tx:#F2F2F5;--tx2:#9A9AA4;--tx3:#6A6A74}
+html{-webkit-font-smoothing:antialiased}
+body{background:var(--page);color:var(--tx);padding:44px 22px 80px;
+  font:400 14px/1.6 -apple-system,"SF Pro Text","PingFang SC","Microsoft YaHei",sans-serif}
+.wrap{max-width:1180px;margin:0 auto}
+h1{font-size:26px;font-weight:500;letter-spacing:-.025em}
+.sub{color:var(--tx2);font-size:13.5px;margin-top:8px;max-width:88ch}
+.sub code{background:rgba(255,255,255,.06);padding:2px 6px;border-radius:5px;font-size:12.5px}
+.map{margin:26px 0 8px;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.map table{width:100%;border-collapse:collapse;font-size:12.5px}
+.map th,.map td{text-align:left;padding:9px 14px;border-bottom:1px solid var(--line)}
+.map th{background:rgba(255,255,255,.03);color:var(--tx3);font-weight:500;font-size:11px;letter-spacing:.08em}
+.map tr:last-child td{border-bottom:0}
+.map td:first-child{width:110px;font-family:ui-monospace,monospace;color:var(--tx)}
+.map td:nth-child(2){width:190px}
+.map b{color:var(--tx)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:22px 0 26px}
+.chip{appearance:none;cursor:pointer;font:inherit;font-size:12.5px;color:var(--tx2);
+  background:var(--card);border:1px solid var(--line);padding:7px 14px;border-radius:999px;display:inline-flex;gap:6px}
+.chip em{font-style:normal;color:var(--tx3);font-size:11.5px}
+.chip:hover{color:var(--tx);border-color:rgba(255,255,255,.2)}
+.chip.on{background:#F2F2F5;border-color:#F2F2F5;color:#111114}
+.chip.on em{color:#6A6A74}
+.row{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin-bottom:14px}
+.row.hide{display:none}
+.rh{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.num{font:500 12px/1 ui-monospace,monospace;color:var(--tx3);background:rgba(255,255,255,.05);
+  border:1px solid var(--line);border-radius:999px;padding:5px 9px}
+.fam{font-size:12px;color:var(--tx);background:rgba(255,255,255,.07);border-radius:6px;padding:3px 9px}
+.rh h3{font-size:15px;font-weight:500;letter-spacing:-.01em}
+.meta{font-size:12px;color:var(--tx3);margin-left:auto;font-family:ui-monospace,monospace}
+.meta code{color:var(--tx2)}
+.src{font-size:12px;color:var(--tx2);text-decoration:none}
+.src:hover{color:var(--tx)}
+.ramp{display:grid;grid-template-columns:repeat(11,1fr);gap:2px;border-radius:10px;overflow:hidden}
+.sw{appearance:none;border:0;cursor:pointer;font:inherit;padding:14px 4px 10px;display:flex;
+  flex-direction:column;gap:5px;align-items:center;transition:transform 140ms ease}
+.sw:hover{transform:translateY(-3px)}
+.sw[data-brand]{box-shadow:inset 0 0 0 2px rgba(255,255,255,.85)}
+.st{font-size:10.5px;font-weight:500;opacity:.75;letter-spacing:.02em}
+.hx{font:400 10.5px/1 ui-monospace,monospace;opacity:.9}
+.copied{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#F2F2F5;color:#111114;
+  padding:9px 18px;border-radius:999px;font-size:12.5px;opacity:0;transition:opacity 200ms ease;pointer-events:none}
+.copied.on{opacity:1}
+@media (max-width:820px){.ramp{grid-template-columns:repeat(6,1fr)}.meta{margin-left:0}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>色阶库 · 56 组 × 11 级</h1>
+  <p class="sub">全部色阶从 Dribbble 配色类作品实测后展开：先 k-means 取出该作品的突出色（原图网格采样），再以其色相为轴按标准明度梯生成 <code>50 → 950</code> 共 11 级。色阶即规范 —— 突出色、面、描边、墨都从同一组取，不再单独定色。点击色块复制 hex。</p>
+
+  <div class="map">
+    <table>
+      <tr><th>色阶</th><th>角色</th><th>用在哪</th></tr>
+      <tr><td>50</td><td>底</td><td>页面底（浅色主题）</td></tr>
+      <tr><td>100–200</td><td>面 / 浅强调</td><td>卡面、选中背景、标签底</td></tr>
+      <tr><td>300–400</td><td>描边 / 次要</td><td>边框、禁用态、图表辅助</td></tr>
+      <tr><td><b>500–600</b></td><td><b>突出色</b> <code>--brand</code></td><td>主按钮、选中态、关键数字</td></tr>
+      <tr><td>700</td><td>强调 hover</td><td>按下态、深色文字</td></tr>
+      <tr><td>800–900</td><td>深面</td><td>深色区块、深色主题底</td></tr>
+      <tr><td>950</td><td>墨</td><td>深色主题文字</td></tr>
+    </table>
+  </div>
+
+  <div class="chips"><button class="chip on" data-f="all">全部 <em>56</em></button><button class="chip" data-f="蓝紫">蓝紫 <em>4</em></button><button class="chip" data-f="青">青 <em>7</em></button><button class="chip" data-f="橙">橙 <em>8</em></button><button class="chip" data-f="红">红 <em>9</em></button><button class="chip" data-f="蓝">蓝 <em>7</em></button><button class="chip" data-f="黄绿">黄绿 <em>2</em></button><button class="chip" data-f="黄">黄 <em>10</em></button><button class="chip" data-f="玫红">玫红 <em>2</em></button><button class="chip" data-f="绿">绿 <em>1</em></button><button class="chip" data-f="洋红">洋红 <em>4</em></button><button class="chip" data-f="青绿">青绿 <em>2</em></button></div>
+
+  <article class="row" data-fam="蓝紫">
+  <header class="rh">
+    <span class="num">01</span>
+    <span class="fam">蓝紫</span>
+    <h3>Brand color scheme</h3>
+    <span class="meta">H247 S92% · 实测 <code>#230AE5</code></span>
+    <a class="src" href="https://dribbble.com/shots/5325053-Brand-color-scheme" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#F6F6FA" style="background:#F6F6FA;color:#111114"><span class="st">50</span><span class="hx">F6F6FA</span></button><button class="sw" data-hex="#EBE9F6" style="background:#EBE9F6;color:#111114"><span class="st">100</span><span class="hx">EBE9F6</span></button><button class="sw" data-hex="#CDC8F1" style="background:#CDC8F1;color:#111114"><span class="st">200</span><span class="hx">CDC8F1</span></button><button class="sw" data-hex="#A49BF1" style="background:#A49BF1;color:#FFFFFF"><span class="st">300</span><span class="hx">A49BF1</span></button><button class="sw" data-hex="#7666F3" style="background:#7666F3;color:#FFFFFF"><span class="st">400</span><span class="hx">7666F3</span></button><button class="sw" data-brand data-hex="#462FF6" style="background:#462FF6;color:#FFFFFF"><span class="st">500</span><span class="hx">462FF6</span></button><button class="sw" data-brand data-hex="#230AE8" style="background:#230AE8;color:#FFFFFF"><span class="st">600</span><span class="hx">230AE8</span></button><button class="sw" data-hex="#210EB7" style="background:#210EB7;color:#FFFFFF"><span class="st">700</span><span class="hx">210EB7</span></button><button class="sw" data-hex="#1E1089" style="background:#1E1089;color:#FFFFFF"><span class="st">800</span><span class="hx">1E1089</span></button><button class="sw" data-hex="#1B1161" style="background:#1B1161;color:#FFFFFF"><span class="st">900</span><span class="hx">1B1161</span></button><button class="sw" data-hex="#15103F" style="background:#15103F;color:#FFFFFF"><span class="st">950</span><span class="hx">15103F</span></button></div>
+</article><article class="row" data-fam="青">
+  <header class="rh">
+    <span class="num">02</span>
+    <span class="fam">青</span>
+    <h3>Personalize Card Colors</h3>
+    <span class="meta">H189 S81% · 实测 <code>#7CDFF1</code></span>
+    <a class="src" href="https://dribbble.com/shots/27082518-Personalize-Card-Colors" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#F6F9FA" style="background:#F6F9FA;color:#111114"><span class="st">50</span><span class="hx">F6F9FA</span></button><button class="sw" data-hex="#EAF4F5" style="background:#EAF4F5;color:#111114"><span class="st">100</span><span class="hx">EAF4F5</span></button><button class="sw" data-hex="#CAE9EF" style="background:#CAE9EF;color:#111114"><span class="st">200</span><span class="hx">CAE9EF</span></button><button class="sw" data-hex="#A0E0EC" style="background:#A0E0EC;color:#111114"><span class="st">300</span><span class="hx">A0E0EC</span></button><button class="sw" data-hex="#6ED7EA" style="background:#6ED7EA;color:#111114"><span class="st">400</span><span class="hx">6ED7EA</span></button><button class="sw" data-brand data-hex="#3BCFEA" style="background:#3BCFEA;color:#111114"><span class="st">500</span><span class="hx">3BCFEA</span></button><button class="sw" data-brand data-hex="#17BDDB" style="background:#17BDDB;color:#FFFFFF"><span class="st">600</span><span class="hx">17BDDB</span></button><button class="sw" data-hex="#1896AD" style="background:#1896AD;color:#FFFFFF"><span class="st">700</span><span class="hx">1896AD</span></button><button class="sw" data-hex="#177182" style="background:#177182;color:#FFFFFF"><span class="st">800</span><span class="hx">177182</span></button><button class="sw" data-hex="#16525D" style="background:#16525D;color:#FFFFFF"><span class="st">900</span><span class="hx">16525D</span></button><button class="sw" data-hex="#12363D" style="background:#12363D;color:#FFFFFF"><span class="st">950</span><span class="hx">12363D</span></button></div>
+</article><article class="row" data-fam="青">
+  <header class="rh">
+    <span class="num">03</span>
+    <span class="fam">青</span>
+    <h3>Switchlab</h3>
+    <span class="meta">H180 S98% · 实测 <code>#02EEEF</code></span>
+    <a class="src" href="https://dribbble.com/shots/26724521-Switchlab-Color-Palette" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#F6FAFA" style="background:#F6FAFA;color:#111114"><span class="st">50</span><span class="hx">F6FAFA</span></button><button class="sw" data-hex="#E9F7F7" style="background:#E9F7F7;color:#111114"><span class="st">100</span><span class="hx">E9F7F7</span></button><button class="sw" data-hex="#C6F3F3" style="background:#C6F3F3;color:#111114"><span class="st">200</span><span class="hx">C6F3F3</span></button><button class="sw" data-hex="#97F4F4" style="background:#97F4F4;color:#111114"><span class="st">300</span><span class="hx">97F4F4</span></button><button class="sw" data-hex="#60F7F8" style="background:#60F7F8;color:#111114"><span class="st">400</span><span class="hx">60F7F8</span></button><button class="sw" data-brand data-hex="#28FCFD" style="background:#28FCFD;color:#111114"><span class="st">500</span><span class="hx">28FCFD</span></button><button class="sw" data-brand data-hex="#02EFF0" style="background:#02EFF0;color:#111114"><span class="st">600</span><span class="hx">02EFF0</span></button><button class="sw" data-hex="#07BCBD" style="background:#07BCBD;color:#FFFFFF"><span class="st">700</span><span class="hx">07BCBD</span></button><button class="sw" data-hex="#0C8D8D" style="background:#0C8D8D;color:#FFFFFF"><span class="st">800</span><span class="hx">0C8D8D</span></button><button class="sw" data-hex="#0E6464" style="background:#0E6464;color:#FFFFFF"><span class="st">900</span><span class="hx">0E6464</span></button><button class="sw" data-hex="#0E4141" style="background:#0E4141;color:#FFFFFF"><span class="st">950</span><span class="hx">0E4141</span></button></div>
+</article><article class="row" data-fam="橙">
+  <header class="rh">
+    <span class="num">04</span>
+    <span class="fam">橙</span>
+    <h3>Florisse</h3>
+    <span class="meta">H28 S28% · 实测 <code>#B99C83</code></span>
+    <a class="src" href="https://dribbble.com/shots/27566935-Florisse-Brand-Color-Palette" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#F8F8F7" style="background:#F8F8F7;color:#111114"><span class="st">50</span><span class="hx">F8F8F7</span></button><button class="sw" data-hex="#F2F0EE" style="background:#F2F0EE;color:#111114"><span class="st">100</span><span class="hx">F2F0EE</span></button><button class="sw" data-hex="#E3DCD6" style="background:#E3DCD6;color:#111114"><span class="st">200</span><span class="hx">E3DCD6</span></button><button class="sw" data-hex="#D3C5B9" style="background:#D3C5B9;color:#111114"><span class="st">300</span><span class="hx">D3C5B9</span></button><button class="sw" data-hex="#C2AB97" style="background:#C2AB97;color:#FFFFFF"><span class="st">400</span><span class="hx">C2AB97</span></button><button class="sw" data-brand data-hex="#B19074" style="background:#B19074;color:#FFFFFF"><span class="st">500</span><span class="hx">B19074</span></button><button class="sw" data-brand data-hex="#9B7757" style="background:#9B7757;color:#FFFFFF"><span class="st">600</span><span class="hx">9B7757</span></button><button class="sw" data-hex="#7C6048" style="background:#7C6048;color:#FFFFFF"><span class="st">700</span><span class="hx">7C6048</span></button><button class="sw" data-hex="#5F4B3A" style="background:#5F4B3A;color:#FFFFFF"><span class="st">800</span><span class="hx">5F4B3A</span></button><button class="sw" data-hex="#46382D" style="background:#46382D;color:#FFFFFF"><span class="st">900</span><span class="hx">46382D</span></button><button class="sw" data-hex="#2F2720" style="background:#2F2720;color:#FFFFFF"><span class="st">950</span><span class="hx">2F2720</span></button></div>
+</article><article class="row" data-fam="红">
+  <header class="rh">
+    <span class="num">05</span>
+    <span class="fam">红</span>
+    <h3>A Cohesive</h3>
+    <span class="meta">H11 S89% · 实测 <code>#F13A13</code></span>
+    <a class="src" href="https://dribbble.com/shots/27285747-A-Cohesive-Color-Scheme" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#FAF7F6" style="background:#FAF7F6;color:#111114"><span class="st">50</span><span class="hx">FAF7F6</span></button><button class="sw" data-hex="#F6ECE9" style="background:#F6ECE9;color:#111114"><span class="st">100</span><span class="hx">F6ECE9</span></button><button class="sw" data-hex="#F1CFC8" style="background:#F1CFC8;color:#111114"><span class="st">200</span><span class="hx">F1CFC8</span></button><button class="sw" data-hex="#EFAB9C" style="background:#EFAB9C;color:#111114"><span class="st">300</span><span class="hx">EFAB9C</span></button><button class="sw" data-hex="#F18068" style="background:#F18068;color:#FFFFFF"><span class="st">400</span><span class="hx">F18068</span></button><button class="sw" data-brand data-hex="#F35432" style="background:#F35432;color:#FFFFFF"><span class="st">500</span><span class="hx">F35432</span></button><button class="sw" data-brand data-hex="#E5330E" style="background:#E5330E;color:#FFFFFF"><span class="st">600</span><span class="hx">E5330E</span></button><button class="sw" data-hex="#B42D10" style="background:#B42D10;color:#FFFFFF"><span class="st">700</span><span class="hx">B42D10</span></button><button class="sw" data-hex="#872712" style="background:#872712;color:#FFFFFF"><span class="st">800</span><span class="hx">872712</span></button><button class="sw" data-hex="#602013" style="background:#602013;color:#FFFFFF"><span class="st">900</span><span class="hx">602013</span></button><button class="sw" data-hex="#3F1810" style="background:#3F1810;color:#FFFFFF"><span class="st">950</span><span class="hx">3F1810</span></button></div>
+</article><article class="row" data-fam="蓝紫">
+  <header class="rh">
+    <span class="num">06</span>
+    <span class="fam">蓝紫</span>
+    <h3>Inspiration</h3>
+    <span class="meta">H255 S45% · 实测 <code>#231942</code></span>
+    <a class="src" href="https://dribbble.com/shots/20906810-Color-Palette-Inspiration" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#F7F7F9" style="background:#F7F7F9;color:#111114"><span class="st">50</span><span class="hx">F7F7F9</span></button><button class="sw" data-hex="#EEEDF3" style="background:#EEEDF3;color:#111114"><span class="st">100</span><span class="hx">EEEDF3</span></button><button class="sw" data-hex="#D7D2E7" style="background:#D7D2E7;color:#111114"><span class="st">200</span><span class="hx">D7D2E7</span></button><button class="sw" data-hex="#BBB0DB" style="background:#BBB0DB;color:#111114"><span class="st">300</span><span class="hx">BBB0DB</span></button><button class="sw" data-hex="#9A89CF" style="background:#9A89CF;color:#FFFFFF"><span class="st">400</span><span class="hx">9A89CF</span></button><button class="sw" data-brand data-hex="#7A62C3" style="background:#7A62C3;color:#FFFFFF"><span class="st">500</span><span class="hx">7A62C3</span></button><button class="sw" data-brand data-hex="#5D43B0" style="background:#5D43B0;color:#FFFFFF"><span class="st">600</span><span class="hx">5D43B0</span></button><button class="sw" data-hex="#4D398C" style="background:#4D398C;color:#FFFFFF"><span class="st">700</span><span class="hx">4D398C</span></button><button class="sw" data-hex="#3D2F6A" style="background:#3D2F6A;color:#FFFFFF"><span class="st">800</span><span class="hx">3D2F6A</span></button><button class="sw" data-hex="#2F264D" style="background:#2F264D;color:#FFFFFF"><span class="st">900</span><span class="hx">2F264D</span></button><button class="sw" data-hex="#221C33" style="background:#221C33;color:#FFFFFF"><span class="st">950</span><span class="hx">221C33</span></button></div>
+</article><article class="row" data-fam="蓝">
+  <header class="rh">
+    <span class="num">07</span>
+    <span class="fam">蓝</span>
+    <h3>Dig Insights</h3>
+    <span class="meta">H213 S54% · 实测 <code>#5A8FCE</code></span>
+    <a class="src" href="https://dribbble.com/shots/25067454-Dig-Insights-Color-Palette" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#F7F8F9" style="background:#F7F8F9;color:#111114"><span class="st">50</span><span class="hx">F7F8F9</span></button><button class="sw" data-hex="#ECEFF4" style="background:#ECEFF4;color:#111114"><span class="st">100</span><span class="hx">ECEFF4</span></button><button class="sw" data-hex="#D0DCE9" style="background:#D0DCE9;color:#111114"><span class="st">200</span><span class="hx">D0DCE9</span></button><button class="sw" data-hex="#ACC3DF" style="background:#ACC3DF;color:#111114"><span class="st">300</span><span class="hx">ACC3DF</span></button><button class="sw" data-hex="#82A9D6" style="background:#82A9D6;color:#FFFFFF"><span class="st">400</span><span class="hx">82A9D6</span></button><button class="sw" data-brand data-hex="#588ECD" style="background:#588ECD;color:#FFFFFF"><span class="st">500</span><span class="hx">588ECD</span></button><button class="sw" data-brand data-hex="#3773BB" style="background:#3773BB;color:#FFFFFF"><span class="st">600</span><span class="hx">3773BB</span></button><button class="sw" data-hex="#305E94" style="background:#305E94;color:#FFFFFF"><span class="st">700</span><span class="hx">305E94</span></button><button class="sw" data-hex="#294970" style="background:#294970;color:#FFFFFF"><span class="st">800</span><span class="hx">294970</span></button><button class="sw" data-hex="#223751" style="background:#223751;color:#FFFFFF"><span class="st">900</span><span class="hx">223751</span></button><button class="sw" data-hex="#192636" style="background:#192636;color:#FFFFFF"><span class="st">950</span><span class="hx">192636</span></button></div>
+</article><article class="row" data-fam="蓝">
+  <header class="rh">
+    <span class="num">08</span>
+    <span class="fam">蓝</span>
+    <h3>for Flight Reservation App</h3>
+    <span class="meta">H210 S99% · 实测 <code>#0A83FE</code></span>
+    <a class="src" href="https://dribbble.com/shots/23124986-Color-Palette-for-Flight-Reservation-App" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#F6F8FA" style="background:#F6F8FA;color:#111114"><span class="st">50</span><span class="hx">F6F8FA</span></button><button class="sw" data-hex="#E9F0F7" style="background:#E9F0F7;color:#111114"><span class="st">100</span><span class="hx">E9F0F7</span></button><button class="sw" data-hex="#C6DCF3" style="background:#C6DCF3;color:#111114"><span class="st">200</span><span class="hx">C6DCF3</span></button><button class="sw" data-hex="#97C5F4" style="background:#97C5F4;color:#111114"><span class="st">300</span><span class="hx">97C5F4</span></button><button class="sw" data-hex="#60ABF9" style="background:#60ABF9;color:#FFFFFF"><span class="st">400</span><span class="hx">60ABF9</span></button><button class="sw" data-brand data-hex="#2792FE" style="background:#2792FE;color:#FFFFFF"><span class="st">500</span><span class="hx">2792FE</span></button><button class="sw" data-brand data-hex="#0178F1" style="background:#0178F1;color:#FFFFFF"><span class="st">600</span><span class="hx">0178F1</span></button><button class="sw" data-hex="#0761BE" style="background:#0761BE;color:#FFFFFF"><span class="st">700</span><span class="hx">0761BE</span></button><button class="sw" data-hex="#0B4C8E" style="background:#0B4C8E;color:#FFFFFF"><span class="st">800</span><span class="hx">0B4C8E</span></button><button class="sw" data-hex="#0E3965" style="background:#0E3965;color:#FFFFFF"><span class="st">900</span><span class="hx">0E3965</span></button><button class="sw" data-hex="#0E2741" style="background:#0E2741;color:#FFFFFF"><span class="st">950</span><span class="hx">0E2741</span></button></div>
+</article><article class="row" data-fam="黄绿">
+  <header class="rh">
+    <span class="num">09</span>
+    <span class="fam">黄绿</span>
+    <h3>Peak Pine</h3>
+    <span class="meta">H93 S44% · 实测 <code>#ABD28C</code></span>
+    <a class="src" href="https://dribbble.com/shots/27242920-Brand-Color-System-Peak-Pine" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#F8F9F7" style="background:#F8F9F7;color:#111114"><span class="st">50</span><span class="hx">F8F9F7</span></button><button class="sw" data-hex="#EFF3ED" style="background:#EFF3ED;color:#111114"><span class="st">100</span><span class="hx">EFF3ED</span></button><button class="sw" data-hex="#DBE7D3" style="background:#DBE7D3;color:#111114"><span class="st">200</span><span class="hx">DBE7D3</span></button><button class="sw" data-hex="#C3DAB1" style="background:#C3DAB1;color:#111114"><span class="st">300</span><span class="hx">C3DAB1</span></button><button class="sw" data-hex="#A8CE8A" style="background:#A8CE8A;color:#111114"><span class="st">400</span><span class="hx">A8CE8A</span></button><button class="sw" data-brand data-hex="#8DC263" style="background:#8DC263;color:#111114"><span class="st">500</span><span class="hx">8DC263</span></button><button class="sw" data-brand data-hex="#73AE44" style="background:#73AE44;color:#FFFFFF"><span class="st">600</span><span class="hx">73AE44</span></button><button class="sw" data-hex="#5E8B3A" style="background:#5E8B3A;color:#FFFFFF"><span class="st">700</span><span class="hx">5E8B3A</span></button><button class="sw" data-hex="#496930" style="background:#496930;color:#FFFFFF"><span class="st">800</span><span class="hx">496930</span></button><button class="sw" data-hex="#374C26" style="background:#374C26;color:#FFFFFF"><span class="st">900</span><span class="hx">374C26</span></button><button class="sw" data-hex="#26331C" style="background:#26331C;color:#FFFFFF"><span class="st">950</span><span class="hx">26331C</span></button></div>
+</article><article class="row" data-fam="黄">
+  <header class="rh">
+    <span class="num">10</span>
+    <span class="fam">黄</span>
+    <h3>Library</h3>
+    <span class="meta">H58 S84% · 实测 <code>#F0EC57</code></span>
+    <a class="src" href="https://dribbble.com/shots/18562947-Color-Palette-Library-17-Hex-Codes-Names-ALIMAYDIDTHAT" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#FAFAF6" style="background:#FAFAF6;color:#111114"><span class="st">50</span><span class="hx">FAFAF6</span></button><button class="sw" data-hex="#F6F5EA" style="background:#F6F5EA;color:#111114"><span class="st">100</span><span class="hx">F6F5EA</span></button><button class="sw" data-hex="#F0EFCA" style="background:#F0EFCA;color:#111114"><span class="st">200</span><span class="hx">F0EFCA</span></button><button class="sw" data-hex="#EDEB9E" style="background:#EDEB9E;color:#111114"><span class="st">300</span><span class="hx">EDEB9E</span></button><button class="sw" data-hex="#EDE96C" style="background:#EDE96C;color:#111114"><span class="st">400</span><span class="hx">EDE96C</span></button><button class="sw" data-brand data-hex="#EDE838" style="background:#EDE838;color:#111114"><span class="st">500</span><span class="hx">EDE838</span></button><button class="sw" data-brand data-hex="#DED914" style="background:#DED914;color:#111114"><span class="st">600</span><span class="hx">DED914</span></button><button class="sw" data-hex="#AFAB15" style="background:#AFAB15;color:#FFFFFF"><span class="st">700</span><span class="hx">AFAB15</span></button><button class="sw" data-hex="#848115" style="background:#848115;color:#FFFFFF"><span class="st">800</span><span class="hx">848115</span></button><button class="sw" data-hex="#5E5C15" style="background:#5E5C15;color:#FFFFFF"><span class="st">900</span><span class="hx">5E5C15</span></button><button class="sw" data-hex="#3D3C12" style="background:#3D3C12;color:#FFFFFF"><span class="st">950</span><span class="hx">3D3C12</span></button></div>
+</article><article class="row" data-fam="玫红">
+  <header class="rh">
+    <span class="num">11</span>
+    <span class="fam">玫红</span>
+    <h3>FullEight visual identity</h3>
+    <span class="meta">H357 S64% · 实测 <code>#E27A7F</code></span>
+    <a class="src" href="https://dribbble.com/shots/15668517-FullEight-visual-identity-Color-palette" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#F9F6F7" style="background:#F9F6F7;color:#111114"><span class="st">50</span><span class="hx">F9F6F7</span></button><button class="sw" data-hex="#F4EBEC" style="background:#F4EBEC;color:#111114"><span class="st">100</span><span class="hx">F4EBEC</span></button><button class="sw" data-hex="#EBCECF" style="background:#EBCECF;color:#111114"><span class="st">200</span><span class="hx">EBCECF</span></button><button class="sw" data-hex="#E4A7AA" style="background:#E4A7AA;color:#111114"><span class="st">300</span><span class="hx">E4A7AA</span></button><button class="sw" data-hex="#DE7B7F" style="background:#DE7B7F;color:#FFFFFF"><span class="st">400</span><span class="hx">DE7B7F</span></button><button class="sw" data-brand data-hex="#D84D54" style="background:#D84D54;color:#FFFFFF"><span class="st">500</span><span class="hx">D84D54</span></button><button class="sw" data-brand data-hex="#C72B33" style="background:#C72B33;color:#FFFFFF"><span class="st">600</span><span class="hx">C72B33</span></button><button class="sw" data-hex="#9D272D" style="background:#9D272D;color:#FFFFFF"><span class="st">700</span><span class="hx">9D272D</span></button><button class="sw" data-hex="#772226" style="background:#772226;color:#FFFFFF"><span class="st">800</span><span class="hx">772226</span></button><button class="sw" data-hex="#551D20" style="background:#551D20;color:#FFFFFF"><span class="st">900</span><span class="hx">551D20</span></button><button class="sw" data-hex="#381718" style="background:#381718;color:#FFFFFF"><span class="st">950</span><span class="hx">381718</span></button></div>
+</article><article class="row" data-fam="玫红">
+  <header class="rh">
+    <span class="num">12</span>
+    <span class="fam">玫红</span>
+    <h3>Color Palette 44 Hex Codes N</h3>
+    <span class="meta">H343 S57% · 实测 <code>#D35E80</code></span>
+    <a class="src" href="https://dribbble.com/shots/21951336-Color-Palette-44-Hex-Codes-Names-ALIMAYDIDTHAT" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#F9F7F7" style="background:#F9F7F7;color:#111114"><span class="st">50</span><span class="hx">F9F7F7</span></button><button class="sw" data-hex="#F4ECEE" style="background:#F4ECEE;color:#111114"><span class="st">100</span><span class="hx">F4ECEE</span></button><button class="sw" data-hex="#EAD0D7" style="background:#EAD0D7;color:#111114"><span class="st">200</span><span class="hx">EAD0D7</span></button><button class="sw" data-hex="#E0ABBA" style="background:#E0ABBA;color:#111114"><span class="st">300</span><span class="hx">E0ABBA</span></button><button class="sw" data-hex="#D8809A" style="background:#D8809A;color:#FFFFFF"><span class="st">400</span><span class="hx">D8809A</span></button><button class="sw" data-brand data-hex="#D05579" style="background:#D05579;color:#FFFFFF"><span class="st">500</span><span class="hx">D05579</span></button><button class="sw" data-brand data-hex="#BE345C" style="background:#BE345C;color:#FFFFFF"><span class="st">600</span><span class="hx">BE345C</span></button><button class="sw" data-hex="#972E4C" style="background:#972E4C;color:#FFFFFF"><span class="st">700</span><span class="hx">972E4C</span></button><button class="sw" data-hex="#72273D" style="background:#72273D;color:#FFFFFF"><span class="st">800</span><span class="hx">72273D</span></button><button class="sw" data-hex="#52202F" style="background:#52202F;color:#FFFFFF"><span class="st">900</span><span class="hx">52202F</span></button><button class="sw" data-hex="#361921" style="background:#361921;color:#FFFFFF"><span class="st">950</span><span class="hx">361921</span></button></div>
+</article><article class="row" data-fam="红">
+  <header class="rh">
+    <span class="num">13</span>
+    <span class="fam">红</span>
+    <h3>Colors Of Nature a web galle</h3>
+    <span class="meta">H11 S97% · 实测 <code>#D22803</code></span>
+    <a class="src" href="https://dribbble.com/shots/10059663-Colors-Of-Nature-a-web-gallery-concept-design" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#FAF7F6" style="background:#FAF7F6;color:#111114"><span class="st">50</span><span class="hx">FAF7F6</span></button><button class="sw" data-hex="#F7EBE9" style="background:#F7EBE9;color:#111114"><span class="st">100</span><span class="hx">F7EBE9</span></button><button class="sw" data-hex="#F3CEC6" style="background:#F3CEC6;color:#111114"><span class="st">200</span><span class="hx">F3CEC6</span></button><button class="sw" data-hex="#F3A898" style="background:#F3A898;color:#111114"><span class="st">300</span><span class="hx">F3A898</span></button><button class="sw" data-hex="#F77C61" style="background:#F77C61;color:#FFFFFF"><span class="st">400</span><span class="hx">F77C61</span></button><button class="sw" data-brand data-hex="#FC4F29" style="background:#FC4F29;color:#FFFFFF"><span class="st">500</span><span class="hx">FC4F29</span></button><button class="sw" data-brand data-hex="#EF2D03" style="background:#EF2D03;color:#FFFFFF"><span class="st">600</span><span class="hx">EF2D03</span></button><button class="sw" data-hex="#BC2908" style="background:#BC2908;color:#FFFFFF"><span class="st">700</span><span class="hx">BC2908</span></button><button class="sw" data-hex="#8C230D" style="background:#8C230D;color:#FFFFFF"><span class="st">800</span><span class="hx">8C230D</span></button><button class="sw" data-hex="#641E0F" style="background:#641E0F;color:#FFFFFF"><span class="st">900</span><span class="hx">641E0F</span></button><button class="sw" data-hex="#41170E" style="background:#41170E;color:#FFFFFF"><span class="st">950</span><span class="hx">41170E</span></button></div>
+</article><article class="row" data-fam="黄">
+  <header class="rh">
+    <span class="num">14</span>
+    <span class="fam">黄</span>
+    <h3>Garden Inspired Organic Iden</h3>
+    <span class="meta">H49 S72% · 实测 <code>#CFAF21</code></span>
+    <a class="src" href="https://dribbble.com/shots/27406845-Garden-Inspired-Color-Palette-Organic-Brand-Identity-Design" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#F9F9F6" style="background:#F9F9F6;color:#111114"><span class="st">50</span><span class="hx">F9F9F6</span></button><button class="sw" data-hex="#F5F3EB" style="background:#F5F3EB;color:#111114"><span class="st">100</span><span class="hx">F5F3EB</span></button><button class="sw" data-hex="#EDE7CC" style="background:#EDE7CC;color:#111114"><span class="st">200</span><span class="hx">EDE7CC</span></button><button class="sw" data-hex="#E8DBA4" style="background:#E8DBA4;color:#111114"><span class="st">300</span><span class="hx">E8DBA4</span></button><button class="sw" data-hex="#E4CF74" style="background:#E4CF74;color:#111114"><span class="st">400</span><span class="hx">E4CF74</span></button><button class="sw" data-brand data-hex="#E1C444" style="background:#E1C444;color:#111114"><span class="st">500</span><span class="hx">E1C444</span></button><button class="sw" data-brand data-hex="#D1B121" style="background:#D1B121;color:#111114"><span class="st">600</span><span class="hx">D1B121</span></button><button class="sw" data-hex="#A58C1F" style="background:#A58C1F;color:#FFFFFF"><span class="st">700</span><span class="hx">A58C1F</span></button><button class="sw" data-hex="#7C6B1D" style="background:#7C6B1D;color:#FFFFFF"><span class="st">800</span><span class="hx">7C6B1D</span></button><button class="sw" data-hex="#594D1A" style="background:#594D1A;color:#FFFFFF"><span class="st">900</span><span class="hx">594D1A</span></button><button class="sw" data-hex="#3A3315" style="background:#3A3315;color:#FFFFFF"><span class="st">950</span><span class="hx">3A3315</span></button></div>
+</article><article class="row" data-fam="红">
+  <header class="rh">
+    <span class="num">15</span>
+    <span class="fam">红</span>
+    <h3>Locally</h3>
+    <span class="meta">H10 S81% · 实测 <code>#EC644A</code></span>
+    <a class="src" href="https://dribbble.com/shots/25079244-Locally-Color-Palette" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#FAF7F6" style="background:#FAF7F6;color:#111114"><span class="st">50</span><span class="hx">FAF7F6</span></button><button class="sw" data-hex="#F5ECEA" style="background:#F5ECEA;color:#111114"><span class="st">100</span><span class="hx">F5ECEA</span></button><button class="sw" data-hex="#EFD0CA" style="background:#EFD0CA;color:#111114"><span class="st">200</span><span class="hx">EFD0CA</span></button><button class="sw" data-hex="#ECACA0" style="background:#ECACA0;color:#111114"><span class="st">300</span><span class="hx">ECACA0</span></button><button class="sw" data-hex="#EB826E" style="background:#EB826E;color:#FFFFFF"><span class="st">400</span><span class="hx">EB826E</span></button><button class="sw" data-brand data-hex="#EA573B" style="background:#EA573B;color:#FFFFFF"><span class="st">500</span><span class="hx">EA573B</span></button><button class="sw" data-brand data-hex="#DB3717" style="background:#DB3717;color:#FFFFFF"><span class="st">600</span><span class="hx">DB3717</span></button><button class="sw" data-hex="#AD2F17" style="background:#AD2F17;color:#FFFFFF"><span class="st">700</span><span class="hx">AD2F17</span></button><button class="sw" data-hex="#822817" style="background:#822817;color:#FFFFFF"><span class="st">800</span><span class="hx">822817</span></button><button class="sw" data-hex="#5D2116" style="background:#5D2116;color:#FFFFFF"><span class="st">900</span><span class="hx">5D2116</span></button><button class="sw" data-hex="#3D1912" style="background:#3D1912;color:#FFFFFF"><span class="st">950</span><span class="hx">3D1912</span></button></div>
+</article><article class="row" data-fam="青">
+  <header class="rh">
+    <span class="num">16</span>
+    <span class="fam">青</span>
+    <h3>Green Blue for Logo</h3>
+    <span class="meta">H197 S97% · 实测 <code>#20BFFC</code></span>
+    <a class="src" href="https://dribbble.com/shots/26902639-Green-Blue-Color-Palette-for-Logo-Design" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#F6F9FA" style="background:#F6F9FA;color:#111114"><span class="st">50</span><span class="hx">F6F9FA</span></button><button class="sw" data-hex="#E9F3F7" style="background:#E9F3F7;color:#111114"><span class="st">100</span><span class="hx">E9F3F7</span></button><button class="sw" data-hex="#C6E6F3" style="background:#C6E6F3;color:#111114"><span class="st">200</span><span class="hx">C6E6F3</span></button><button class="sw" data-hex="#98DAF3" style="background:#98DAF3;color:#111114"><span class="st">300</span><span class="hx">98DAF3</span></button><button class="sw" data-hex="#61CEF7" style="background:#61CEF7;color:#111114"><span class="st">400</span><span class="hx">61CEF7</span></button><button class="sw" data-brand data-hex="#29C2FC" style="background:#29C2FC;color:#111114"><span class="st">500</span><span class="hx">29C2FC</span></button><button class="sw" data-brand data-hex="#03AEEF" style="background:#03AEEF;color:#FFFFFF"><span class="st">600</span><span class="hx">03AEEF</span></button><button class="sw" data-hex="#088ABC" style="background:#088ABC;color:#FFFFFF"><span class="st">700</span><span class="hx">088ABC</span></button><button class="sw" data-hex="#0C698D" style="background:#0C698D;color:#FFFFFF"><span class="st">800</span><span class="hx">0C698D</span></button><button class="sw" data-hex="#0F4C64" style="background:#0F4C64;color:#FFFFFF"><span class="st">900</span><span class="hx">0F4C64</span></button><button class="sw" data-hex="#0E3341" style="background:#0E3341;color:#FFFFFF"><span class="st">950</span><span class="hx">0E3341</span></button></div>
+</article><article class="row" data-fam="橙">
+  <header class="rh">
+    <span class="num">17</span>
+    <span class="fam">橙</span>
+    <h3>Colorista Generator</h3>
+    <span class="meta">H38 S99% · 实测 <code>#FDA001</code></span>
+    <a class="src" href="https://dribbble.com/shots/25282683-Colorista-Color-Palette-Generator" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#FAF8F6" style="background:#FAF8F6;color:#111114"><span class="st">50</span><span class="hx">FAF8F6</span></button><button class="sw" data-hex="#F7F2E9" style="background:#F7F2E9;color:#111114"><span class="st">100</span><span class="hx">F7F2E9</span></button><button class="sw" data-hex="#F3E2C6" style="background:#F3E2C6;color:#111114"><span class="st">200</span><span class="hx">F3E2C6</span></button><button class="sw" data-hex="#F4D297" style="background:#F4D297;color:#111114"><span class="st">300</span><span class="hx">F4D297</span></button><button class="sw" data-hex="#F9C060" style="background:#F9C060;color:#111114"><span class="st">400</span><span class="hx">F9C060</span></button><button class="sw" data-brand data-hex="#FEAF27" style="background:#FEAF27;color:#111114"><span class="st">500</span><span class="hx">FEAF27</span></button><button class="sw" data-brand data-hex="#F19901" style="background:#F19901;color:#FFFFFF"><span class="st">600</span><span class="hx">F19901</span></button><button class="sw" data-hex="#BE7A07" style="background:#BE7A07;color:#FFFFFF"><span class="st">700</span><span class="hx">BE7A07</span></button><button class="sw" data-hex="#8E5E0B" style="background:#8E5E0B;color:#FFFFFF"><span class="st">800</span><span class="hx">8E5E0B</span></button><button class="sw" data-hex="#65450E" style="background:#65450E;color:#FFFFFF"><span class="st">900</span><span class="hx">65450E</span></button><button class="sw" data-hex="#412E0E" style="background:#412E0E;color:#FFFFFF"><span class="st">950</span><span class="hx">412E0E</span></button></div>
+</article><article class="row" data-fam="蓝">
+  <header class="rh">
+    <span class="num">18</span>
+    <span class="fam">蓝</span>
+    <h3>Medical website</h3>
+    <span class="meta">H235 S65% · 实测 <code>#5B65DC</code></span>
+    <a class="src" href="https://dribbble.com/shots/26024523-Medical-website-color-palette" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#F6F7F9" style="background:#F6F7F9;color:#111114"><span class="st">50</span><span class="hx">F6F7F9</span></button><button class="sw" data-hex="#EBECF4" style="background:#EBECF4;color:#111114"><span class="st">100</span><span class="hx">EBECF4</span></button><button class="sw" data-hex="#CED0EB" style="background:#CED0EB;color:#111114"><span class="st">200</span><span class="hx">CED0EB</span></button><button class="sw" data-hex="#A7ACE4" style="background:#A7ACE4;color:#FFFFFF"><span class="st">300</span><span class="hx">A7ACE4</span></button><button class="sw" data-hex="#7A82DE" style="background:#7A82DE;color:#FFFFFF"><span class="st">400</span><span class="hx">7A82DE</span></button><button class="sw" data-brand data-hex="#4C57D9" style="background:#4C57D9;color:#FFFFFF"><span class="st">500</span><span class="hx">4C57D9</span></button><button class="sw" data-brand data-hex="#2B37C8" style="background:#2B37C8;color:#FFFFFF"><span class="st">600</span><span class="hx">2B37C8</span></button><button class="sw" data-hex="#26309E" style="background:#26309E;color:#FFFFFF"><span class="st">700</span><span class="hx">26309E</span></button><button class="sw" data-hex="#222877" style="background:#222877;color:#FFFFFF"><span class="st">800</span><span class="hx">222877</span></button><button class="sw" data-hex="#1D2156" style="background:#1D2156;color:#FFFFFF"><span class="st">900</span><span class="hx">1D2156</span></button><button class="sw" data-hex="#171938" style="background:#171938;color:#FFFFFF"><span class="st">950</span><span class="hx">171938</span></button></div>
+</article><article class="row" data-fam="绿">
+  <header class="rh">
+    <span class="num">19</span>
+    <span class="fam">绿</span>
+    <h3>Green and Blue for Logo</h3>
+    <span class="meta">H106 S27% · 实测 <code>#426238</code></span>
+    <a class="src" href="https://dribbble.com/shots/24954787-Green-and-Blue-Color-Palette-for-Logo-Branding-Color-Scheme" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#F8F8F7" style="background:#F8F8F7;color:#111114"><span class="st">50</span><span class="hx">F8F8F7</span></button><button class="sw" data-hex="#EFF2EE" style="background:#EFF2EE;color:#111114"><span class="st">100</span><span class="hx">EFF2EE</span></button><button class="sw" data-hex="#D9E3D6" style="background:#D9E3D6;color:#111114"><span class="st">200</span><span class="hx">D9E3D6</span></button><button class="sw" data-hex="#BFD2B9" style="background:#BFD2B9;color:#111114"><span class="st">300</span><span class="hx">BFD2B9</span></button><button class="sw" data-hex="#A1C197" style="background:#A1C197;color:#111114"><span class="st">400</span><span class="hx">A1C197</span></button><button class="sw" data-brand data-hex="#83B075" style="background:#83B075;color:#FFFFFF"><span class="st">500</span><span class="hx">83B075</span></button><button class="sw" data-brand data-hex="#689A58" style="background:#689A58;color:#FFFFFF"><span class="st">600</span><span class="hx">689A58</span></button><button class="sw" data-hex="#557B49" style="background:#557B49;color:#FFFFFF"><span class="st">700</span><span class="hx">557B49</span></button><button class="sw" data-hex="#435E3B" style="background:#435E3B;color:#FFFFFF"><span class="st">800</span><span class="hx">435E3B</span></button><button class="sw" data-hex="#33452D" style="background:#33452D;color:#FFFFFF"><span class="st">900</span><span class="hx">33452D</span></button><button class="sw" data-hex="#242F20" style="background:#242F20;color:#FFFFFF"><span class="st">950</span><span class="hx">242F20</span></button></div>
+</article><article class="row" data-fam="黄">
+  <header class="rh">
+    <span class="num">20</span>
+    <span class="fam">黄</span>
+    <h3>Color Palette</h3>
+    <span class="meta">H60 S3% · 实测 <code>#F0F0EF</code></span>
+    <a class="src" href="https://dribbble.com/shots/27723655-Color-Palette" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#F8F8F8" style="background:#F8F8F8;color:#111114"><span class="st">50</span><span class="hx">F8F8F8</span></button><button class="sw" data-hex="#F0F0EF" style="background:#F0F0EF;color:#111114"><span class="st">100</span><span class="hx">F0F0EF</span></button><button class="sw" data-hex="#DDDDDC" style="background:#DDDDDC;color:#111114"><span class="st">200</span><span class="hx">DDDDDC</span></button><button class="sw" data-hex="#C7C7C4" style="background:#C7C7C4;color:#111114"><span class="st">300</span><span class="hx">C7C7C4</span></button><button class="sw" data-hex="#AFAFAA" style="background:#AFAFAA;color:#FFFFFF"><span class="st">400</span><span class="hx">AFAFAA</span></button><button class="sw" data-brand data-hex="#96968F" style="background:#96968F;color:#FFFFFF"><span class="st">500</span><span class="hx">96968F</span></button><button class="sw" data-brand data-hex="#7D7D75" style="background:#7D7D75;color:#FFFFFF"><span class="st">600</span><span class="hx">7D7D75</span></button><button class="sw" data-hex="#65655F" style="background:#65655F;color:#FFFFFF"><span class="st">700</span><span class="hx">65655F</span></button><button class="sw" data-hex="#4F4F4A" style="background:#4F4F4A;color:#FFFFFF"><span class="st">800</span><span class="hx">4F4F4A</span></button><button class="sw" data-hex="#3B3B38" style="background:#3B3B38;color:#FFFFFF"><span class="st">900</span><span class="hx">3B3B38</span></button><button class="sw" data-hex="#282827" style="background:#282827;color:#FFFFFF"><span class="st">950</span><span class="hx">282827</span></button></div>
+</article><article class="row" data-fam="黄">
+  <header class="rh">
+    <span class="num">21</span>
+    <span class="fam">黄</span>
+    <h3>Her Black Dollar</h3>
+    <span class="meta">H41 S76% · 实测 <code>#956C14</code></span>
+    <a class="src" href="https://dribbble.com/shots/27439430-Her-Black-Dollar-Color-Palette" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#F9F8F6" style="background:#F9F8F6;color:#111114"><span class="st">50</span><span class="hx">F9F8F6</span></button><button class="sw" data-hex="#F5F2EA" style="background:#F5F2EA;color:#111114"><span class="st">100</span><span class="hx">F5F2EA</span></button><button class="sw" data-hex="#EEE3CB" style="background:#EEE3CB;color:#111114"><span class="st">200</span><span class="hx">EEE3CB</span></button><button class="sw" data-hex="#EAD3A2" style="background:#EAD3A2;color:#111114"><span class="st">300</span><span class="hx">EAD3A2</span></button><button class="sw" data-hex="#E7C271" style="background:#E7C271;color:#111114"><span class="st">400</span><span class="hx">E7C271</span></button><button class="sw" data-brand data-hex="#E5B140" style="background:#E5B140;color:#111114"><span class="st">500</span><span class="hx">E5B140</span></button><button class="sw" data-brand data-hex="#D69B1D" style="background:#D69B1D;color:#FFFFFF"><span class="st">600</span><span class="hx">D69B1D</span></button><button class="sw" data-hex="#A97C1C" style="background:#A97C1C;color:#FFFFFF"><span class="st">700</span><span class="hx">A97C1C</span></button><button class="sw" data-hex="#7F5F1A" style="background:#7F5F1A;color:#FFFFFF"><span class="st">800</span><span class="hx">7F5F1A</span></button><button class="sw" data-hex="#5B4618" style="background:#5B4618;color:#FFFFFF"><span class="st">900</span><span class="hx">5B4618</span></button><button class="sw" data-hex="#3B2F14" style="background:#3B2F14;color:#FFFFFF"><span class="st">950</span><span class="hx">3B2F14</span></button></div>
+</article><article class="row" data-fam="洋红">
+  <header class="rh">
+    <span class="num">22</span>
+    <span class="fam">洋红</span>
+    <h3>Dark Light Pink</h3>
+    <span class="meta">H326 S82% · 实测 <code>#CE147E</code></span>
+    <a class="src" href="https://dribbble.com/shots/27450239-Dark-Light-Pink-Color-Palette" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#FAF6F8" style="background:#FAF6F8;color:#111114"><span class="st">50</span><span class="hx">FAF6F8</span></button><button class="sw" data-hex="#F5EAF1" style="background:#F5EAF1;color:#111114"><span class="st">100</span><span class="hx">F5EAF1</span></button><button class="sw" data-hex="#EFCADF" style="background:#EFCADF;color:#111114"><span class="st">200</span><span class="hx">EFCADF</span></button><button class="sw" data-hex="#EC9FCB" style="background:#EC9FCB;color:#111114"><span class="st">300</span><span class="hx">EC9FCB</span></button><button class="sw" data-hex="#EC6DB5" style="background:#EC6DB5;color:#FFFFFF"><span class="st">400</span><span class="hx">EC6DB5</span></button><button class="sw" data-brand data-hex="#EC399F" style="background:#EC399F;color:#FFFFFF"><span class="st">500</span><span class="hx">EC399F</span></button><button class="sw" data-brand data-hex="#DD1587" style="background:#DD1587;color:#FFFFFF"><span class="st">600</span><span class="hx">DD1587</span></button><button class="sw" data-hex="#AE166D" style="background:#AE166D;color:#FFFFFF"><span class="st">700</span><span class="hx">AE166D</span></button><button class="sw" data-hex="#831654" style="background:#831654;color:#FFFFFF"><span class="st">800</span><span class="hx">831654</span></button><button class="sw" data-hex="#5D153E" style="background:#5D153E;color:#FFFFFF"><span class="st">900</span><span class="hx">5D153E</span></button><button class="sw" data-hex="#3D122B" style="background:#3D122B;color:#FFFFFF"><span class="st">950</span><span class="hx">3D122B</span></button></div>
+</article><article class="row" data-fam="黄">
+  <header class="rh">
+    <span class="num">23</span>
+    <span class="fam">黄</span>
+    <h3>Titan Fitness</h3>
+    <span class="meta">H52 S27% · 实测 <code>#7B7446</code></span>
+    <a class="src" href="https://dribbble.com/shots/26262162-Titan-Fitness-Color-Palette" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#F8F8F7" style="background:#F8F8F7;color:#111114"><span class="st">50</span><span class="hx">F8F8F7</span></button><button class="sw" data-hex="#F2F1EE" style="background:#F2F1EE;color:#111114"><span class="st">100</span><span class="hx">F2F1EE</span></button><button class="sw" data-hex="#E3E1D6" style="background:#E3E1D6;color:#111114"><span class="st">200</span><span class="hx">E3E1D6</span></button><button class="sw" data-hex="#D3CFB9" style="background:#D3CFB9;color:#111114"><span class="st">300</span><span class="hx">D3CFB9</span></button><button class="sw" data-hex="#C1BC97" style="background:#C1BC97;color:#111114"><span class="st">400</span><span class="hx">C1BC97</span></button><button class="sw" data-brand data-hex="#B0A975" style="background:#B0A975;color:#FFFFFF"><span class="st">500</span><span class="hx">B0A975</span></button><button class="sw" data-brand data-hex="#9A9258" style="background:#9A9258;color:#FFFFFF"><span class="st">600</span><span class="hx">9A9258</span></button><button class="sw" data-hex="#7C7549" style="background:#7C7549;color:#FFFFFF"><span class="st">700</span><span class="hx">7C7549</span></button><button class="sw" data-hex="#5F5A3A" style="background:#5F5A3A;color:#FFFFFF"><span class="st">800</span><span class="hx">5F5A3A</span></button><button class="sw" data-hex="#45422D" style="background:#45422D;color:#FFFFFF"><span class="st">900</span><span class="hx">45422D</span></button><button class="sw" data-hex="#2F2D20" style="background:#2F2D20;color:#FFFFFF"><span class="st">950</span><span class="hx">2F2D20</span></button></div>
+</article><article class="row" data-fam="青">
+  <header class="rh">
+    <span class="num">24</span>
+    <span class="fam">青</span>
+    <h3>Eyr Lab Healthcare</h3>
+    <span class="meta">H175 S44% · 实测 <code>#46B2A9</code></span>
+    <a class="src" href="https://dribbble.com/shots/26642808-Eyr-Lab-Healthcare-Color-Palette" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#F7F9F9" style="background:#F7F9F9;color:#111114"><span class="st">50</span><span class="hx">F7F9F9</span></button><button class="sw" data-hex="#EDF3F2" style="background:#EDF3F2;color:#111114"><span class="st">100</span><span class="hx">EDF3F2</span></button><button class="sw" data-hex="#D3E6E5" style="background:#D3E6E5;color:#111114"><span class="st">200</span><span class="hx">D3E6E5</span></button><button class="sw" data-hex="#B1DAD7" style="background:#B1DAD7;color:#111114"><span class="st">300</span><span class="hx">B1DAD7</span></button><button class="sw" data-hex="#8BCEC8" style="background:#8BCEC8;color:#111114"><span class="st">400</span><span class="hx">8BCEC8</span></button><button class="sw" data-brand data-hex="#63C2BA" style="background:#63C2BA;color:#FFFFFF"><span class="st">500</span><span class="hx">63C2BA</span></button><button class="sw" data-brand data-hex="#44AEA5" style="background:#44AEA5;color:#FFFFFF"><span class="st">600</span><span class="hx">44AEA5</span></button><button class="sw" data-hex="#3A8A84" style="background:#3A8A84;color:#FFFFFF"><span class="st">700</span><span class="hx">3A8A84</span></button><button class="sw" data-hex="#306964" style="background:#306964;color:#FFFFFF"><span class="st">800</span><span class="hx">306964</span></button><button class="sw" data-hex="#264C49" style="background:#264C49;color:#FFFFFF"><span class="st">900</span><span class="hx">264C49</span></button><button class="sw" data-hex="#1C3331" style="background:#1C3331;color:#FFFFFF"><span class="st">950</span><span class="hx">1C3331</span></button></div>
+</article><article class="row" data-fam="蓝">
+  <header class="rh">
+    <span class="num">25</span>
+    <span class="fam">蓝</span>
+    <h3>Export with Clarity Dizno</h3>
+    <span class="meta">H212 S91% · 实测 <code>#0B77F2</code></span>
+    <a class="src" href="https://dribbble.com/shots/27335000-Export-Palettes-with-Clarity-Dizno" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#F6F8FA" style="background:#F6F8FA;color:#111114"><span class="st">50</span><span class="hx">F6F8FA</span></button><button class="sw" data-hex="#E9EFF6" style="background:#E9EFF6;color:#111114"><span class="st">100</span><span class="hx">E9EFF6</span></button><button class="sw" data-hex="#C8DBF1" style="background:#C8DBF1;color:#111114"><span class="st">200</span><span class="hx">C8DBF1</span></button><button class="sw" data-hex="#9BC3F1" style="background:#9BC3F1;color:#111114"><span class="st">300</span><span class="hx">9BC3F1</span></button><button class="sw" data-hex="#66A8F2" style="background:#66A8F2;color:#FFFFFF"><span class="st">400</span><span class="hx">66A8F2</span></button><button class="sw" data-brand data-hex="#308CF6" style="background:#308CF6;color:#FFFFFF"><span class="st">500</span><span class="hx">308CF6</span></button><button class="sw" data-brand data-hex="#0B72E8" style="background:#0B72E8;color:#FFFFFF"><span class="st">600</span><span class="hx">0B72E8</span></button><button class="sw" data-hex="#0E5DB6" style="background:#0E5DB6;color:#FFFFFF"><span class="st">700</span><span class="hx">0E5DB6</span></button><button class="sw" data-hex="#104989" style="background:#104989;color:#FFFFFF"><span class="st">800</span><span class="hx">104989</span></button><button class="sw" data-hex="#123761" style="background:#123761;color:#FFFFFF"><span class="st">900</span><span class="hx">123761</span></button><button class="sw" data-hex="#10263F" style="background:#10263F;color:#FFFFFF"><span class="st">950</span><span class="hx">10263F</span></button></div>
+</article><article class="row" data-fam="青">
+  <header class="rh">
+    <span class="num">26</span>
+    <span class="fam">青</span>
+    <h3>for AI Driven Marine Shippin</h3>
+    <span class="meta">H197 S79% · 实测 <code>#1899CE</code></span>
+    <a class="src" href="https://dribbble.com/shots/25559600-Color-Palette-for-AI-Driven-Marine-Shipping-Software-Company" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#F6F9FA" style="background:#F6F9FA;color:#111114"><span class="st">50</span><span class="hx">F6F9FA</span></button><button class="sw" data-hex="#EAF2F5" style="background:#EAF2F5;color:#111114"><span class="st">100</span><span class="hx">EAF2F5</span></button><button class="sw" data-hex="#CBE4EF" style="background:#CBE4EF;color:#111114"><span class="st">200</span><span class="hx">CBE4EF</span></button><button class="sw" data-hex="#A0D5EB" style="background:#A0D5EB;color:#111114"><span class="st">300</span><span class="hx">A0D5EB</span></button><button class="sw" data-hex="#6FC6E9" style="background:#6FC6E9;color:#111114"><span class="st">400</span><span class="hx">6FC6E9</span></button><button class="sw" data-brand data-hex="#3DB6E8" style="background:#3DB6E8;color:#FFFFFF"><span class="st">500</span><span class="hx">3DB6E8</span></button><button class="sw" data-brand data-hex="#19A1D9" style="background:#19A1D9;color:#FFFFFF"><span class="st">600</span><span class="hx">19A1D9</span></button><button class="sw" data-hex="#1981AB" style="background:#1981AB;color:#FFFFFF"><span class="st">700</span><span class="hx">1981AB</span></button><button class="sw" data-hex="#186281" style="background:#186281;color:#FFFFFF"><span class="st">800</span><span class="hx">186281</span></button><button class="sw" data-hex="#17485C" style="background:#17485C;color:#FFFFFF"><span class="st">900</span><span class="hx">17485C</span></button><button class="sw" data-hex="#13303C" style="background:#13303C;color:#FFFFFF"><span class="st">950</span><span class="hx">13303C</span></button></div>
+</article><article class="row" data-fam="橙">
+  <header class="rh">
+    <span class="num">27</span>
+    <span class="fam">橙</span>
+    <h3>Design System Color Palette</h3>
+    <span class="meta">H16 S78% · 实测 <code>#E76838</code></span>
+    <a class="src" href="https://dribbble.com/shots/26926780-Design-System-Color-Palette" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#FAF7F6" style="background:#FAF7F6;color:#111114"><span class="st">50</span><span class="hx">FAF7F6</span></button><button class="sw" data-hex="#F5EDEA" style="background:#F5EDEA;color:#111114"><span class="st">100</span><span class="hx">F5EDEA</span></button><button class="sw" data-hex="#EED5CB" style="background:#EED5CB;color:#111114"><span class="st">200</span><span class="hx">EED5CB</span></button><button class="sw" data-hex="#EBB5A1" style="background:#EBB5A1;color:#111114"><span class="st">300</span><span class="hx">EBB5A1</span></button><button class="sw" data-hex="#E99170" style="background:#E99170;color:#FFFFFF"><span class="st">400</span><span class="hx">E99170</span></button><button class="sw" data-brand data-hex="#E86C3E" style="background:#E86C3E;color:#FFFFFF"><span class="st">500</span><span class="hx">E86C3E</span></button><button class="sw" data-brand data-hex="#D84E1A" style="background:#D84E1A;color:#FFFFFF"><span class="st">600</span><span class="hx">D84E1A</span></button><button class="sw" data-hex="#AB411A" style="background:#AB411A;color:#FFFFFF"><span class="st">700</span><span class="hx">AB411A</span></button><button class="sw" data-hex="#803519" style="background:#803519;color:#FFFFFF"><span class="st">800</span><span class="hx">803519</span></button><button class="sw" data-hex="#5C2A17" style="background:#5C2A17;color:#FFFFFF"><span class="st">900</span><span class="hx">5C2A17</span></button><button class="sw" data-hex="#3C1E13" style="background:#3C1E13;color:#FFFFFF"><span class="st">950</span><span class="hx">3C1E13</span></button></div>
+</article><article class="row" data-fam="青">
+  <header class="rh">
+    <span class="num">28</span>
+    <span class="fam">青</span>
+    <h3>Brand color palette</h3>
+    <span class="meta">H189 S93% · 实测 <code>#7DE7FA</code></span>
+    <a class="src" href="https://dribbble.com/shots/26781667-Brand-color-palette" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#F6F9FA" style="background:#F6F9FA;color:#111114"><span class="st">50</span><span class="hx">F6F9FA</span></button><button class="sw" data-hex="#E9F4F6" style="background:#E9F4F6;color:#111114"><span class="st">100</span><span class="hx">E9F4F6</span></button><button class="sw" data-hex="#C8EBF2" style="background:#C8EBF2;color:#111114"><span class="st">200</span><span class="hx">C8EBF2</span></button><button class="sw" data-hex="#9AE4F1" style="background:#9AE4F1;color:#111114"><span class="st">300</span><span class="hx">9AE4F1</span></button><button class="sw" data-hex="#65DEF3" style="background:#65DEF3;color:#111114"><span class="st">400</span><span class="hx">65DEF3</span></button><button class="sw" data-brand data-hex="#2ED8F7" style="background:#2ED8F7;color:#111114"><span class="st">500</span><span class="hx">2ED8F7</span></button><button class="sw" data-brand data-hex="#09C7E9" style="background:#09C7E9;color:#111114"><span class="st">600</span><span class="hx">09C7E9</span></button><button class="sw" data-hex="#0D9EB8" style="background:#0D9EB8;color:#FFFFFF"><span class="st">700</span><span class="hx">0D9EB8</span></button><button class="sw" data-hex="#107789" style="background:#107789;color:#FFFFFF"><span class="st">800</span><span class="hx">107789</span></button><button class="sw" data-hex="#115562" style="background:#115562;color:#FFFFFF"><span class="st">900</span><span class="hx">115562</span></button><button class="sw" data-hex="#0F3840" style="background:#0F3840;color:#FFFFFF"><span class="st">950</span><span class="hx">0F3840</span></button></div>
+</article><article class="row" data-fam="蓝">
+  <header class="rh">
+    <span class="num">29</span>
+    <span class="fam">蓝</span>
+    <h3>Nexora Systems Modern Blue T</h3>
+    <span class="meta">H234 S70% · 实测 <code>#2436CE</code></span>
+    <a class="src" href="https://dribbble.com/shots/27080076-Nexora-Systems-Modern-Blue-Color-Palette-Tech-Branding" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#F6F7F9" style="background:#F6F7F9;color:#111114"><span class="st">50</span><span class="hx">F6F7F9</span></button><button class="sw" data-hex="#EBECF5" style="background:#EBECF5;color:#111114"><span class="st">100</span><span class="hx">EBECF5</span></button><button class="sw" data-hex="#CDD0ED" style="background:#CDD0ED;color:#111114"><span class="st">200</span><span class="hx">CDD0ED</span></button><button class="sw" data-hex="#A5ACE7" style="background:#A5ACE7;color:#FFFFFF"><span class="st">300</span><span class="hx">A5ACE7</span></button><button class="sw" data-hex="#7681E2" style="background:#7681E2;color:#FFFFFF"><span class="st">400</span><span class="hx">7681E2</span></button><button class="sw" data-brand data-hex="#4657DF" style="background:#4657DF;color:#FFFFFF"><span class="st">500</span><span class="hx">4657DF</span></button><button class="sw" data-brand data-hex="#2436CE" style="background:#2436CE;color:#FFFFFF"><span class="st">600</span><span class="hx">2436CE</span></button><button class="sw" data-hex="#212FA3" style="background:#212FA3;color:#FFFFFF"><span class="st">700</span><span class="hx">212FA3</span></button><button class="sw" data-hex="#1E287B" style="background:#1E287B;color:#FFFFFF"><span class="st">800</span><span class="hx">1E287B</span></button><button class="sw" data-hex="#1B2158" style="background:#1B2158;color:#FFFFFF"><span class="st">900</span><span class="hx">1B2158</span></button><button class="sw" data-hex="#15193A" style="background:#15193A;color:#FFFFFF"><span class="st">950</span><span class="hx">15193A</span></button></div>
+</article><article class="row" data-fam="红">
+  <header class="rh">
+    <span class="num">30</span>
+    <span class="fam">红</span>
+    <h3>Beautiful Procreate</h3>
+    <span class="meta">H1 S65% · 实测 <code>#90201F</code></span>
+    <a class="src" href="https://dribbble.com/shots/27271205-50-Beautiful-Procreate-Color-Palettes" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#F9F7F6" style="background:#F9F7F6;color:#111114"><span class="st">50</span><span class="hx">F9F7F6</span></button><button class="sw" data-hex="#F4EBEB" style="background:#F4EBEB;color:#111114"><span class="st">100</span><span class="hx">F4EBEB</span></button><button class="sw" data-hex="#EBCECE" style="background:#EBCECE;color:#111114"><span class="st">200</span><span class="hx">EBCECE</span></button><button class="sw" data-hex="#E4A8A7" style="background:#E4A8A7;color:#111114"><span class="st">300</span><span class="hx">E4A8A7</span></button><button class="sw" data-hex="#DE7B7A" style="background:#DE7B7A;color:#FFFFFF"><span class="st">400</span><span class="hx">DE7B7A</span></button><button class="sw" data-brand data-hex="#D94E4D" style="background:#D94E4D;color:#FFFFFF"><span class="st">500</span><span class="hx">D94E4D</span></button><button class="sw" data-brand data-hex="#C72C2B" style="background:#C72C2B;color:#FFFFFF"><span class="st">600</span><span class="hx">C72C2B</span></button><button class="sw" data-hex="#9E2827" style="background:#9E2827;color:#FFFFFF"><span class="st">700</span><span class="hx">9E2827</span></button><button class="sw" data-hex="#772322" style="background:#772322;color:#FFFFFF"><span class="st">800</span><span class="hx">772322</span></button><button class="sw" data-hex="#561E1D" style="background:#561E1D;color:#FFFFFF"><span class="st">900</span><span class="hx">561E1D</span></button><button class="sw" data-hex="#381717" style="background:#381717;color:#FFFFFF"><span class="st">950</span><span class="hx">381717</span></button></div>
+</article><article class="row" data-fam="洋红">
+  <header class="rh">
+    <span class="num">31</span>
+    <span class="fam">洋红</span>
+    <h3>Harbor</h3>
+    <span class="meta">H300 S15% · 实测 <code>#5D455D</code></span>
+    <a class="src" href="https://dribbble.com/shots/26261615-Harbor-UI-Kit-Color-Palette" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#F8F8F8" style="background:#F8F8F8;color:#111114"><span class="st">50</span><span class="hx">F8F8F8</span></button><button class="sw" data-hex="#F1EFF1" style="background:#F1EFF1;color:#111114"><span class="st">100</span><span class="hx">F1EFF1</span></button><button class="sw" data-hex="#E0D9E0" style="background:#E0D9E0;color:#111114"><span class="st">200</span><span class="hx">E0D9E0</span></button><button class="sw" data-hex="#CDBFCD" style="background:#CDBFCD;color:#111114"><span class="st">300</span><span class="hx">CDBFCD</span></button><button class="sw" data-hex="#B8A1B8" style="background:#B8A1B8;color:#FFFFFF"><span class="st">400</span><span class="hx">B8A1B8</span></button><button class="sw" data-brand data-hex="#A383A3" style="background:#A383A3;color:#FFFFFF"><span class="st">500</span><span class="hx">A383A3</span></button><button class="sw" data-brand data-hex="#8B678B" style="background:#8B678B;color:#FFFFFF"><span class="st">600</span><span class="hx">8B678B</span></button><button class="sw" data-hex="#705570" style="background:#705570;color:#FFFFFF"><span class="st">700</span><span class="hx">705570</span></button><button class="sw" data-hex="#564356" style="background:#564356;color:#FFFFFF"><span class="st">800</span><span class="hx">564356</span></button><button class="sw" data-hex="#403340" style="background:#403340;color:#FFFFFF"><span class="st">900</span><span class="hx">403340</span></button><button class="sw" data-hex="#2B242B" style="background:#2B242B;color:#FFFFFF"><span class="st">950</span><span class="hx">2B242B</span></button></div>
+</article><article class="row" data-fam="橙">
+  <header class="rh">
+    <span class="num">32</span>
+    <span class="fam">橙</span>
+    <h3>Image based Exploration Dizn</h3>
+    <span class="meta">H39 S99% · 实测 <code>#ED9A01</code></span>
+    <a class="src" href="https://dribbble.com/shots/27406562-Image-based-Palette-Exploration-Dizno" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#FAF8F6" style="background:#FAF8F6;color:#111114"><span class="st">50</span><span class="hx">FAF8F6</span></button><button class="sw" data-hex="#F7F2E9" style="background:#F7F2E9;color:#111114"><span class="st">100</span><span class="hx">F7F2E9</span></button><button class="sw" data-hex="#F3E3C6" style="background:#F3E3C6;color:#111114"><span class="st">200</span><span class="hx">F3E3C6</span></button><button class="sw" data-hex="#F4D397" style="background:#F4D397;color:#111114"><span class="st">300</span><span class="hx">F4D397</span></button><button class="sw" data-hex="#F9C360" style="background:#F9C360;color:#111114"><span class="st">400</span><span class="hx">F9C360</span></button><button class="sw" data-brand data-hex="#FEB227" style="background:#FEB227;color:#111114"><span class="st">500</span><span class="hx">FEB227</span></button><button class="sw" data-brand data-hex="#F19D01" style="background:#F19D01;color:#FFFFFF"><span class="st">600</span><span class="hx">F19D01</span></button><button class="sw" data-hex="#BE7D07" style="background:#BE7D07;color:#FFFFFF"><span class="st">700</span><span class="hx">BE7D07</span></button><button class="sw" data-hex="#8E600B" style="background:#8E600B;color:#FFFFFF"><span class="st">800</span><span class="hx">8E600B</span></button><button class="sw" data-hex="#65460E" style="background:#65460E;color:#FFFFFF"><span class="st">900</span><span class="hx">65460E</span></button><button class="sw" data-hex="#412F0E" style="background:#412F0E;color:#FFFFFF"><span class="st">950</span><span class="hx">412F0E</span></button></div>
+</article><article class="row" data-fam="青绿">
+  <header class="rh">
+    <span class="num">33</span>
+    <span class="fam">青绿</span>
+    <h3>myVitalReport</h3>
+    <span class="meta">H164 S81% · 实测 <code>#1CE7B0</code></span>
+    <a class="src" href="https://dribbble.com/shots/27257709-myVitalReport-Color-Palette" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#F6FAF9" style="background:#F6FAF9;color:#111114"><span class="st">50</span><span class="hx">F6FAF9</span></button><button class="sw" data-hex="#EAF5F2" style="background:#EAF5F2;color:#111114"><span class="st">100</span><span class="hx">EAF5F2</span></button><button class="sw" data-hex="#CAEFE5" style="background:#CAEFE5;color:#111114"><span class="st">200</span><span class="hx">CAEFE5</span></button><button class="sw" data-hex="#A0ECD7" style="background:#A0ECD7;color:#111114"><span class="st">300</span><span class="hx">A0ECD7</span></button><button class="sw" data-hex="#6EEAC9" style="background:#6EEAC9;color:#111114"><span class="st">400</span><span class="hx">6EEAC9</span></button><button class="sw" data-brand data-hex="#3BEABB" style="background:#3BEABB;color:#111114"><span class="st">500</span><span class="hx">3BEABB</span></button><button class="sw" data-brand data-hex="#17DBA6" style="background:#17DBA6;color:#111114"><span class="st">600</span><span class="hx">17DBA6</span></button><button class="sw" data-hex="#18AD84" style="background:#18AD84;color:#FFFFFF"><span class="st">700</span><span class="hx">18AD84</span></button><button class="sw" data-hex="#178265" style="background:#178265;color:#FFFFFF"><span class="st">800</span><span class="hx">178265</span></button><button class="sw" data-hex="#165D4A" style="background:#165D4A;color:#FFFFFF"><span class="st">900</span><span class="hx">165D4A</span></button><button class="sw" data-hex="#123D31" style="background:#123D31;color:#FFFFFF"><span class="st">950</span><span class="hx">123D31</span></button></div>
+</article><article class="row" data-fam="橙">
+  <header class="rh">
+    <span class="num">34</span>
+    <span class="fam">橙</span>
+    <h3>slothUI World s Laziest WCAG</h3>
+    <span class="meta">H20 S71% · 实测 <code>#DE7540</code></span>
+    <a class="src" href="https://dribbble.com/shots/24101402-slothUI-World-s-Laziest-Design-System-WCAG-2-1-Color-Palette" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#F9F7F6" style="background:#F9F7F6;color:#111114"><span class="st">50</span><span class="hx">F9F7F6</span></button><button class="sw" data-hex="#F5EEEB" style="background:#F5EEEB;color:#111114"><span class="st">100</span><span class="hx">F5EEEB</span></button><button class="sw" data-hex="#EDD7CD" style="background:#EDD7CD;color:#111114"><span class="st">200</span><span class="hx">EDD7CD</span></button><button class="sw" data-hex="#E7BBA4" style="background:#E7BBA4;color:#111114"><span class="st">300</span><span class="hx">E7BBA4</span></button><button class="sw" data-hex="#E29A76" style="background:#E29A76;color:#FFFFFF"><span class="st">400</span><span class="hx">E29A76</span></button><button class="sw" data-brand data-hex="#DF7946" style="background:#DF7946;color:#FFFFFF"><span class="st">500</span><span class="hx">DF7946</span></button><button class="sw" data-brand data-hex="#CF5D24" style="background:#CF5D24;color:#FFFFFF"><span class="st">600</span><span class="hx">CF5D24</span></button><button class="sw" data-hex="#A34D21" style="background:#A34D21;color:#FFFFFF"><span class="st">700</span><span class="hx">A34D21</span></button><button class="sw" data-hex="#7B3D1E" style="background:#7B3D1E;color:#FFFFFF"><span class="st">800</span><span class="hx">7B3D1E</span></button><button class="sw" data-hex="#582F1B" style="background:#582F1B;color:#FFFFFF"><span class="st">900</span><span class="hx">582F1B</span></button><button class="sw" data-hex="#3A2115" style="background:#3A2115;color:#FFFFFF"><span class="st">950</span><span class="hx">3A2115</span></button></div>
+</article><article class="row" data-fam="橙">
+  <header class="rh">
+    <span class="num">35</span>
+    <span class="fam">橙</span>
+    <h3>Green orange</h3>
+    <span class="meta">H24 S75% · 实测 <code>#DE6D20</code></span>
+    <a class="src" href="https://dribbble.com/shots/24026431-Green-orange-color-palette" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#F9F8F6" style="background:#F9F8F6;color:#111114"><span class="st">50</span><span class="hx">F9F8F6</span></button><button class="sw" data-hex="#F5EFEA" style="background:#F5EFEA;color:#111114"><span class="st">100</span><span class="hx">F5EFEA</span></button><button class="sw" data-hex="#EED9CC" style="background:#EED9CC;color:#111114"><span class="st">200</span><span class="hx">EED9CC</span></button><button class="sw" data-hex="#E9BFA2" style="background:#E9BFA2;color:#111114"><span class="st">300</span><span class="hx">E9BFA2</span></button><button class="sw" data-hex="#E6A172" style="background:#E6A172;color:#FFFFFF"><span class="st">400</span><span class="hx">E6A172</span></button><button class="sw" data-brand data-hex="#E48342" style="background:#E48342;color:#FFFFFF"><span class="st">500</span><span class="hx">E48342</span></button><button class="sw" data-brand data-hex="#D4681F" style="background:#D4681F;color:#FFFFFF"><span class="st">600</span><span class="hx">D4681F</span></button><button class="sw" data-hex="#A7551D" style="background:#A7551D;color:#FFFFFF"><span class="st">700</span><span class="hx">A7551D</span></button><button class="sw" data-hex="#7E431B" style="background:#7E431B;color:#FFFFFF"><span class="st">800</span><span class="hx">7E431B</span></button><button class="sw" data-hex="#5A3319" style="background:#5A3319;color:#FFFFFF"><span class="st">900</span><span class="hx">5A3319</span></button><button class="sw" data-hex="#3B2414" style="background:#3B2414;color:#FFFFFF"><span class="st">950</span><span class="hx">3B2414</span></button></div>
+</article><article class="row" data-fam="蓝">
+  <header class="rh">
+    <span class="num">36</span>
+    <span class="fam">蓝</span>
+    <h3>UI Color Palette</h3>
+    <span class="meta">H205 S34% · 实测 <code>#3D627D</code></span>
+    <a class="src" href="https://dribbble.com/shots/23844305-UI-Color-Palette" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#F7F8F9" style="background:#F7F8F9;color:#111114"><span class="st">50</span><span class="hx">F7F8F9</span></button><button class="sw" data-hex="#EDF0F2" style="background:#EDF0F2;color:#111114"><span class="st">100</span><span class="hx">EDF0F2</span></button><button class="sw" data-hex="#D5DEE4" style="background:#D5DEE4;color:#111114"><span class="st">200</span><span class="hx">D5DEE4</span></button><button class="sw" data-hex="#B5C8D6" style="background:#B5C8D6;color:#111114"><span class="st">300</span><span class="hx">B5C8D6</span></button><button class="sw" data-hex="#92B0C7" style="background:#92B0C7;color:#FFFFFF"><span class="st">400</span><span class="hx">92B0C7</span></button><button class="sw" data-brand data-hex="#6D98B8" style="background:#6D98B8;color:#FFFFFF"><span class="st">500</span><span class="hx">6D98B8</span></button><button class="sw" data-brand data-hex="#4F80A3" style="background:#4F80A3;color:#FFFFFF"><span class="st">600</span><span class="hx">4F80A3</span></button><button class="sw" data-hex="#426782" style="background:#426782;color:#FFFFFF"><span class="st">700</span><span class="hx">426782</span></button><button class="sw" data-hex="#365063" style="background:#365063;color:#FFFFFF"><span class="st">800</span><span class="hx">365063</span></button><button class="sw" data-hex="#2A3C48" style="background:#2A3C48;color:#FFFFFF"><span class="st">900</span><span class="hx">2A3C48</span></button><button class="sw" data-hex="#1F2931" style="background:#1F2931;color:#FFFFFF"><span class="st">950</span><span class="hx">1F2931</span></button></div>
+</article><article class="row" data-fam="蓝紫">
+  <header class="rh">
+    <span class="num">37</span>
+    <span class="fam">蓝紫</span>
+    <h3>color palette</h3>
+    <span class="meta">H264 S72% · 实测 <code>#B089EC</code></span>
+    <a class="src" href="https://dribbble.com/shots/26711227-color-palette" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#F8F6F9" style="background:#F8F6F9;color:#111114"><span class="st">50</span><span class="hx">F8F6F9</span></button><button class="sw" data-hex="#EFEBF5" style="background:#EFEBF5;color:#111114"><span class="st">100</span><span class="hx">EFEBF5</span></button><button class="sw" data-hex="#D9CCED" style="background:#D9CCED;color:#111114"><span class="st">200</span><span class="hx">D9CCED</span></button><button class="sw" data-hex="#BEA4E8" style="background:#BEA4E8;color:#FFFFFF"><span class="st">300</span><span class="hx">BEA4E8</span></button><button class="sw" data-hex="#A074E4" style="background:#A074E4;color:#FFFFFF"><span class="st">400</span><span class="hx">A074E4</span></button><button class="sw" data-brand data-hex="#8244E1" style="background:#8244E1;color:#FFFFFF"><span class="st">500</span><span class="hx">8244E1</span></button><button class="sw" data-brand data-hex="#6722D1" style="background:#6722D1;color:#FFFFFF"><span class="st">600</span><span class="hx">6722D1</span></button><button class="sw" data-hex="#541FA5" style="background:#541FA5;color:#FFFFFF"><span class="st">700</span><span class="hx">541FA5</span></button><button class="sw" data-hex="#421D7C" style="background:#421D7C;color:#FFFFFF"><span class="st">800</span><span class="hx">421D7C</span></button><button class="sw" data-hex="#331A59" style="background:#331A59;color:#FFFFFF"><span class="st">900</span><span class="hx">331A59</span></button><button class="sw" data-hex="#24153A" style="background:#24153A;color:#FFFFFF"><span class="st">950</span><span class="hx">24153A</span></button></div>
+</article><article class="row" data-fam="蓝">
+  <header class="rh">
+    <span class="num">38</span>
+    <span class="fam">蓝</span>
+    <h3>neurolyze BCI Brain Computer</h3>
+    <span class="meta">H221 S84% · 实测 <code>#2766EC</code></span>
+    <a class="src" href="https://dribbble.com/shots/25340565-neurolyze-BCI-Brain-Computer-Interface-Branding-Color-Palette" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#F6F7FA" style="background:#F6F7FA;color:#111114"><span class="st">50</span><span class="hx">F6F7FA</span></button><button class="sw" data-hex="#EAEEF6" style="background:#EAEEF6;color:#111114"><span class="st">100</span><span class="hx">EAEEF6</span></button><button class="sw" data-hex="#CAD6F0" style="background:#CAD6F0;color:#111114"><span class="st">200</span><span class="hx">CAD6F0</span></button><button class="sw" data-hex="#9EB7ED" style="background:#9EB7ED;color:#111114"><span class="st">300</span><span class="hx">9EB7ED</span></button><button class="sw" data-hex="#6C95ED" style="background:#6C95ED;color:#FFFFFF"><span class="st">400</span><span class="hx">6C95ED</span></button><button class="sw" data-brand data-hex="#3872ED" style="background:#3872ED;color:#FFFFFF"><span class="st">500</span><span class="hx">3872ED</span></button><button class="sw" data-brand data-hex="#1455DF" style="background:#1455DF;color:#FFFFFF"><span class="st">600</span><span class="hx">1455DF</span></button><button class="sw" data-hex="#1546B0" style="background:#1546B0;color:#FFFFFF"><span class="st">700</span><span class="hx">1546B0</span></button><button class="sw" data-hex="#153984" style="background:#153984;color:#FFFFFF"><span class="st">800</span><span class="hx">153984</span></button><button class="sw" data-hex="#152C5E" style="background:#152C5E;color:#FFFFFF"><span class="st">900</span><span class="hx">152C5E</span></button><button class="sw" data-hex="#12203D" style="background:#12203D;color:#FFFFFF"><span class="st">950</span><span class="hx">12203D</span></button></div>
+</article><article class="row" data-fam="红">
+  <header class="rh">
+    <span class="num">39</span>
+    <span class="fam">红</span>
+    <h3>Beta Peak</h3>
+    <span class="meta">H14 S88% · 实测 <code>#F15829</code></span>
+    <a class="src" href="https://dribbble.com/shots/8951390-Beta-Peak-Color-Palette" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#FAF7F6" style="background:#FAF7F6;color:#111114"><span class="st">50</span><span class="hx">FAF7F6</span></button><button class="sw" data-hex="#F6ECEA" style="background:#F6ECEA;color:#111114"><span class="st">100</span><span class="hx">F6ECEA</span></button><button class="sw" data-hex="#F1D2C9" style="background:#F1D2C9;color:#111114"><span class="st">200</span><span class="hx">F1D2C9</span></button><button class="sw" data-hex="#EFB09C" style="background:#EFB09C;color:#111114"><span class="st">300</span><span class="hx">EFB09C</span></button><button class="sw" data-hex="#F08869" style="background:#F08869;color:#FFFFFF"><span class="st">400</span><span class="hx">F08869</span></button><button class="sw" data-brand data-hex="#F26034" style="background:#F26034;color:#FFFFFF"><span class="st">500</span><span class="hx">F26034</span></button><button class="sw" data-brand data-hex="#E3410F" style="background:#E3410F;color:#FFFFFF"><span class="st">600</span><span class="hx">E3410F</span></button><button class="sw" data-hex="#B33711" style="background:#B33711;color:#FFFFFF"><span class="st">700</span><span class="hx">B33711</span></button><button class="sw" data-hex="#862E13" style="background:#862E13;color:#FFFFFF"><span class="st">800</span><span class="hx">862E13</span></button><button class="sw" data-hex="#602513" style="background:#602513;color:#FFFFFF"><span class="st">900</span><span class="hx">602513</span></button><button class="sw" data-hex="#3E1B11" style="background:#3E1B11;color:#FFFFFF"><span class="st">950</span><span class="hx">3E1B11</span></button></div>
+</article><article class="row" data-fam="黄绿">
+  <header class="rh">
+    <span class="num">40</span>
+    <span class="fam">黄绿</span>
+    <h3>Spark</h3>
+    <span class="meta">H67 S100% · 实测 <code>#DFFD00</code></span>
+    <a class="src" href="https://dribbble.com/shots/24130906-Spark-Color-Palette" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#F9FAF6" style="background:#F9FAF6;color:#111114"><span class="st">50</span><span class="hx">F9FAF6</span></button><button class="sw" data-hex="#F5F7E9" style="background:#F5F7E9;color:#111114"><span class="st">100</span><span class="hx">F5F7E9</span></button><button class="sw" data-hex="#EEF3C6" style="background:#EEF3C6;color:#111114"><span class="st">200</span><span class="hx">EEF3C6</span></button><button class="sw" data-hex="#EAF597" style="background:#EAF597;color:#111114"><span class="st">300</span><span class="hx">EAF597</span></button><button class="sw" data-hex="#E7F95F" style="background:#E7F95F;color:#111114"><span class="st">400</span><span class="hx">E7F95F</span></button><button class="sw" data-brand data-hex="#E5FF26" style="background:#E5FF26;color:#111114"><span class="st">500</span><span class="hx">E5FF26</span></button><button class="sw" data-brand data-hex="#D6F200" style="background:#D6F200;color:#111114"><span class="st">600</span><span class="hx">D6F200</span></button><button class="sw" data-hex="#A9BE06" style="background:#A9BE06;color:#111114"><span class="st">700</span><span class="hx">A9BE06</span></button><button class="sw" data-hex="#7F8E0B" style="background:#7F8E0B;color:#FFFFFF"><span class="st">800</span><span class="hx">7F8E0B</span></button><button class="sw" data-hex="#5B650E" style="background:#5B650E;color:#FFFFFF"><span class="st">900</span><span class="hx">5B650E</span></button><button class="sw" data-hex="#3B420D" style="background:#3B420D;color:#FFFFFF"><span class="st">950</span><span class="hx">3B420D</span></button></div>
+</article><article class="row" data-fam="红">
+  <header class="rh">
+    <span class="num">41</span>
+    <span class="fam">红</span>
+    <h3>Radish Counseling</h3>
+    <span class="meta">H13 S47% · 实测 <code>#84422F</code></span>
+    <a class="src" href="https://dribbble.com/shots/26591010-Radish-Counseling-Color-Palette" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#F9F7F7" style="background:#F9F7F7;color:#111114"><span class="st">50</span><span class="hx">F9F7F7</span></button><button class="sw" data-hex="#F3EEEC" style="background:#F3EEEC;color:#111114"><span class="st">100</span><span class="hx">F3EEEC</span></button><button class="sw" data-hex="#E7D7D2" style="background:#E7D7D2;color:#111114"><span class="st">200</span><span class="hx">E7D7D2</span></button><button class="sw" data-hex="#DCB9AF" style="background:#DCB9AF;color:#111114"><span class="st">300</span><span class="hx">DCB9AF</span></button><button class="sw" data-hex="#D19888" style="background:#D19888;color:#FFFFFF"><span class="st">400</span><span class="hx">D19888</span></button><button class="sw" data-brand data-hex="#C6765F" style="background:#C6765F;color:#FFFFFF"><span class="st">500</span><span class="hx">C6765F</span></button><button class="sw" data-brand data-hex="#B35940" style="background:#B35940;color:#FFFFFF"><span class="st">600</span><span class="hx">B35940</span></button><button class="sw" data-hex="#8E4A36" style="background:#8E4A36;color:#FFFFFF"><span class="st">700</span><span class="hx">8E4A36</span></button><button class="sw" data-hex="#6C3B2D" style="background:#6C3B2D;color:#FFFFFF"><span class="st">800</span><span class="hx">6C3B2D</span></button><button class="sw" data-hex="#4E2E25" style="background:#4E2E25;color:#FFFFFF"><span class="st">900</span><span class="hx">4E2E25</span></button><button class="sw" data-hex="#34211B" style="background:#34211B;color:#FFFFFF"><span class="st">950</span><span class="hx">34211B</span></button></div>
+</article><article class="row" data-fam="洋红">
+  <header class="rh">
+    <span class="num">42</span>
+    <span class="fam">洋红</span>
+    <h3>Color Palette Design System</h3>
+    <span class="meta">H309 S5% · 实测 <code>#443D43</code></span>
+    <a class="src" href="https://dribbble.com/shots/23354323-Color-Palette-Design-System" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#F8F8F8" style="background:#F8F8F8;color:#111114"><span class="st">50</span><span class="hx">F8F8F8</span></button><button class="sw" data-hex="#F0EFF0" style="background:#F0EFF0;color:#111114"><span class="st">100</span><span class="hx">F0EFF0</span></button><button class="sw" data-hex="#DEDBDD" style="background:#DEDBDD;color:#111114"><span class="st">200</span><span class="hx">DEDBDD</span></button><button class="sw" data-hex="#C8C3C7" style="background:#C8C3C7;color:#111114"><span class="st">300</span><span class="hx">C8C3C7</span></button><button class="sw" data-hex="#B0A8AF" style="background:#B0A8AF;color:#FFFFFF"><span class="st">400</span><span class="hx">B0A8AF</span></button><button class="sw" data-brand data-hex="#998D97" style="background:#998D97;color:#FFFFFF"><span class="st">500</span><span class="hx">998D97</span></button><button class="sw" data-brand data-hex="#80737E" style="background:#80737E;color:#FFFFFF"><span class="st">600</span><span class="hx">80737E</span></button><button class="sw" data-hex="#675D66" style="background:#675D66;color:#FFFFFF"><span class="st">700</span><span class="hx">675D66</span></button><button class="sw" data-hex="#50494F" style="background:#50494F;color:#FFFFFF"><span class="st">800</span><span class="hx">50494F</span></button><button class="sw" data-hex="#3C373B" style="background:#3C373B;color:#FFFFFF"><span class="st">900</span><span class="hx">3C373B</span></button><button class="sw" data-hex="#292629" style="background:#292629;color:#FFFFFF"><span class="st">950</span><span class="hx">292629</span></button></div>
+</article><article class="row" data-fam="蓝紫">
+  <header class="rh">
+    <span class="num">43</span>
+    <span class="fam">蓝紫</span>
+    <h3>SPARK Identity Logo Visual A</h3>
+    <span class="meta">H242 S11% · 实测 <code>#73728E</code></span>
+    <a class="src" href="https://dribbble.com/shots/26983475-SPARK-Brand-Identity-Design-Logo-Visual-System-And-Color-Palette" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#F8F8F8" style="background:#F8F8F8;color:#111114"><span class="st">50</span><span class="hx">F8F8F8</span></button><button class="sw" data-hex="#EFEFF0" style="background:#EFEFF0;color:#111114"><span class="st">100</span><span class="hx">EFEFF0</span></button><button class="sw" data-hex="#DADADF" style="background:#DADADF;color:#111114"><span class="st">200</span><span class="hx">DADADF</span></button><button class="sw" data-hex="#C1C0CB" style="background:#C1C0CB;color:#111114"><span class="st">300</span><span class="hx">C1C0CB</span></button><button class="sw" data-hex="#A4A4B5" style="background:#A4A4B5;color:#FFFFFF"><span class="st">400</span><span class="hx">A4A4B5</span></button><button class="sw" data-brand data-hex="#88879F" style="background:#88879F;color:#FFFFFF"><span class="st">500</span><span class="hx">88879F</span></button><button class="sw" data-brand data-hex="#6D6C86" style="background:#6D6C86;color:#FFFFFF"><span class="st">600</span><span class="hx">6D6C86</span></button><button class="sw" data-hex="#59586C" style="background:#59586C;color:#FFFFFF"><span class="st">700</span><span class="hx">59586C</span></button><button class="sw" data-hex="#464554" style="background:#464554;color:#FFFFFF"><span class="st">800</span><span class="hx">464554</span></button><button class="sw" data-hex="#35353E" style="background:#35353E;color:#FFFFFF"><span class="st">900</span><span class="hx">35353E</span></button><button class="sw" data-hex="#25252A" style="background:#25252A;color:#FFFFFF"><span class="st">950</span><span class="hx">25252A</span></button></div>
+</article><article class="row" data-fam="红">
+  <header class="rh">
+    <span class="num">44</span>
+    <span class="fam">红</span>
+    <h3>Parcel Tracker and</h3>
+    <span class="meta">H0 S0% · 实测 <code>#FFFFFF</code></span>
+    <a class="src" href="https://dribbble.com/shots/27129579-Parcel-Tracker-Brand-and-Color-Palette" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#F8F8F8" style="background:#F8F8F8;color:#111114"><span class="st">50</span><span class="hx">F8F8F8</span></button><button class="sw" data-hex="#F0F0F0" style="background:#F0F0F0;color:#111114"><span class="st">100</span><span class="hx">F0F0F0</span></button><button class="sw" data-hex="#DDDDDD" style="background:#DDDDDD;color:#111114"><span class="st">200</span><span class="hx">DDDDDD</span></button><button class="sw" data-hex="#C6C6C6" style="background:#C6C6C6;color:#111114"><span class="st">300</span><span class="hx">C6C6C6</span></button><button class="sw" data-hex="#ACACAC" style="background:#ACACAC;color:#FFFFFF"><span class="st">400</span><span class="hx">ACACAC</span></button><button class="sw" data-brand data-hex="#939393" style="background:#939393;color:#FFFFFF"><span class="st">500</span><span class="hx">939393</span></button><button class="sw" data-brand data-hex="#797979" style="background:#797979;color:#FFFFFF"><span class="st">600</span><span class="hx">797979</span></button><button class="sw" data-hex="#626262" style="background:#626262;color:#FFFFFF"><span class="st">700</span><span class="hx">626262</span></button><button class="sw" data-hex="#4C4C4C" style="background:#4C4C4C;color:#FFFFFF"><span class="st">800</span><span class="hx">4C4C4C</span></button><button class="sw" data-hex="#393939" style="background:#393939;color:#FFFFFF"><span class="st">900</span><span class="hx">393939</span></button><button class="sw" data-hex="#282828" style="background:#282828;color:#FFFFFF"><span class="st">950</span><span class="hx">282828</span></button></div>
+</article><article class="row" data-fam="橙">
+  <header class="rh">
+    <span class="num">45</span>
+    <span class="fam">橙</span>
+    <h3>After</h3>
+    <span class="meta">H38 S32% · 实测 <code>#C5B18E</code></span>
+    <a class="src" href="https://dribbble.com/shots/23150430-After-Color-Palette" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#F9F8F7" style="background:#F9F8F7;color:#111114"><span class="st">50</span><span class="hx">F9F8F7</span></button><button class="sw" data-hex="#F2F0ED" style="background:#F2F0ED;color:#111114"><span class="st">100</span><span class="hx">F2F0ED</span></button><button class="sw" data-hex="#E4DFD5" style="background:#E4DFD5;color:#111114"><span class="st">200</span><span class="hx">E4DFD5</span></button><button class="sw" data-hex="#D5CAB6" style="background:#D5CAB6;color:#111114"><span class="st">300</span><span class="hx">D5CAB6</span></button><button class="sw" data-hex="#C5B393" style="background:#C5B393;color:#111114"><span class="st">400</span><span class="hx">C5B393</span></button><button class="sw" data-brand data-hex="#B59C70" style="background:#B59C70;color:#FFFFFF"><span class="st">500</span><span class="hx">B59C70</span></button><button class="sw" data-brand data-hex="#A08452" style="background:#A08452;color:#FFFFFF"><span class="st">600</span><span class="hx">A08452</span></button><button class="sw" data-hex="#806A44" style="background:#806A44;color:#FFFFFF"><span class="st">700</span><span class="hx">806A44</span></button><button class="sw" data-hex="#625237" style="background:#625237;color:#FFFFFF"><span class="st">800</span><span class="hx">625237</span></button><button class="sw" data-hex="#473D2B" style="background:#473D2B;color:#FFFFFF"><span class="st">900</span><span class="hx">473D2B</span></button><button class="sw" data-hex="#302A1F" style="background:#302A1F;color:#FFFFFF"><span class="st">950</span><span class="hx">302A1F</span></button></div>
+</article><article class="row" data-fam="黄">
+  <header class="rh">
+    <span class="num">46</span>
+    <span class="fam">黄</span>
+    <h3>Lob</h3>
+    <span class="meta">H54 S90% · 实测 <code>#F7E968</code></span>
+    <a class="src" href="https://dribbble.com/shots/25710246-Lob-Color-Palette" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#FAF9F6" style="background:#FAF9F6;color:#111114"><span class="st">50</span><span class="hx">FAF9F6</span></button><button class="sw" data-hex="#F6F5E9" style="background:#F6F5E9;color:#111114"><span class="st">100</span><span class="hx">F6F5E9</span></button><button class="sw" data-hex="#F1EDC8" style="background:#F1EDC8;color:#111114"><span class="st">200</span><span class="hx">F1EDC8</span></button><button class="sw" data-hex="#F0E89B" style="background:#F0E89B;color:#111114"><span class="st">300</span><span class="hx">F0E89B</span></button><button class="sw" data-hex="#F1E467" style="background:#F1E467;color:#111114"><span class="st">400</span><span class="hx">F1E467</span></button><button class="sw" data-brand data-hex="#F4E131" style="background:#F4E131;color:#111114"><span class="st">500</span><span class="hx">F4E131</span></button><button class="sw" data-brand data-hex="#E6D10C" style="background:#E6D10C;color:#111114"><span class="st">600</span><span class="hx">E6D10C</span></button><button class="sw" data-hex="#B5A50F" style="background:#B5A50F;color:#FFFFFF"><span class="st">700</span><span class="hx">B5A50F</span></button><button class="sw" data-hex="#887C11" style="background:#887C11;color:#FFFFFF"><span class="st">800</span><span class="hx">887C11</span></button><button class="sw" data-hex="#615912" style="background:#615912;color:#FFFFFF"><span class="st">900</span><span class="hx">615912</span></button><button class="sw" data-hex="#3F3A10" style="background:#3F3A10;color:#FFFFFF"><span class="st">950</span><span class="hx">3F3A10</span></button></div>
+</article><article class="row" data-fam="黄">
+  <header class="rh">
+    <span class="num">47</span>
+    <span class="fam">黄</span>
+    <h3>Color Palette</h3>
+    <span class="meta">H42 S85% · 实测 <code>#F0BE49</code></span>
+    <a class="src" href="https://dribbble.com/shots/23444247-Color-Palette" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#FAF9F6" style="background:#FAF9F6;color:#111114"><span class="st">50</span><span class="hx">FAF9F6</span></button><button class="sw" data-hex="#F6F2EA" style="background:#F6F2EA;color:#111114"><span class="st">100</span><span class="hx">F6F2EA</span></button><button class="sw" data-hex="#F0E4C9" style="background:#F0E4C9;color:#111114"><span class="st">200</span><span class="hx">F0E4C9</span></button><button class="sw" data-hex="#EED69E" style="background:#EED69E;color:#111114"><span class="st">300</span><span class="hx">EED69E</span></button><button class="sw" data-hex="#EDC66B" style="background:#EDC66B;color:#111114"><span class="st">400</span><span class="hx">EDC66B</span></button><button class="sw" data-brand data-hex="#EEB737" style="background:#EEB737;color:#111114"><span class="st">500</span><span class="hx">EEB737</span></button><button class="sw" data-brand data-hex="#E0A212" style="background:#E0A212;color:#FFFFFF"><span class="st">600</span><span class="hx">E0A212</span></button><button class="sw" data-hex="#B08214" style="background:#B08214;color:#FFFFFF"><span class="st">700</span><span class="hx">B08214</span></button><button class="sw" data-hex="#846315" style="background:#846315;color:#FFFFFF"><span class="st">800</span><span class="hx">846315</span></button><button class="sw" data-hex="#5E4814" style="background:#5E4814;color:#FFFFFF"><span class="st">900</span><span class="hx">5E4814</span></button><button class="sw" data-hex="#3E3011" style="background:#3E3011;color:#FFFFFF"><span class="st">950</span><span class="hx">3E3011</span></button></div>
+</article><article class="row" data-fam="青">
+  <header class="rh">
+    <span class="num">48</span>
+    <span class="fam">青</span>
+    <h3>Invoca</h3>
+    <span class="meta">H179 S42% · 实测 <code>#54B9B8</code></span>
+    <a class="src" href="https://dribbble.com/shots/26490424-Invoca-Color-Palette" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#F7F9F9" style="background:#F7F9F9;color:#111114"><span class="st">50</span><span class="hx">F7F9F9</span></button><button class="sw" data-hex="#EDF3F3" style="background:#EDF3F3;color:#111114"><span class="st">100</span><span class="hx">EDF3F3</span></button><button class="sw" data-hex="#D3E6E6" style="background:#D3E6E6;color:#111114"><span class="st">200</span><span class="hx">D3E6E6</span></button><button class="sw" data-hex="#B2D9D9" style="background:#B2D9D9;color:#111114"><span class="st">300</span><span class="hx">B2D9D9</span></button><button class="sw" data-hex="#8CCCCC" style="background:#8CCCCC;color:#111114"><span class="st">400</span><span class="hx">8CCCCC</span></button><button class="sw" data-brand data-hex="#65C0BF" style="background:#65C0BF;color:#FFFFFF"><span class="st">500</span><span class="hx">65C0BF</span></button><button class="sw" data-brand data-hex="#46ACAB" style="background:#46ACAB;color:#FFFFFF"><span class="st">600</span><span class="hx">46ACAB</span></button><button class="sw" data-hex="#3B8988" style="background:#3B8988;color:#FFFFFF"><span class="st">700</span><span class="hx">3B8988</span></button><button class="sw" data-hex="#316868" style="background:#316868;color:#FFFFFF"><span class="st">800</span><span class="hx">316868</span></button><button class="sw" data-hex="#274C4B" style="background:#274C4B;color:#FFFFFF"><span class="st">900</span><span class="hx">274C4B</span></button><button class="sw" data-hex="#1D3232" style="background:#1D3232;color:#FFFFFF"><span class="st">950</span><span class="hx">1D3232</span></button></div>
+</article><article class="row" data-fam="橙">
+  <header class="rh">
+    <span class="num">49</span>
+    <span class="fam">橙</span>
+    <h3>D rive Coffee Roasters</h3>
+    <span class="meta">H30 S79% · 实测 <code>#E8933F</code></span>
+    <a class="src" href="https://dribbble.com/shots/27335800-D-rive-Coffee-Roasters-Color-Palette" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#FAF8F6" style="background:#FAF8F6;color:#111114"><span class="st">50</span><span class="hx">FAF8F6</span></button><button class="sw" data-hex="#F5F0EA" style="background:#F5F0EA;color:#111114"><span class="st">100</span><span class="hx">F5F0EA</span></button><button class="sw" data-hex="#EEDCCB" style="background:#EEDCCB;color:#111114"><span class="st">200</span><span class="hx">EEDCCB</span></button><button class="sw" data-hex="#EBC5A1" style="background:#EBC5A1;color:#111114"><span class="st">300</span><span class="hx">EBC5A1</span></button><button class="sw" data-hex="#E9AC70" style="background:#E9AC70;color:#111114"><span class="st">400</span><span class="hx">E9AC70</span></button><button class="sw" data-brand data-hex="#E8923D" style="background:#E8923D;color:#FFFFFF"><span class="st">500</span><span class="hx">E8923D</span></button><button class="sw" data-brand data-hex="#D8791A" style="background:#D8791A;color:#FFFFFF"><span class="st">600</span><span class="hx">D8791A</span></button><button class="sw" data-hex="#AB621A" style="background:#AB621A;color:#FFFFFF"><span class="st">700</span><span class="hx">AB621A</span></button><button class="sw" data-hex="#804C19" style="background:#804C19;color:#FFFFFF"><span class="st">800</span><span class="hx">804C19</span></button><button class="sw" data-hex="#5C3917" style="background:#5C3917;color:#FFFFFF"><span class="st">900</span><span class="hx">5C3917</span></button><button class="sw" data-hex="#3C2713" style="background:#3C2713;color:#FFFFFF"><span class="st">950</span><span class="hx">3C2713</span></button></div>
+</article><article class="row" data-fam="黄">
+  <header class="rh">
+    <span class="num">50</span>
+    <span class="fam">黄</span>
+    <h3>Color Palette 06</h3>
+    <span class="meta">H41 S97% · 实测 <code>#FCB415</code></span>
+    <a class="src" href="https://dribbble.com/shots/5847356-Color-Palette-06" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#FAF9F6" style="background:#FAF9F6;color:#111114"><span class="st">50</span><span class="hx">FAF9F6</span></button><button class="sw" data-hex="#F7F2E9" style="background:#F7F2E9;color:#111114"><span class="st">100</span><span class="hx">F7F2E9</span></button><button class="sw" data-hex="#F3E5C6" style="background:#F3E5C6;color:#111114"><span class="st">200</span><span class="hx">F3E5C6</span></button><button class="sw" data-hex="#F3D798" style="background:#F3D798;color:#111114"><span class="st">300</span><span class="hx">F3D798</span></button><button class="sw" data-hex="#F7C861" style="background:#F7C861;color:#111114"><span class="st">400</span><span class="hx">F7C861</span></button><button class="sw" data-brand data-hex="#FCBA29" style="background:#FCBA29;color:#111114"><span class="st">500</span><span class="hx">FCBA29</span></button><button class="sw" data-brand data-hex="#EFA603" style="background:#EFA603;color:#111114"><span class="st">600</span><span class="hx">EFA603</span></button><button class="sw" data-hex="#BC8408" style="background:#BC8408;color:#FFFFFF"><span class="st">700</span><span class="hx">BC8408</span></button><button class="sw" data-hex="#8D650C" style="background:#8D650C;color:#FFFFFF"><span class="st">800</span><span class="hx">8D650C</span></button><button class="sw" data-hex="#64490F" style="background:#64490F;color:#FFFFFF"><span class="st">900</span><span class="hx">64490F</span></button><button class="sw" data-hex="#41310E" style="background:#41310E;color:#FFFFFF"><span class="st">950</span><span class="hx">41310E</span></button></div>
+</article><article class="row" data-fam="黄">
+  <header class="rh">
+    <span class="num">51</span>
+    <span class="fam">黄</span>
+    <h3>B B SaaS</h3>
+    <span class="meta">H58 S36% · 实测 <code>#E8E7CE</code></span>
+    <a class="src" href="https://dribbble.com/shots/19382898-B2B-SaaS-Color-Palette" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#F9F9F7" style="background:#F9F9F7;color:#111114"><span class="st">50</span><span class="hx">F9F9F7</span></button><button class="sw" data-hex="#F2F2ED" style="background:#F2F2ED;color:#111114"><span class="st">100</span><span class="hx">F2F2ED</span></button><button class="sw" data-hex="#E5E4D4" style="background:#E5E4D4;color:#111114"><span class="st">200</span><span class="hx">E5E4D4</span></button><button class="sw" data-hex="#D7D5B5" style="background:#D7D5B5;color:#111114"><span class="st">300</span><span class="hx">D7D5B5</span></button><button class="sw" data-hex="#C8C690" style="background:#C8C690;color:#111114"><span class="st">400</span><span class="hx">C8C690</span></button><button class="sw" data-brand data-hex="#BAB76B" style="background:#BAB76B;color:#111114"><span class="st">500</span><span class="hx">BAB76B</span></button><button class="sw" data-brand data-hex="#A5A24D" style="background:#A5A24D;color:#FFFFFF"><span class="st">600</span><span class="hx">A5A24D</span></button><button class="sw" data-hex="#838141" style="background:#838141;color:#FFFFFF"><span class="st">700</span><span class="hx">838141</span></button><button class="sw" data-hex="#646235" style="background:#646235;color:#FFFFFF"><span class="st">800</span><span class="hx">646235</span></button><button class="sw" data-hex="#49482A" style="background:#49482A;color:#FFFFFF"><span class="st">900</span><span class="hx">49482A</span></button><button class="sw" data-hex="#31301E" style="background:#31301E;color:#FFFFFF"><span class="st">950</span><span class="hx">31301E</span></button></div>
+</article><article class="row" data-fam="洋红">
+  <header class="rh">
+    <span class="num">52</span>
+    <span class="fam">洋红</span>
+    <h3>Color Palette</h3>
+    <span class="meta">H323 S21% · 实测 <code>#A77995</code></span>
+    <a class="src" href="https://dribbble.com/shots/22222184-Color-Palette" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#F8F7F8" style="background:#F8F7F8;color:#111114"><span class="st">50</span><span class="hx">F8F7F8</span></button><button class="sw" data-hex="#F1EEF0" style="background:#F1EEF0;color:#111114"><span class="st">100</span><span class="hx">F1EEF0</span></button><button class="sw" data-hex="#E1D8DE" style="background:#E1D8DE;color:#111114"><span class="st">200</span><span class="hx">E1D8DE</span></button><button class="sw" data-hex="#CFBCC8" style="background:#CFBCC8;color:#111114"><span class="st">300</span><span class="hx">CFBCC8</span></button><button class="sw" data-hex="#BC9CB0" style="background:#BC9CB0;color:#FFFFFF"><span class="st">400</span><span class="hx">BC9CB0</span></button><button class="sw" data-brand data-hex="#A97C98" style="background:#A97C98;color:#FFFFFF"><span class="st">500</span><span class="hx">A97C98</span></button><button class="sw" data-brand data-hex="#92607F" style="background:#92607F;color:#FFFFFF"><span class="st">600</span><span class="hx">92607F</span></button><button class="sw" data-hex="#754F66" style="background:#754F66;color:#FFFFFF"><span class="st">700</span><span class="hx">754F66</span></button><button class="sw" data-hex="#5A3F4F" style="background:#5A3F4F;color:#FFFFFF"><span class="st">800</span><span class="hx">5A3F4F</span></button><button class="sw" data-hex="#42303B" style="background:#42303B;color:#FFFFFF"><span class="st">900</span><span class="hx">42303B</span></button><button class="sw" data-hex="#2D2229" style="background:#2D2229;color:#FFFFFF"><span class="st">950</span><span class="hx">2D2229</span></button></div>
+</article><article class="row" data-fam="红">
+  <header class="rh">
+    <span class="num">53</span>
+    <span class="fam">红</span>
+    <h3>Skincare Logo Mark Packaging</h3>
+    <span class="meta">H3 S87% · 实测 <code>#F4665F</code></span>
+    <a class="src" href="https://dribbble.com/shots/27747835-Skincare-Branding-Logo-Mark-Packaging-Color-Palette" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#FAF6F6" style="background:#FAF6F6;color:#111114"><span class="st">50</span><span class="hx">FAF6F6</span></button><button class="sw" data-hex="#F6EAEA" style="background:#F6EAEA;color:#111114"><span class="st">100</span><span class="hx">F6EAEA</span></button><button class="sw" data-hex="#F0CBC9" style="background:#F0CBC9;color:#111114"><span class="st">200</span><span class="hx">F0CBC9</span></button><button class="sw" data-hex="#EFA09D" style="background:#EFA09D;color:#111114"><span class="st">300</span><span class="hx">EFA09D</span></button><button class="sw" data-hex="#EF6F69" style="background:#EF6F69;color:#FFFFFF"><span class="st">400</span><span class="hx">EF6F69</span></button><button class="sw" data-brand data-hex="#F13D34" style="background:#F13D34;color:#FFFFFF"><span class="st">500</span><span class="hx">F13D34</span></button><button class="sw" data-brand data-hex="#E31910" style="background:#E31910;color:#FFFFFF"><span class="st">600</span><span class="hx">E31910</span></button><button class="sw" data-hex="#B31912" style="background:#B31912;color:#FFFFFF"><span class="st">700</span><span class="hx">B31912</span></button><button class="sw" data-hex="#861913" style="background:#861913;color:#FFFFFF"><span class="st">800</span><span class="hx">861913</span></button><button class="sw" data-hex="#5F1713" style="background:#5F1713;color:#FFFFFF"><span class="st">900</span><span class="hx">5F1713</span></button><button class="sw" data-hex="#3E1311" style="background:#3E1311;color:#FFFFFF"><span class="st">950</span><span class="hx">3E1311</span></button></div>
+</article><article class="row" data-fam="红">
+  <header class="rh">
+    <span class="num">54</span>
+    <span class="fam">红</span>
+    <h3>B B SaaS</h3>
+    <span class="meta">H10 S45% · 实测 <code>#CD8A7C</code></span>
+    <a class="src" href="https://dribbble.com/shots/19118644-B2B-SaaS-Color-Palette" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#F9F7F7" style="background:#F9F7F7;color:#111114"><span class="st">50</span><span class="hx">F9F7F7</span></button><button class="sw" data-hex="#F3EEED" style="background:#F3EEED;color:#111114"><span class="st">100</span><span class="hx">F3EEED</span></button><button class="sw" data-hex="#E7D6D2" style="background:#E7D6D2;color:#111114"><span class="st">200</span><span class="hx">E7D6D2</span></button><button class="sw" data-hex="#DBB8B1" style="background:#DBB8B1;color:#111114"><span class="st">300</span><span class="hx">DBB8B1</span></button><button class="sw" data-hex="#CF968A" style="background:#CF968A;color:#FFFFFF"><span class="st">400</span><span class="hx">CF968A</span></button><button class="sw" data-brand data-hex="#C37362" style="background:#C37362;color:#FFFFFF"><span class="st">500</span><span class="hx">C37362</span></button><button class="sw" data-brand data-hex="#AF5643" style="background:#AF5643;color:#FFFFFF"><span class="st">600</span><span class="hx">AF5643</span></button><button class="sw" data-hex="#8B4739" style="background:#8B4739;color:#FFFFFF"><span class="st">700</span><span class="hx">8B4739</span></button><button class="sw" data-hex="#6A392F" style="background:#6A392F;color:#FFFFFF"><span class="st">800</span><span class="hx">6A392F</span></button><button class="sw" data-hex="#4D2D26" style="background:#4D2D26;color:#FFFFFF"><span class="st">900</span><span class="hx">4D2D26</span></button><button class="sw" data-hex="#33201C" style="background:#33201C;color:#FFFFFF"><span class="st">950</span><span class="hx">33201C</span></button></div>
+</article><article class="row" data-fam="黄">
+  <header class="rh">
+    <span class="num">55</span>
+    <span class="fam">黄</span>
+    <h3>Odi Agency Masuga</h3>
+    <span class="meta">H61 S100% · 实测 <code>#CACE00</code></span>
+    <a class="src" href="https://dribbble.com/shots/24837521-Odi-Agency-Masuga-Color-Palette" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#FAFAF6" style="background:#FAFAF6;color:#111114"><span class="st">50</span><span class="hx">FAFAF6</span></button><button class="sw" data-hex="#F6F7E9" style="background:#F6F7E9;color:#111114"><span class="st">100</span><span class="hx">F6F7E9</span></button><button class="sw" data-hex="#F2F3C6" style="background:#F2F3C6;color:#111114"><span class="st">200</span><span class="hx">F2F3C6</span></button><button class="sw" data-hex="#F3F597" style="background:#F3F597;color:#111114"><span class="st">300</span><span class="hx">F3F597</span></button><button class="sw" data-hex="#F6F95F" style="background:#F6F95F;color:#111114"><span class="st">400</span><span class="hx">F6F95F</span></button><button class="sw" data-brand data-hex="#FBFF26" style="background:#FBFF26;color:#111114"><span class="st">500</span><span class="hx">FBFF26</span></button><button class="sw" data-brand data-hex="#EEF200" style="background:#EEF200;color:#111114"><span class="st">600</span><span class="hx">EEF200</span></button><button class="sw" data-hex="#BBBE06" style="background:#BBBE06;color:#111114"><span class="st">700</span><span class="hx">BBBE06</span></button><button class="sw" data-hex="#8C8E0B" style="background:#8C8E0B;color:#FFFFFF"><span class="st">800</span><span class="hx">8C8E0B</span></button><button class="sw" data-hex="#63650E" style="background:#63650E;color:#FFFFFF"><span class="st">900</span><span class="hx">63650E</span></button><button class="sw" data-hex="#41420D" style="background:#41420D;color:#FFFFFF"><span class="st">950</span><span class="hx">41420D</span></button></div>
+</article><article class="row" data-fam="青绿">
+  <header class="rh">
+    <span class="num">56</span>
+    <span class="fam">青绿</span>
+    <h3>AI</h3>
+    <span class="meta">H159 S88% · 实测 <code>#09895D</code></span>
+    <a class="src" href="https://dribbble.com/shots/25579787-AI-Color-Palette" target="_blank" rel="noopener">来源 ↗</a>
+  </header>
+  <div class="ramp"><button class="sw" data-hex="#F6FAF8" style="background:#F6FAF8;color:#111114"><span class="st">50</span><span class="hx">F6FAF8</span></button><button class="sw" data-hex="#EAF6F2" style="background:#EAF6F2;color:#111114"><span class="st">100</span><span class="hx">EAF6F2</span></button><button class="sw" data-hex="#C9F0E3" style="background:#C9F0E3;color:#111114"><span class="st">200</span><span class="hx">C9F0E3</span></button><button class="sw" data-hex="#9CEFD3" style="background:#9CEFD3;color:#111114"><span class="st">300</span><span class="hx">9CEFD3</span></button><button class="sw" data-hex="#69F0C1" style="background:#69F0C1;color:#111114"><span class="st">400</span><span class="hx">69F0C1</span></button><button class="sw" data-brand data-hex="#34F2B0" style="background:#34F2B0;color:#111114"><span class="st">500</span><span class="hx">34F2B0</span></button><button class="sw" data-brand data-hex="#0FE39A" style="background:#0FE39A;color:#111114"><span class="st">600</span><span class="hx">0FE39A</span></button><button class="sw" data-hex="#11B37B" style="background:#11B37B;color:#FFFFFF"><span class="st">700</span><span class="hx">11B37B</span></button><button class="sw" data-hex="#13865F" style="background:#13865F;color:#FFFFFF"><span class="st">800</span><span class="hx">13865F</span></button><button class="sw" data-hex="#136045" style="background:#136045;color:#FFFFFF"><span class="st">900</span><span class="hx">136045</span></button><button class="sw" data-hex="#113E2F" style="background:#113E2F;color:#FFFFFF"><span class="st">950</span><span class="hx">113E2F</span></button></div>
+</article>
+</div>
+<div class="copied" id="tip">已复制</div>
+<script>
+const rows=document.querySelectorAll('.row'),chips=document.querySelectorAll('.chip'),tip=document.getElementById('tip');
+chips.forEach(c=>c.addEventListener('click',()=>{
+  chips.forEach(x=>x.classList.remove('on'));c.classList.add('on');
+  const f=c.dataset.f;
+  rows.forEach(r=>r.classList.toggle('hide',f!=='all'&&r.dataset.fam!==f));
+}));
+let t;
+document.querySelectorAll('.sw').forEach(s=>s.addEventListener('click',()=>{
+  const h='#'+s.querySelector('.hx').textContent;
+  navigator.clipboard&&navigator.clipboard.writeText(h);
+  tip.textContent='已复制 '+h; tip.classList.add('on');
+  clearTimeout(t); t=setTimeout(()=>tip.classList.remove('on'),1200);
+}));
+</script>
+</body>
+</html>

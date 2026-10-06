@@ -4,7 +4,7 @@
 
 F: 让 AI 先确认风格、再直出可运行的界面设计
 R:
-A: `baseline.md`（总纲）；`style-color/` `style-motion/` `style-looklike/`（三项跨风格规范）；`prompt.md`（流程）；`tokens.md`（通用基础组 + 索引）；`styles/`（18 款）
+A: `baseline.md`（总纲）；`style-color/`（颜色规范 + `palettes.html` 56 组色阶）；`style-motion/` `style-looklike/`（动效 / 组件形态）；`prompt.md`（流程）；`tokens.md`（通用基础组 + 索引）；`styles/`（18 款）
 S: 风格未确认前不得开始设计；风格是可复用规范组，可跨款组合，但圆角与阴影必须同档；交付物是可运行 HTML/CSS 而非设计稿；图标必须内联 SVG
 
 ---
@@ -23,7 +23,7 @@ UI 设计判断力 → 提示词 + 18 款可复用风格组 + 13 组实测色卡
 
 常驻注入 `baseline` → `style-color` → `style-motion` → `style-looklike` → `prompt` → `tokens`，再给设计需求。
 
-命中后按需读，**不要全量注入**：风格 → `styles/<name>.md`；配色 → `style-color/palettes/<编号>.md`。
+命中后按需读，**不要全量注入**：风格 → `styles/<name>.md`；配色 → `style-color/palettes.html`。
 
 ## 最不能违反什么
 

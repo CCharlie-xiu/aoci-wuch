@@ -14,7 +14,7 @@
 ```text
 baseline.md              总纲 + 字体 —— 优先
     ↓
-style-color/             颜色：四角色、渐变边界、13 组实测色卡
+style-color/             颜色：四角色、渐变边界、56 组标准色阶（palettes.html）
 style-motion/            动效：时长、缓动、出入场、交互反馈
 style-looklike/          组件形态：圆角、容器、图标、组件清单
     ↓
