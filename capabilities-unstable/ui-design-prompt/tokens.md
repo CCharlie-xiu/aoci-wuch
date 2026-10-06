@@ -223,22 +223,29 @@
 
 ### 8 · 自然生态 Eco
 
-奶油白底 + 深林绿 + 满幅自然摄影，浅绿胶囊按钮，方角卡片
+奶油白底 + 橄榄绿 + 满幅自然摄影，浅绿胶囊按钮，方角卡片
+
+- 来源 `Dribbble · Earth Day Brand Recognition（Sustainable Web Design）`
+- 实测 底 `#EEEDE9` · 暗 `#191B1A` · 中间调 `#555D4F` / `#34382E` · 最高饱和 `#474D26`（S.50 / 10%）
+- 推导 主色、面、线、语义色、圆角、字体、阴影 —— 按本文件第三节规则推导，非实测
+- 版式 满幅摄影 Hero（大标题叠压）→ 方角三栏卡 → 深色 CTA 段
+- 字体 无衬线正文 + 衬线斜体强调词（`Songti SC` 系）
+- 圆角 R=`4`（形态锚点判断，非实测），按第三节展开
 
 ```css
 :root{
-  --bg:#F7F6F1; --surface:#FFFFFF; --surface-2:#EFEDE4;
-  --line:#DCD8C9; --line-hover:#C9C3AE;
-  --ink:#1C2118; --ink-soft:#4A5344; --muted:#7C8574; --faint:#A8B0A0;
-  --brand:#C9E06B; --brand-hover:#D6E98A; --brand-ink:#16210F; --deep:#2E5233; --ring:rgba(46,82,51,.16);
-  --success:#2E5233; --danger:#B4442F; --warning:#C08A2E;
+  --bg:#EEEDE9; --surface:#F8F7F3; --surface-2:#E1E0D9;
+  --line:#D2D0C5; --line-hover:#B9B7A8;
+  --ink:#191B1A; --ink-soft:#34382E; --muted:#555D4F; --faint:#8A8F7C;
+  --brand:#C6DE7A; --brand-hover:#D4E894; --brand-ink:#191B1A; --deep:#1F231E; --ring:rgba(31,35,30,.16);
+  --success:#474D26; --danger:#9C4A38; --warning:#B08A3A;
 
-  --font:-apple-system,"SF Pro Text",Inter,"PingFang SC","Microsoft YaHei",sans-serif; --font-display:"Playfair Display","Songti SC",Georgia,serif;
+  --font:-apple-system,"SF Pro Text","PingFang SC","Microsoft YaHei",sans-serif; --font-display:"Songti SC",Georgia,"Times New Roman",serif;
   --fs-1:11px; --fs-2:12.5px; --fs-3:14px; --fs-4:16px; --fs-5:22px; --fs-6:34px; --fs-7:56px;
   --fw-regular:400; --fw-medium:500; --fw-semibold:600;
   --lh-body:1.65; --lh-title:1.12; --ls-title:-0.02em;
 
-  --r-xs:2px; --r-sm:3px; --r-md:4px; --r-lg:6px; --r-xl:8px; --r-full:999px;
+  --r-xs:2px; --r-sm:3px; --r-md:4px; --r-lg:6px; --r-xl:7px; --r-full:999px;
 
   --shadow-card:none; --shadow-brand:none;
 }
@@ -248,20 +255,27 @@
 
 米白 + 暖褐摄影，衬线大标题，圆形细线图标，全靠 1px 细线分区
 
+- 来源 `Dribbble · Healance Mental Health Platform Web Design`
+- 实测 底 `#FBF9F5`（46%）· 暗 `#221E1A`（20%）· 中间调 `#71695C` / `#4E4235` · 分隔线 `#CFCFCE`
+- 推导 主色、圆角、阴影、字号阶梯 —— 按第三节推导，非实测
+- 版式 左文右图 Hero → 圆形细线图标 2×2 服务网格 → 引述块，全程细线分区
+- 字体 衬线大标题（`Songti SC` 系）+ 无衬线正文
+- 圆角 R=`16`（形态锚点判断，非实测），按第三节展开
+
 ```css
 :root{
-  --bg:#FAF9F6; --surface:#FFFFFF; --surface-2:#F3F1EC;
-  --line:#E6E2D9; --line-hover:#D5CFC0;
-  --ink:#1F1E1B; --ink-soft:#55524A; --muted:#8A8579; --faint:#B5AFA2;
-  --brand:#2B2A26; --brand-hover:#3D3B35; --ring:rgba(43,42,38,.10); --accent:#E8E2D6;
-  --success:#3F6B4A; --danger:#A8443A; --warning:#A8761F;
+  --bg:#FBF9F5; --surface:#FFFFFF; --surface-2:#F2F0EA;
+  --line:#CFCFCE; --line-hover:#B4B0A6;
+  --ink:#221E1A; --ink-soft:#4E4235; --muted:#71695C; --faint:#A78B6A;
+  --brand:#221E1A; --brand-hover:#3A342C; --ring:rgba(34,30,26,.12); --accent:#E3DFD9;
+  --success:#4E5A45; --danger:#8E4436; --warning:#9A7530;
 
-  --font:-apple-system,"SF Pro Text",Inter,"PingFang SC","Microsoft YaHei",sans-serif; --font-display:"Playfair Display","Songti SC",Georgia,serif;
+  --font:-apple-system,"SF Pro Text","PingFang SC","Microsoft YaHei",sans-serif; --font-display:"Songti SC",Georgia,"Times New Roman",serif;
   --fs-1:11px; --fs-2:12.5px; --fs-3:14px; --fs-4:15px; --fs-5:20px; --fs-6:30px; --fs-7:44px;
   --fw-regular:400; --fw-medium:500; --fw-semibold:600;
   --lh-body:1.7; --lh-title:1.18; --ls-title:-0.015em;
 
-  --r-xs:10px; --r-sm:12px; --r-md:16px; --r-lg:20px; --r-xl:24px; --r-full:999px;
+  --r-xs:8px; --r-sm:11px; --r-md:16px; --r-lg:22px; --r-xl:29px; --r-full:999px;
 
   --shadow-card:none; --shadow-brand:none;
 }
@@ -269,40 +283,54 @@
 
 ### 10 · 图谱暗绿 Graph
 
-墨绿近黑底 + 紫色发光节点 + 玻璃面板 + 发丝连线，数据密集
+墨绿近黑底 + 发光节点 + 玻璃面板 + 发丝连线，数据密集
+
+- 来源 `Dribbble · AI Dashboard Design for Control AI Policy Platform`
+- 实测 底 `#111B1E` / `#0C1417` · 面板 `#19292B` · 高亮面 `#273D3E` · 最暗 `#010101`（面积 12%）
+- 推导 **发光色、语义色、字号、圆角、阴影为推导** —— 参考图中发光节点面积过小，未进入调色板
+- 版式 左侧节点画布（中心节点 + 辐射连线）→ 右侧堆叠信息卡 → 底部输入条
+- 字体 无衬线 + 等宽数字（`SF Mono` 系）
+- 圆角 R=`12`（形态锚点判断，非实测），按第三节展开
 
 ```css
 :root{
-  --bg:#06100E; --surface:rgba(255,255,255,.035); --surface-2:rgba(255,255,255,.06);
-  --line:rgba(255,255,255,.08); --line-hover:rgba(255,255,255,.20);
-  --ink:#E9F2EF; --ink-soft:#A9BDB7; --muted:#7A8E88; --faint:#4E5F5A;
-  --brand:#A855F7; --brand-2:#2DD4BF; --ring:rgba(168,85,247,.20); --glow:rgba(168,85,247,.35);
+  --bg:#0C1417; --surface:#19292B; --surface-2:#203234;
+  --line:rgba(255,255,255,.08); --line-hover:rgba(255,255,255,.22);
+  --ink:#E6EFEC; --ink-soft:#9FB3AE; --muted:#6E8380; --faint:#48595A;
+  --brand:#8B6BF0; --brand-2:#2DD4BF; --ring:rgba(139,107,240,.20); --glow:rgba(139,107,240,.35);
   --success:#34D399; --danger:#F87171; --warning:#FBBF24;
 
-  --font:-apple-system,"SF Pro Text",Inter,"PingFang SC","Microsoft YaHei",sans-serif; --font-mono:"SF Mono","IBM Plex Mono",ui-monospace,monospace;
+  --font:-apple-system,"SF Pro Text","PingFang SC","Microsoft YaHei",sans-serif; --font-mono:ui-monospace,"SF Mono",Menlo,monospace;
   --fs-1:10.5px; --fs-2:12px; --fs-3:13px; --fs-4:14px; --fs-5:18px; --fs-6:22px; --fs-7:30px;
   --fw-regular:400; --fw-medium:500; --fw-semibold:600;
   --lh-body:1.6; --lh-title:1.2; --ls-label:.08em;
 
-  --r-xs:8px; --r-sm:10px; --r-md:12px; --r-lg:16px; --r-xl:20px; --r-full:999px;
+  --r-xs:6px; --r-sm:8px; --r-md:12px; --r-lg:17px; --r-xl:22px; --r-full:999px;
 
-  --shadow-card:inset 0 1px 0 rgba(255,255,255,.06), 0 24px 60px rgba(0,0,0,.6); --shadow-brand:0 0 24px rgba(168,85,247,.45); --blur-glass:blur(20px);
+  --shadow-card:inset 0 1px 0 rgba(255,255,255,.06), 0 24px 60px rgba(0,0,0,.6); --shadow-brand:0 0 24px rgba(139,107,240,.45); --blur-glass:blur(20px);
 }
 ```
 
 ### 11 · 网格渐变 Mesh
 
-白底 + 大面积极柔网格渐变光斑，零边框零阴影，按钮反而用纯色
+白底 + 大面积极柔网格光斑，零边框零阴影，按钮反而用纯色
+
+- 来源 `Dribbble · Appinio Gradients`
+- 实测 底 `#FBFBFB`（31%）· 蓝 `#344CC8`（S.74）· 橙 `#F16748` · 淡紫 `#DFE4F9` / `#C9D1F9`
+- 推导 圆角、字号、语义色 —— 按第三节推导；光斑位置为示意，非实测坐标
+- 版式 居中大标题 + 极柔网格光斑背景 → 纯色主按钮 → 三栏小字
+- 字体 无衬线，字距收紧（`-0.025em`）
+- 圆角 R=`20`（形态锚点判断，非实测），按第三节展开
 
 ```css
 :root{
-  --bg:#FFFFFF; --surface:#FFFFFF; --surface-2:#F7F7FA;
+  --bg:#FBFBFB; --surface:#FFFFFF; --surface-2:#F4F4F7;
   --line:rgba(17,17,20,.06); --line-hover:rgba(17,17,20,.14);
   --ink:#17171A; --ink-soft:#5A5A62; --muted:#93939C; --faint:#C2C2CA;
-  --brand:#3B4CE0; --brand-2:#FF5C39; --ring:rgba(59,76,224,.16);
+  --brand:#344CC8; --brand-2:#F16748; --ring:rgba(52,76,200,.16);
   --success:#16A34A; --danger:#DC2626; --warning:#D97706;
 
-  --font:-apple-system,"SF Pro Text",Inter,"PingFang SC","Microsoft YaHei",sans-serif;
+  --font:-apple-system,"SF Pro Text","PingFang SC","Microsoft YaHei",sans-serif;
   --fs-1:11px; --fs-2:12.5px; --fs-3:14px; --fs-4:16px; --fs-5:20px; --fs-6:28px; --fs-7:40px;
   --fw-regular:400; --fw-medium:500; --fw-semibold:600;
   --lh-body:1.65; --lh-title:1.18; --ls-title:-0.025em;
@@ -310,31 +338,38 @@
   --r-xs:10px; --r-sm:14px; --r-md:20px; --r-lg:28px; --r-xl:36px; --r-full:999px;
 
   --shadow-card:none; --shadow-brand:none;
-  --mesh-a:#FF5C39; --mesh-b:#3B4CE0; --mesh-c:#FFFFFF;
+  --mesh-a:#F16748; --mesh-b:#344CC8; --mesh-c:#DFE4F9;
 }
 ```
 
 ### 12 · 彩色拟态 Chroma
 
-浅蓝灰底 + 双向阴影凸起，彩色渐变数据条是识别度
+浅青蓝底 + 双向阴影凸起，彩色渐变数据条是识别度
+
+- 来源 `Dribbble · Fitness neumorphism`
+- 实测 底 `#E3F0F9`（26%）/ `#D4E6F2`（20%）· 阴影侧 `#BFD6E8` · 深色点缀 `#7578B2`（2%）
+- 推导 渐变数据条色、语义色、圆角、字号 —— 按第三节推导；参考图以浅青蓝为主，**无大面积紫**
+- 版式 双设备卡并置 → 环形进度 + 四色渐变数据柱 + 底部图标栏
+- 字体 无衬线，标签宽字距（`.10em`）
+- 圆角 R=`20`（形态锚点判断，非实测），按第三节展开
 
 ```css
 :root{
-  --bg:#E2E8F4; --surface:#E6EBF6; --surface-2:#EDF1F9; --sh-light:#FFFFFF; --sh-dark:#C3CCE0;
-  --line:rgba(90,100,128,.10);
-  --ink:#4E5878; --ink-soft:#6E7899; --muted:#8E98B5; --faint:#AAB4CC;
-  --brand:#7B5CF0; --brand-2:#4CC3F0; --brand-3:#FF6B9D; --ring:rgba(123,92,240,.35);
-  --success:#4FA97A; --danger:#E5697A; --warning:#FFB547;
+  --bg:#E3F0F9; --surface:#E7F2FA; --surface-2:#EDF5FB; --sh-light:#FFFFFF; --sh-dark:#BFD6E8;
+  --line:rgba(63,90,120,.10);
+  --ink:#4A5A72; --ink-soft:#6B7D96; --muted:#8B9DB5; --faint:#AEC0D4;
+  --brand:#5A6FD8; --brand-2:#3FBEE0; --brand-3:#E8709E; --ring:rgba(90,111,216,.32);
+  --success:#4FA97A; --danger:#E5697A; --warning:#E8A64F;
 
-  --font:-apple-system,"SF Pro Text",Inter,"PingFang SC","Microsoft YaHei",sans-serif;
+  --font:-apple-system,"SF Pro Text","PingFang SC","Microsoft YaHei",sans-serif;
   --fs-1:11px; --fs-2:12.5px; --fs-3:13.5px; --fs-4:15px; --fs-5:20px; --fs-6:24px; --fs-7:30px;
   --fw-regular:400; --fw-medium:500; --fw-semibold:600;
   --lh-body:1.6; --lh-title:1.25; --ls-label:.10em;
 
-  --r-xs:12px; --r-sm:16px; --r-md:20px; --r-lg:26px; --r-xl:32px; --r-full:999px;
+  --r-xs:10px; --r-sm:14px; --r-md:20px; --r-lg:28px; --r-xl:36px; --r-full:999px;
 
-  --shadow-raised:-8px -8px 20px var(--sh-light), 10px 10px 24px var(--sh-dark); --shadow-inset:inset 3px 3px 7px var(--sh-dark), inset -3px -3px 7px var(--sh-light); --shadow-card:-8px -8px 20px var(--sh-light), 10px 10px 24px var(--sh-dark); --shadow-brand:6px 6px 14px var(--sh-dark), -5px -5px 12px var(--sh-light);
-  --grad-data:linear-gradient(180deg,#4CC3F0,#7B5CF0 55%,#FF6B9D);
+  --shadow-card:-8px -8px 20px var(--sh-light), 10px 10px 24px var(--sh-dark); --shadow-inset:inset 3px 3px 7px var(--sh-dark), inset -3px -3px 7px var(--sh-light); --shadow-brand:6px 6px 14px var(--sh-dark), -5px -5px 12px var(--sh-light);
+  --grad-data:linear-gradient(180deg,#3FBEE0,#5A6FD8 55%,#E8709E);
 }
 ```
 
@@ -342,43 +377,57 @@
 
 超大背景字 + 单一高饱和圆形色块 + 产品图叠压，导航极简
 
+- 来源 `Dribbble · Adidas Neumorphism Landing Page`
+- 实测 底 `#EDECF0`（32%）/ `#EAEBEF`（16%）· 主色 `#E45641`（S.71 / 9%）· 浅色同系 `#FA916B`（8%）
+- 推导 字级（含超大号）、圆角、阴影 —— 按第三节推导；**背景字字号为示意**，参考图字高约占画布 45%
+- 版式 极简导航 → 超大背景字 + 单一高饱和圆 + 产品图叠压 → 圆形翻页钮 + 缩略图角标
+- 字体 无衬线超粗标题，行高压到 `0.94`
+- 圆角 R=`14`（形态锚点判断，非实测），按第三节展开
+
 ```css
 :root{
-  --bg:#FFFFFF; --surface:#FFFFFF; --surface-2:#F4F4F5;
+  --bg:#EDECF0; --surface:#F4F4F7; --surface-2:#E5E6EC;
   --line:rgba(17,17,20,.08); --line-hover:rgba(17,17,20,.16);
   --ink:#111114; --ink-soft:#4A4A52; --muted:#8C8C94; --faint:#B8B8C0;
-  --brand:#E8502A; --brand-hover:#F0623C; --ring:rgba(232,80,42,.18); --ghost:#F0A184;
+  --brand:#E45641; --brand-hover:#EF6C58; --ring:rgba(228,86,65,.18); --ghost:#E8AB97;
   --success:#16A34A; --danger:#DC2626; --warning:#D97706;
 
-  --font:-apple-system,"SF Pro Text",Inter,"PingFang SC","Microsoft YaHei",sans-serif; --font-display:"Archivo Black","Arial Black","PingFang SC",sans-serif;
+  --font:-apple-system,"SF Pro Text","PingFang SC","Microsoft YaHei",sans-serif; --font-display:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
   --fs-1:11px; --fs-2:12.5px; --fs-3:14px; --fs-4:16px; --fs-5:20px; --fs-6:40px; --fs-7:96px;
   --fw-regular:400; --fw-medium:500; --fw-semibold:600;
   --lh-body:1.6; --lh-title:0.94; --ls-title:-0.04em;
 
-  --r-xs:8px; --r-sm:10px; --r-md:14px; --r-lg:20px; --r-xl:24px; --r-full:999px;
+  --r-xs:7px; --r-sm:10px; --r-md:14px; --r-lg:20px; --r-xl:25px; --r-full:999px;
 
-  --shadow-card:0 24px 60px -24px rgba(17,17,20,.28); --shadow-brand:0 12px 28px -8px rgba(232,80,42,.40);
+  --shadow-card:0 24px 60px -24px rgba(17,17,20,.28); --shadow-brand:0 12px 28px -8px rgba(228,86,65,.40);
 }
 ```
 
 ### 14 · 野兽派 Brutalist
 
-高饱和亮黄 + 近黑块 + 零圆角零阴影，粗黑字与手绘装饰
+高饱和纯黄 + 近黑块 + 零圆角零阴影，粗黑字与手绘装饰
+
+- 来源 `Dribbble · Kool Boys Ski & Snowboard Event Website`
+- 实测 黄 `#FEE300`（S=1.00 / 16%）· 纯黑 `#000000`（19%）· 照片冷调 `#355E70` / `#899DAB`
+- 推导 语义色、字号、字体族 —— 按第三节推导；**黄为实测，我原先写的 `#F2DF1B` 偏金，已修正**
+- 版式 亮黄头版（导航 + 满幅照片 + 左粗标题右小字）→ 近黑正文段（居中大字 + 方块按钮）
+- 字体 超粗无衬线标题（字重 `800`）+ 常规正文
+- 圆角 R=`2`（形态锚点判断，非实测），按第三节展开
 
 ```css
 :root{
-  --bg:#F2DF1B; --surface:#F2DF1B; --surface-2:#E6D41A;
-  --line:#0E0E0E; --line-hover:#2A2A20;
-  --ink:#0E0E0E; --ink-soft:#2A2A20; --muted:#6B6B55; --faint:#A8A88E; --ink-inv:#F5F5F0;
-  --block:#0E0E0E; --brand:#0E0E0E; --brand-hover:#2A2A20; --ring:rgba(14,14,14,.20); --accent:#FF3B8D;
-  --success:#0E0E0E; --danger:#E23B2E; --warning:#B07A10;
+  --bg:#FEE300; --surface:#FEE300; --surface-2:#F0D500;
+  --line:#0A0A0A; --line-hover:#2A2A20;
+  --ink:#0A0A0A; --ink-soft:#2A2A20; --muted:#6B6B3F; --faint:#A8A86E; --ink-inv:#F5F5F0;
+  --block:#0A0A0A; --brand:#0A0A0A; --brand-hover:#2A2A20; --ring:rgba(10,10,10,.20); --accent:#FF3B8D;
+  --success:#0A0A0A; --danger:#D8332A; --warning:#B07A10;
 
-  --font:-apple-system,"SF Pro Text",Inter,"PingFang SC","Microsoft YaHei",sans-serif; --font-display:"Archivo Black","Arial Black","Songti SC",sans-serif;
+  --font:-apple-system,"SF Pro Text","PingFang SC","Microsoft YaHei",sans-serif; --font-display:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
   --fs-1:11px; --fs-2:12.5px; --fs-3:14px; --fs-4:16px; --fs-5:20px; --fs-6:34px; --fs-7:52px;
   --fw-regular:400; --fw-medium:600; --fw-semibold:800;
   --lh-body:1.55; --lh-title:0.98; --ls-title:-0.03em;
 
-  --r-xs:0px; --r-sm:0px; --r-md:0px; --r-lg:0px; --r-xl:0px; --r-full:0px;
+  --r-xs:1px; --r-sm:1px; --r-md:2px; --r-lg:3px; --r-xl:4px; --r-full:999px;
 
   --shadow-card:none; --shadow-brand:none;
 }
@@ -386,48 +435,62 @@
 
 ### 15 · 噪点暗红 Noise
 
-近黑底 + 荧光粉 + 位图噪点 + 印刷错位，等宽字为主
+近黑底 + 玫粉 + 位图噪点 + 印刷错位，等宽字为主
+
+- 来源 `Dribbble · Monolith Dark Bold Brutalist Music Record Label`
+- 实测 底 `#080808`（33%）· 玫粉 `#E94E79`（S.66 / 20%）· 亮粉 `#EA80A6` · 暗红 `#742F42`
+- 推导 噪点纹理、错位量、圆角、字号 —— 按第三节推导；**粉为实测，我原先写的 `#FF2D78` 过饱和，已修正**
+- 版式 左大标题块（错位叠印）→ 右侧编号卡网格 → 等宽编号标签贯穿
+- 字体 等宽字为主（`SF Mono` 系），标题用方角位图气质
+- 圆角 R=`2`（形态锚点判断，非实测），按第三节展开
 
 ```css
 :root{
-  --bg:#0B0B0B; --surface:#141414; --surface-2:#1C1C1C;
-  --line:rgba(255,255,255,.10); --line-hover:rgba(255,45,120,.55);
+  --bg:#080808; --surface:#141414; --surface-2:#1C1C1C;
+  --line:rgba(255,255,255,.10); --line-hover:rgba(233,78,121,.55);
   --ink:#F2F2F2; --ink-soft:#A8A8A8; --muted:#7A7A7A; --faint:#4A4A4A;
-  --brand:#FF2D78; --brand-2:#FF5C9E; --ring:rgba(255,45,120,.30);
-  --success:#3FBF7F; --danger:#FF4D4D; --warning:#FFC24D;
+  --brand:#E94E79; --brand-2:#EA80A6; --ring:rgba(233,78,121,.30);
+  --success:#3FBF7F; --danger:#E94E79; --warning:#D9A94D;
 
-  --font:-apple-system,"SF Pro Text",Inter,"PingFang SC","Microsoft YaHei",sans-serif; --font-mono:"SF Mono","IBM Plex Mono",ui-monospace,monospace;
+  --font:-apple-system,"SF Pro Text","PingFang SC","Microsoft YaHei",sans-serif; --font-mono:ui-monospace,"SF Mono",Menlo,monospace;
   --fs-1:10.5px; --fs-2:12px; --fs-3:13px; --fs-4:14px; --fs-5:18px; --fs-6:26px; --fs-7:38px;
   --fw-regular:400; --fw-medium:500; --fw-semibold:700;
   --lh-body:1.6; --lh-title:1.05; --ls-label:.12em;
 
-  --r-xs:2px; --r-sm:2px; --r-md:3px; --r-lg:4px; --r-xl:6px; --r-full:2px;
+  --r-xs:1px; --r-sm:1px; --r-md:2px; --r-lg:3px; --r-xl:4px; --r-full:999px;
 
-  --shadow-card:0 0 0 1px rgba(255,255,255,.08); --shadow-brand:0 0 28px rgba(255,45,120,.45);
+  --shadow-card:0 0 0 1px rgba(255,255,255,.08); --shadow-brand:0 0 28px rgba(233,78,121,.45);
 }
 ```
 
 ### 16 · 液态铬 Chrome
 
-纯黑底 + 铬合金渐变面 + 镜面高光 + 大圆角
+近黑底 + 铬合金渐变面 + 镜面高光 + 大圆角
+
+- 来源 `Dribbble · 3D Illustration System`
+- 实测 底 `#090A0D`（61%）· 铬面 `#DFE2EA` / `#A5AEC2` / `#434C6C` · 高光 `#2D3043`
+- 推导 主色、圆角、字号 —— 按第三节推导；**参考图无蓝色主色**，我原先写的 `#6E8BFF` 无依据，已改为按实测铬面中调取蓝灰
+- 版式 顶部横排 5 张铬面图标卡 → 下方大铬面圆环 + 右侧说明文字
+- 字体 无衬线 + 等宽数字
+- 圆角 R=`20`（形态锚点判断，非实测），按第三节展开
 
 ```css
 :root{
-  --bg:#08080A; --surface:#121215; --surface-2:#1A1A1E;
+  --bg:#090A0D; --surface:#111219; --surface-2:#1D1C28;
   --line:rgba(255,255,255,.10); --line-hover:rgba(255,255,255,.24);
-  --ink:#F0F0F4; --ink-soft:#A8A8B4; --muted:#75757F; --faint:#4A4A52;
-  --brand:#6E8BFF; --brand-hover:#8AA2FF; --brand-ink:#0B0B14; --brand-2:#E0C9A6; --ring:rgba(110,139,255,.26);
-  --success:#34D399; --danger:#F87171; --warning:#FBBF24;
+  --ink:#E8EAF0; --ink-soft:#A5AEC2; --muted:#75798A; --faint:#4A4D5C;
+  --brand:#434C6C; --brand-hover:#54608A; --brand-ink:#E8EAF0; --ring:rgba(67,76,108,.40);
+  --success:#4FA97A; --danger:#D96A6A; --warning:#D9B24D;
 
-  --font:-apple-system,"SF Pro Text",Inter,"PingFang SC","Microsoft YaHei",sans-serif; --font-mono:"SF Mono",ui-monospace,monospace;
+  --font:-apple-system,"SF Pro Text","PingFang SC","Microsoft YaHei",sans-serif; --font-mono:ui-monospace,"SF Mono",Menlo,monospace;
   --fs-1:11px; --fs-2:12.5px; --fs-3:14px; --fs-4:15px; --fs-5:20px; --fs-6:26px; --fs-7:36px;
   --fw-regular:400; --fw-medium:500; --fw-semibold:600;
   --lh-body:1.6; --lh-title:1.15; --ls-title:-0.02em;
 
-  --r-xs:10px; --r-sm:14px; --r-md:18px; --r-lg:24px; --r-xl:32px; --r-full:999px;
+  --r-xs:10px; --r-sm:14px; --r-md:20px; --r-lg:28px; --r-xl:36px; --r-full:999px;
 
-  --shadow-card:inset 0 1px 0 rgba(255,255,255,.10), 0 30px 70px rgba(0,0,0,.7); --shadow-brand:0 0 40px rgba(110,139,255,.28);
-  --chrome:linear-gradient(135deg,#FFFFFF 0%,#B8C4E0 18%,#4A5A8A 38%,#E8D9C0 55%,#8A9BC8 72%,#2A3050 88%,#F0F4FF 100%);
+  --shadow-card:inset 0 1px 0 rgba(255,255,255,.10), 0 30px 70px rgba(0,0,0,.7); --shadow-brand:0 0 32px rgba(67,76,108,.55);
+  --chrome:linear-gradient(135deg,#F2F4F8 0%,#B6BFD2 16%,#3A4356 36%,#DDE2EC 52%,#7D879C 68%,#22262F 84%,#EDF0F6 100%);
 }
 ```
 
@@ -435,20 +498,27 @@
 
 哑光中饱和色块 + 等宽编号与条码装饰 + 细分割线，机械制图感
 
+- 来源 `Dribbble · Retro cyberpunk design (CBRPNK)`
+- 实测 黑 `#000000`（35%）· 灰绿 `#7D8F7C`（20%）· 橘 `#DFA15E`（19%）· 砖红 `#A44C44`（10%）
+- 推导 圆角、字号、主色（作按钮用）—— 按第三节推导；**色块取实测，我原先写的红/绿偏饱和，已修正**
+- 版式 左侧哑光红大卡（等宽编号 + 大标题 + 条码）→ 右侧橘 / 绿 / 灰三张色卡
+- 字体 等宽编号 + 几何无衬线混排
+- 圆角 R=`14`（形态锚点判断，非实测），按第三节展开
+
 ```css
 :root{
-  --bg:#101010; --surface:#C4554A; --surface-2:#E0A15E; --surface-3:#7FA37F; --surface-4:#B5B5B5;
-  --line:rgba(16,16,16,.35); --line-hover:rgba(16,16,16,.6);
+  --bg:#0D0D0D; --surface:#A44C44; --surface-2:#DFA15E; --surface-3:#7D8F7C; --surface-4:#9F978D;
+  --line:rgba(13,13,13,.35); --line-hover:rgba(13,13,13,.6);
   --ink:#141414; --ink-soft:#3A322C; --muted:#6B6058; --faint:#8E8378; --ink-inv:#F0EDE8;
-  --brand:#141414; --brand-hover:#2E2A26; --ring:rgba(196,85,74,.30); --accent:#7FA37F;
-  --success:#7FA37F; --danger:#C4554A; --warning:#E0A15E;
+  --brand:#141414; --brand-hover:#2E2A26; --ring:rgba(164,76,68,.30);
+  --success:#7D8F7C; --danger:#A44C44; --warning:#DFA15E;
 
-  --font:-apple-system,"SF Pro Text",Inter,"PingFang SC","Microsoft YaHei",sans-serif; --font-mono:"SF Mono","IBM Plex Mono",ui-monospace,monospace;
+  --font:-apple-system,"SF Pro Text","PingFang SC","Microsoft YaHei",sans-serif; --font-mono:ui-monospace,"SF Mono",Menlo,monospace;
   --fs-1:10px; --fs-2:11.5px; --fs-3:13px; --fs-4:14px; --fs-5:18px; --fs-6:26px; --fs-7:40px;
   --fw-regular:400; --fw-medium:500; --fw-semibold:700;
   --lh-body:1.55; --lh-title:1.06; --ls-label:.14em;
 
-  --r-xs:8px; --r-sm:12px; --r-md:16px; --r-lg:20px; --r-xl:24px; --r-full:999px;
+  --r-xs:7px; --r-sm:10px; --r-md:14px; --r-lg:20px; --r-xl:25px; --r-full:999px;
 
   --shadow-card:none; --shadow-brand:none;
 }
@@ -456,22 +526,29 @@
 
 ### 18 · 奢华暗调 Luxury
 
-深褐暗底 + 象牙白 + 细衬线大标题 + 金色发丝线，方角
+深褐暗底 + 象牙白 + 细衬线大标题 + 发丝线，方角
+
+- 来源 `Dribbble · LORÉN Luxury Perfume & Body Care E-Commerce`
+- 实测 深褐 `#301C13`（36%）· 象牙 `#F1ECE9`（15%）/ `#E9E2D5` · 中褐 `#4D3123` · 浅褐 `#D7CBB9`
+- 推导 圆角、字号、阴影 —— 按第三节推导；**参考图无金色**，我原先写的 `#C9A227` 无依据，已改为按实测中褐取强调色
+- 版式 深褐满幅 Hero（细衬线大标题 + 发丝线按钮）→ 象牙白正文分栏 + 三栏小图
+- 字体 细衬线大标题（`Songti SC` 系）+ 大字距小标签（`.18em`）
+- 圆角 R=`2`（形态锚点判断，非实测），按第三节展开
 
 ```css
 :root{
-  --bg:#2A1E19; --surface:#38291F; --surface-2:#4A3728; --ivory:#F5F2EB;
-  --line:rgba(245,242,235,.14); --line-hover:rgba(201,162,39,.55);
-  --ink:#F5F2EB; --ink-soft:#D8CFC0; --muted:#A99C8A; --faint:#7A6E5E;
-  --brand:#C9A227; --brand-hover:#DDB43A; --brand-ink:#2A1E19; --ring:rgba(201,162,39,.24);
-  --success:#7A8C5A; --danger:#B4442F; --warning:#C9A227;
+  --bg:#301C13; --surface:#3D2618; --surface-2:#4D3123; --ivory:#F1ECE9; --ivory-2:#E9E2D5;
+  --line:rgba(241,236,233,.16); --line-hover:rgba(215,203,185,.55);
+  --ink:#F1ECE9; --ink-soft:#D7CBB9; --muted:#9E826A; --faint:#775641;
+  --brand:#D7CBB9; --brand-hover:#E9E2D5; --brand-ink:#301C13; --ring:rgba(215,203,185,.24);
+  --success:#7A8C5A; --danger:#A44C44; --warning:#B08A3A;
 
-  --font:-apple-system,"SF Pro Text",Inter,"PingFang SC","Microsoft YaHei",sans-serif; --font-display:"Cormorant Garamond","Songti SC",Georgia,serif;
+  --font:-apple-system,"SF Pro Text","PingFang SC","Microsoft YaHei",sans-serif; --font-display:"Songti SC",Georgia,"Times New Roman",serif;
   --fs-1:10px; --fs-2:11.5px; --fs-3:13px; --fs-4:15px; --fs-5:22px; --fs-6:36px; --fs-7:56px;
-  --fw-regular:300; --fw-medium:400; --fw-semibold:500;
+  --fw-regular:400; --fw-medium:500; --fw-semibold:600;
   --lh-body:1.75; --lh-title:1.1; --ls-label:.18em; --ls-title:-0.01em;
 
-  --r-xs:0px; --r-sm:0px; --r-md:2px; --r-lg:2px; --r-xl:4px; --r-full:999px;
+  --r-xs:1px; --r-sm:1px; --r-md:2px; --r-lg:3px; --r-xl:4px; --r-full:999px;
 
   --shadow-card:none; --shadow-brand:none;
 }
@@ -494,17 +571,17 @@
 | Soft | 双向立体：外阴影凸起，按下转 `inset`。**禁止发光** | 同色底 + 双层反向阴影，**禁止边框** | 线性 `1.75px`，与主色同色系 | 圆角 `16`，叠内阴影 |
 | Bold | 纯黑实心 + `3px` 描边 + **硬阴影零模糊**，hover 位移。**禁止渐变** | 白面 + `3px` 黑描边 + `10px` 硬阴影 | 线性 `2.5px`，`#111`，圆端点 | 圆角 `16`，可加 `3px` 黑描边 |
 | Neutral | 近黑实心 pill，**无渐变无发光**。hover 变深一档 | 白面 + 极弱双层阴影，**无描边**，圆角 `22` | 线性 `1.75px`，`#B8B8C0`，选中态转 `#16161A` | 圆角 `16`，图上标题叠暗色遮罩 |
-| Eco | 浅绿 pill，深绿字。**无渐变无发光** | 白面 + `1px` 描边，方角，**无阴影** | 线性 `1.5px`，`#4A5344` | 满幅自然摄影，方角，可加深绿叠加 |
-| Organic | 深墨或米色 pill，**无渐变无发光** | 白面 + `1px` 细线，圆角 `16`，**无阴影** | 线性 `1.5px`，`#55524A`，外裹圆形细线徽章 | 圆角 `16`，暖调压暗，不加滤镜 |
-| Graph | 紫色实心 + **同色发光**，**不用渐变** | 玻璃 `blur(20px)` + `1px` 半透明描边 + inset 顶部高光 | 线性 `1.75px`，`#A9BDB7`，激活转紫 | 圆角 `12`，叠深色遮罩压亮度 |
-| Mesh | 纯色实心，**禁止渐变**——渐变只给背景大面 | 白面或全透明，**无边框无阴影**，靠光斑分区 | 线性 `1.75px`，`#5A5A62` | 圆角 `20`，不加滤镜 |
+| Eco | 浅绿 pill，深墨字。**无渐变无发光**，hover 加深一档 | `1px` 描边 + 方角，**无阴影** | 线性 `1.5px`，`#34382E` | 满幅摄影，方角，可叠深色遮罩压标题区 |
+| Organic | 深墨或米色 pill，**无渐变无发光** | 白面 + `1px` 细线，圆角 `16`，**无阴影** | 线性 `1.5px`，`#4E4235`，外裹圆形细线徽章 | 圆角 `16`，暖调压暗 |
+| Graph | 紫色实心 + 同色发光，**不用渐变** | 玻璃 `blur(20px)` + `1px` 半透明描边 + inset 顶部高光 | 线性 `1.75px`，`#9FB3AE`，激活转紫 | 圆角 `12`，叠深色遮罩压亮度 |
+| Mesh | 纯色实心，**禁止渐变**——渐变只给背景大面 | 白面或全透明，**无边框无阴影** | 线性 `1.75px`，`#5A5A62` | 圆角 `20`，不加滤镜 |
 | Chroma | 双向立体：外阴影凸起，按下转 `inset`。**禁止发光** | 同色底 + 双向反向阴影，**禁止边框** | 线性 `1.75px`，与主色同色系 | 圆角 `16`，叠内阴影 |
-| Gigatype | 橙红实心 pill，**无渐变**，hover 加深一档 | 白面 + 极弱阴影，圆角 `14` | 线性 `1.75px`，`#4A4A52` | 产品图无边框，叠在背景字之上 |
-| Brutalist | 近黑实心方块，零圆角零阴影，hover 反色 | 单色块 + `2px` 黑描边，**零圆角零阴影** | 线性 `2.5px`，`#0E0E0E` | 方角，可叠 `2px` 黑描边 |
-| Noise | 荧光粉实心 + 同色发光，方角 | 近黑面 + `1px` 白线，**方角**，可叠噪点 | 线性 `1.5px`，`#A8A8A8`，等宽字标签 | 方角，叠噪点与粉色调 |
-| Chrome | 蓝铬实心 + 冷光晕，**不用渐变** | 铬合金渐变面 + inset 顶部高光，圆角 `24` | 线性 `1.75px`，`#A8A8B4` | 圆角 `18`，叠冷色高光 |
+| Gigatype | 橙红实心 pill，**无渐变**，hover 加深一档 | 浅灰面 + 极弱阴影，圆角 `14` | 线性 `1.75px`，`#4A4A52` | 产品图无边框，叠在背景字之上 |
+| Brutalist | 近黑实心方块，零圆角零阴影，hover 反色 | 单色块 + `2px` 黑描边，**零圆角零阴影** | 线性 `2.5px`，`#0A0A0A` | 方角，可叠 `2px` 黑描边 |
+| Noise | 玫粉实心 + 同色发光，方角 | 近黑面 + `1px` 白线，**方角**，可叠噪点 | 线性 `1.5px`，`#A8A8A8`，等宽字标签 | 方角，叠噪点与粉色调 |
+| Chrome | 蓝灰实心 + 冷光晕，**不用渐变** | 铬合金渐变面 + inset 顶部高光，圆角 `20` | 线性 `1.75px`，`#A5AEC2` | 圆角 `18`，叠冷色高光 |
 | Retro Print | 近黑实心 pill，**无渐变无阴影** | 哑光色块 + `1px` 深描边，**无阴影** | 线性 `1.5px`，`#141414`，配等宽编号 | 圆角 `16`，可叠单色遮罩 |
-| Luxury | 金色细描边或实心，**无渐变无发光** | 深褐面 + `1px` 金色发丝，**方角零阴影** | 线性 `1.25px`，细，`#D8CFC0` | 方角，暖调压暗，可全出血 |
+| Luxury | 象牙白实心或细描边，**无渐变无发光** | 深褐面 + `1px` 发丝线，**方角零阴影** | 线性 `1.25px`，细，`#D7CBB9` | 方角，暖调压暗，可全出血 |
 
 与 `prompt.md` 第 3.5 节冲突时，**3.5 的通用规则优先**；风格质感只决定**形态**（渐变还是实心），不决定**有无**。
 
