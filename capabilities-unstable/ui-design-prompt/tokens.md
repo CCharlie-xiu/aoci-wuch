@@ -22,7 +22,7 @@
 | --- | --- |
 | 间距 | `4/8/12/16/24/32/48/64/96` |
 | 断点 | `375 / 768 / 1280` |
-| 动效 | 时长 `100–600ms`、缓动曲线 —— 详见 `style-motion` |
+| 动效 | 时长 `70–700ms`、缓动曲线 —— 详见 `style-motion` |
 | 无障碍 | 对比度 ≥ 4.5:1；点击区 ≥ 44px；`prefers-reduced-motion` |
 | 字号全集 | `12/14/16/20/24/32/40/56`，各风格取子集 |
 
@@ -31,10 +31,10 @@
   --s-1:4px;  --s-2:8px;  --s-3:12px; --s-4:16px; --s-5:24px;
   --s-6:32px; --s-7:48px; --s-8:64px; --s-9:96px;
   --bp-sm:375px; --bp-md:768px; --bp-lg:1280px;
-  --dur-fast:150ms; --dur:200ms; --dur-slow:300ms; --dur-xslow:500ms;
+  --dur-fast:110ms; --dur:150ms; --dur-mid:240ms; --dur-slow:400ms; --dur-xslow:700ms;
   --ease:cubic-bezier(.4,0,.2,1);
   --ease-out:cubic-bezier(0,0,.2,1); --ease-in:cubic-bezier(.4,0,1,1);
-  --ease-spring:cubic-bezier(.34,1.56,.64,1);
+  --ease-sharp:cubic-bezier(.4,0,.6,1); --ease-spring:cubic-bezier(.34,1.56,.64,1);
 }
 ```
 

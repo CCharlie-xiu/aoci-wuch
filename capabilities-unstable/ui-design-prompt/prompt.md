@@ -96,6 +96,8 @@ style-looklike/   组件形态：圆角四档、容器与背景、图标、组�
 
 配色**不由 AI 挑** —— 用户看 `style-color/palettes.html` 选定后告知编号或色值。该文件 AI 默认不读，仅在新增色阶时才打开。
 
+需要写 JS 动画实现时，按需加载 GSAP 官方技能库（`github.com/greensock/gsap-skills`，先读 `skills/llms.txt`）—— 默认不读。
+
 仅此处保留一条：
 
 - 颜色、间距、圆角、字号**全部取自 token**，禁止字面值与魔数

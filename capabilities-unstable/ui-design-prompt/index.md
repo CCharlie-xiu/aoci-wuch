@@ -32,6 +32,8 @@ UI 设计判断力 → 提示词 + 18 款可复用风格组 + 13 组实测色卡
 
 **`style-color/palettes.html` 是给人看的展示页，AI 默认不读** —— 仅在**新增色阶**时才打开作格式参考。
 
+需要写 JS 动画实现时，按需加载 GSAP 官方技能库 `github.com/greensock/gsap-skills`（先读 `skills/llms.txt`）。**默认不读。**
+
 ## 最不能违反什么
 
 - **总纲优先** `baseline.md` > `style-*` > `styles/*` > `tokens.md`
