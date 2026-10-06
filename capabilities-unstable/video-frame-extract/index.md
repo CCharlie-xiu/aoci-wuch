@@ -7,7 +7,7 @@
 F: 按自然语言要求从视频中提取画面，生成有序图片集合
 R:
 A: `scripts/extract_frames.py`（执行入口，契约见「使用入口」）；`scripts/validate.py`（产物自检）；`method.md`（ffmpeg 执行细节）；`templates/handoff.md`（交付与回问话术）
-S: VFR 视频按真实 PTS 记录，不以帧序号代替时间；旋转由 ffmpeg 自动处理，不得手工叠加 transpose；默认精确时间定位，快速定位须显式声明；默认上限 600 张，超限返回 LIMIT_EXCEEDED，不静默截断；只处理画面，不抽音频、不抠像、不去背、不做视觉内容理解
+S: VFR 视频按真实 PTS 记录，不以帧序号代替时间；旋转由 ffmpeg 自动处理，不得手工叠加 transpose；文件名前缀里的 `%` 必须替换，否则被 ffmpeg 当成编号占位符；默认精确时间定位，快速定位须显式声明；默认上限 600 张，超限返回 LIMIT_EXCEEDED，不静默截断；只处理画面，不抽音频、不抠像、不去背、不做视觉内容理解
 
 ---
 
@@ -39,6 +39,8 @@ scene  --threshold 0.4
 
 可选  --format png|jpg|webp   --scale 1280:-1
       --seek accurate|fast    --max-frames 600
+      --name-prefix 前缀      默认取视频文件名
+      --zip auto|always|never 默认 auto：超过 12 张自动打包
 ```
 
 | 退出码 | 状态 | 含义 |
@@ -52,12 +54,15 @@ scene  --threshold 0.4
 ```text
 <out>/
 ├── frames/
-│   ├── 00001.png
-│   └── 00002.png
-└── manifest.json
+│   ├── <视频名>_0001.png
+│   └── <视频名>_0002.png
+├── manifest.json
+└── <视频名>_frames.zip        （超过 12 张时自动生成）
 ```
 
-`manifest.json`：`source`、`duration`、`extraction_mode`、`parameters`、`format`、`scale`、`rotation_applied`、`frame_count`、`frames[]`（`index` / `filename` / `pts` / `timestamp`）。
+`manifest.json`：`source`、`duration`、`extraction_mode`、`parameters`、`format`、`scale`、`rotation_applied`、`name_prefix`、`frame_count`、`frames[]`（`index` / `filename` / `pts` / `timestamp`）。
+
+stdout 另给一份 `summary`，供 AI 直接写总结，不用自己算：`source_name`、`name_prefix`、`mode`、`frame_count`、`interval_seconds`、`time_range`、`duration`、`delivery`、`delivery_limit`。
 
 执行完跑一次自检：
 
@@ -74,7 +79,14 @@ python3 scripts/validate.py --out DIR [--expect N]
 
 ## 最终交付
 
-本能力生成产物并返回有序清单，不负责展示。展示由调用方决定：≤12 张直接展示；>12 张给目录并展示首尾或代表帧。话术见 `templates/handoff.md`。
+本能力生成产物并返回有序清单与 `summary`，不负责展示。展示由调用方决定：
+
+| 数量 | 交付方式 |
+| --- | --- |
+| ≤12 张 | 逐张展示 |
+| >12 张 | 先总结（来源、数量、间隔、时间跨度），再展示首/中/尾共 3 张，附压缩包与目录 |
+
+压缩包路径由 `zip` 字段给出。话术见 `templates/handoff.md`。
 
 ## 边界
 

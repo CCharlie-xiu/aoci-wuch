@@ -58,6 +58,18 @@ ffmpeg -loglevel error -y -i VIDEO -ss 1.500 -vf "scale=1280:-1" \
 | 帧数一致性 | 写盘后比对实际文件数与预期，不一致直接报错 |
 | webp | 需要 `libwebp` 编码器，缺失时返回 `ERROR` 而不是静默失败 |
 | 版本差异 | 优先 `-fps_mode passthrough`，旧版回退 `-vsync 0` |
+| 前缀里的 `%` | ffmpeg 把文件名里的 `%` 当编号占位符，含 `%` 的视频名会抽帧失败；前缀统一把 `%` 与 `/` 换成 `_` |
+| 残留文件 | 写盘前清掉同前缀的旧图片，否则帧数统计被污染，报「帧数不一致」 |
+
+## 命名与打包
+
+```text
+frames/<视频文件名>_0001.png        前缀默认取视频文件名，可用 --name-prefix 覆盖
+<out>/<前缀>_frames.zip             含 manifest.json + frames/
+```
+
+打包触发：>`DELIVERY_PREVIEW_LIMIT`（12 张）自动打包；`--zip always|never` 可强制开关。
+打包用标准库 `zipfile`，无第三方依赖。
 
 ## 验证
 

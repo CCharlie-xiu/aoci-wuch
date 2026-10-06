@@ -20,6 +20,8 @@ from pathlib import Path
 
 DEFAULT_MAX_FRAMES = 600
 DEFAULT_THRESHOLD = 0.4
+# 超过这个数量：交付方式由「逐张展示」切换为「总结 + 压缩包」
+DELIVERY_PREVIEW_LIMIT = 12
 PTS_RE = re.compile(r"pts_time:(-?\d+(?:\.\d+)?)")
 SCALE_RE = re.compile(r"^(-?\d+):(-?\d+)$")
 TIME_RE = re.compile(r"^(?:(?:(\d+):)?(\d+):)?(\d+(?:\.\d+)?)$")
@@ -112,6 +114,16 @@ def probe_rotation(video: Path) -> int | None:
     return None
 
 
+def sanitize_prefix(name: str) -> str:
+    """文件名前缀：% 会被 ffmpeg 当成编号占位符，必须替换。"""
+    cleaned = name.replace("%", "_").replace("/", "_").strip()
+    return cleaned or "frame"
+
+
+def frame_name(prefix: str, index: int, ext: str) -> str:
+    return f"{prefix}_{index:04d}.{ext}"
+
+
 def build_filter(selector: str | None, scale: str | None) -> str:
     parts: list[str] = []
     if selector:
@@ -134,9 +146,33 @@ def analyze_pts(video: Path, selector: str) -> list[float]:
     return [float(value) for value in PTS_RE.findall(completed.stderr)]
 
 
+def clear_previous(out_dir: Path, prefix: str, ext: str) -> None:
+    """清掉同前缀的旧产物，避免残留文件混入帧数统计。"""
+    for path in out_dir.glob(f"{prefix}_*.{ext}"):
+        path.unlink()
+
+
+def make_zip(out_dir: Path, parent: Path, prefix: str) -> Path:
+    """把 frames/ 与 manifest.json 打成一个可下载的压缩包。"""
+    import zipfile
+
+    zip_path = parent / f"{prefix}_frames.zip"
+    if zip_path.exists():
+        zip_path.unlink()
+    with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as archive:
+        manifest = parent / "manifest.json"
+        if manifest.is_file():
+            archive.write(manifest, "manifest.json")
+        for path in sorted(out_dir.iterdir()):
+            if path.is_file():
+                archive.write(path, f"frames/{path.name}")
+    return zip_path
+
+
 def write_frames(video: Path, out_dir: Path, video_filter: str, ext: str,
-                 expected: int) -> list[Path]:
+                 expected: int, prefix: str) -> list[Path]:
     out_dir.mkdir(parents=True, exist_ok=True)
+    clear_previous(out_dir, prefix, ext)
     command = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-y", "-nostdin", "-an", "-sn"]
     command += ["-i", str(video)]
     if video_filter:
@@ -146,7 +182,7 @@ def write_frames(video: Path, out_dir: Path, video_filter: str, ext: str,
     elif ext == "jpg":
         command += ["-q:v", "2"]
     command += ["-fps_mode", "passthrough", "-start_number", "1",
-                str(out_dir / f"%05d.{ext}")]
+                str(out_dir / f"{prefix}_%04d.{ext}")]
     completed = run(command)
     if completed.returncode != 0 and "fps_mode" in completed.stderr:
         command = [item for item in command if item not in {"-fps_mode", "passthrough"}]
@@ -154,7 +190,7 @@ def write_frames(video: Path, out_dir: Path, video_filter: str, ext: str,
         completed = run(command)
     if completed.returncode != 0:
         raise ExtractionError(f"抽帧失败：{completed.stderr.strip()[-400:]}")
-    files = sorted(out_dir.glob(f"*.{ext}"))
+    files = sorted(out_dir.glob(f"{prefix}_*.{ext}"))
     if len(files) != expected:
         raise ExtractionError(
             f"帧数不一致：预期 {expected} 张，实际 {len(files)} 张"
@@ -228,6 +264,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--scale")
     parser.add_argument("--seek", default="accurate", choices=["accurate", "fast"])
     parser.add_argument("--max-frames", type=int, default=DEFAULT_MAX_FRAMES)
+    parser.add_argument("--name-prefix", help="图片名前缀，默认取视频文件名")
+    parser.add_argument("--zip", default="auto", choices=["auto", "always", "never"])
     return parser.parse_args(argv)
 
 
@@ -264,6 +302,7 @@ def main(argv: list[str] | None = None) -> int:
         if not video.is_file():
             raise ExtractionError(f"视频不存在：{video}")
         out_dir = Path(args.out).expanduser().resolve() / "frames"
+        prefix = sanitize_prefix(args.name_prefix or video.stem)
         selector, known_times = resolve_strategy(args)
         rotation = probe_rotation(video)
         info = probe(video)
@@ -292,13 +331,14 @@ def main(argv: list[str] | None = None) -> int:
         if args.mode in {"fps", "scene"}:
             video_filter = build_filter(selector, args.scale)
             files = write_frames(video, out_dir, video_filter, args.format,
-                                 len(stamps))
+                                 len(stamps), prefix)
         else:
             video_filter = build_filter(None, args.scale)
             out_dir.mkdir(parents=True, exist_ok=True)
+            clear_previous(out_dir, prefix, args.format)
             files = []
             for index, stamp in enumerate(stamps, start=1):
-                target = out_dir / f"{index:05d}.{args.format}"
+                target = out_dir / frame_name(prefix, index, args.format)
                 write_single(video, target, stamp, args.seek, video_filter, args.format)
                 files.append(target)
 
@@ -324,6 +364,7 @@ def main(argv: list[str] | None = None) -> int:
             "format": args.format,
             "scale": args.scale,
             "rotation_applied": rotation,
+            "name_prefix": prefix,
             "frame_count": len(frames),
             "frames": frames,
         }
@@ -332,12 +373,34 @@ def main(argv: list[str] | None = None) -> int:
         manifest_path.write_text(
             json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8"
         )
+        parent = manifest_path.parent
+        many = len(frames) > DELIVERY_PREVIEW_LIMIT
+        zip_path = None
+        if frames and (args.zip == "always" or (args.zip == "auto" and many)):
+            zip_path = make_zip(out_dir, parent, prefix)
+        interval = None
+        if args.mode == "fps" and args.fps:
+            interval = round(1 / args.fps, 3)
+        elif args.mode == "count" and args.count and info["duration"]:
+            interval = round(info["duration"] / args.count, 3)
         payload = {
             "status": "OK",
-            "out": str(manifest_path.parent),
+            "out": str(parent),
             "frames_dir": str(out_dir),
             "frame_count": len(frames),
             "manifest": str(manifest_path),
+            "zip": str(zip_path) if zip_path else None,
+            "summary": {
+                "source_name": video.name,
+                "name_prefix": prefix,
+                "mode": args.mode,
+                "frame_count": len(frames),
+                "interval_seconds": interval,
+                "time_range": [frames[0]["pts"], frames[-1]["pts"]] if frames else None,
+                "duration": info["duration"],
+                "delivery": "zip" if (many or zip_path) else "preview",
+                "delivery_limit": DELIVERY_PREVIEW_LIMIT,
+            },
         }
         if not frames:
             payload["warnings"] = ["未抽取到任何画面：scene 模式可降低 --threshold"]

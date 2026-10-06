@@ -46,8 +46,12 @@ def main() -> int:
     if manifest.get("frame_count") != len(entries):
         errors.append("frame_count 与实际条目数不一致")
 
+    ext = manifest.get("format", "png")
+    prefix = manifest.get("name_prefix")
     for position, entry in enumerate(entries, start=1):
-        expected_name = f"{position:05d}.{manifest.get('format', 'png')}"
+        expected_name = (
+            f"{prefix}_{position:04d}.{ext}" if prefix else f"{position:05d}.{ext}"
+        )
         if entry.get("index") != position:
             errors.append(f"index 不连续：{entry.get('index')} ≠ {position}")
         if entry.get("filename") != expected_name:
