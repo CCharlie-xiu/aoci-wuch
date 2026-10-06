@@ -4,7 +4,7 @@
 
 F: 让 AI 先确认风格、再直出可运行的界面设计
 R:
-A: `baseline.md`（跨风格基调，优先）；`prompt.md`（行为流程）；`tokens.md`（通用基础组 + 风格索引 + 组合用法）；`styles/`（18 款风格，按需读取）
+A: `baseline.md`（总纲 + 字体，优先）；`style-color/`（颜色规范 + `palettes/` 13 组实测色卡）；`style-motion/`（动效）；`style-looklike/`（组件形态）；`prompt.md`（行为流程）；`tokens.md`（通用基础组 + 风格索引 + 组合用法）；`styles/`（18 款风格，按需读取）
 S: 风格未确认前不得开始设计；风格是可复用规范组而非单选锁定项，可跨款组合，但圆角与阴影必须同档、质感由颜色与圆角决定；交付物是可运行 HTML/CSS 而非设计稿；图标必须内联 SVG，禁止字符 / emoji / CSS 圆圈充当图标
 
 ---
@@ -23,13 +23,16 @@ S: 风格未确认前不得开始设计；风格是可复用规范组而非单�
 
 ## 去哪里用
 
-按序注入：`baseline.md` → `prompt.md` → `tokens.md`（system prompt 或对话首条），再给设计需求。风格询问环节由提示词自带。
+按序注入：`baseline.md` → `style-color/` → `style-motion/` → `style-looklike/` → `prompt.md` → `tokens.md`（system prompt 或对话首条），再给设计需求。风格询问环节由提示词自带。
 
-命中风格后再读 `styles/<name>.md` 取五组 token —— **不要全量注入 `styles/`**。
+命中后按需读取，**不要全量注入**：
+
+- 选风格 → `styles/<name>.md`
+- 选配色 → `style-color/palettes/<编号>.md`
 
 ## 最不能违反什么
 
-- **基调优先**：`baseline.md` 的六条跨风格规则（圆角 / 容器 / 颜色 / 渐变 / 字体 / 图标）优先于任何风格文件
+- **总纲优先**：`baseline.md` > `style-color/` `style-motion/` `style-looklike/` > `styles/*` > `tokens.md`
 - **风格未确认，不动手**：先问清风格基调、场景、主色、明暗
 - **风格可组合，不是单选**：18 款中任一款都可在任何场景作为搭配；支持整组套用 / 基底换组 / 跨款拼装
 - **绑定关系不可拆**：圆角与阴影必须同档；质感由颜色与圆角决定，不能独立挑

@@ -60,5 +60,6 @@
 
 字号用法与间距密度为使用约定，非参考图实测。
 
-本文件的 token 受 `baseline.md` 约束 —— 圆角分档、容器与背景、颜色四角色、
-渐变边界、字体规范、图标规范六条一律以 `baseline.md` 为准。
+本文件的 token 受 `baseline.md` 与 `style-*` 约束：
+字体见 `baseline.md`，颜色与渐变见 `style-color/`，动效见 `style-motion/`，
+圆角 / 容器 / 图标 / 组件形态见 `style-looklike/`。
