@@ -1,16 +1,19 @@
 # tokens.md
 
-`prompt.md` 第 1 节选定风格后，从本文件取值。
+`prompt.md` 第 1 节确认风格后，从本文件取值。
 
 ```text
 一 · 通用基础组     间距 / 断点 / 动效 / 无障碍 —— 全风格共用
-二 · 六风格 token   颜色 / 字体 / 圆角 / 阴影 —— 随风格切换
+二 · 18 风格 token   颜色 / 字体 / 圆角 / 阴影 —— 可整组套用，也可拆组搭配
 二·补 · 质感组      第五组：按钮 / 卡片 / 图标 / 图片
 三 · 自定义风格     菜单外风格的推导流程
+三·补 · 组合用法     跨款搭配的绑定关系与一致性检查
 四 · 使用规则
 ```
 
 落地形态一律为 CSS 变量，写进 `:root`，全程只引用变量。
+
+**风格不是单选锁定项，是可复用的规范组。** 一次设计可只取一款，也可从多款各取所需。
 
 ---
 
@@ -36,9 +39,11 @@
 
 ---
 
-## 二 · 六风格 token
+## 二 · 18 风格 token
 
 每款只覆盖 **颜色 / 字体 / 圆角 / 阴影** 四组，质感组见下一节。
+
+18 款互为可复用的规范组，不存在"只能用一款"的限制，搭配规则见三·补。
 
 ### 1 · 极简克制 Minimal
 
@@ -192,13 +197,293 @@
 }
 ```
 
+### 7 · 中性留白 Neutral
+
+近黑中性色 + 白卡大留白 + 圆形悬浮按钮。零彩色主色——主色即墨色，层级全靠字号、字重与留白。
+
+```css
+:root{
+  --bg:#F4F4F6; --surface:#FFFFFF; --surface-2:#EFEFF2;
+  --line:rgba(22,22,26,.08); --line-strong:rgba(22,22,26,.16);
+  --ink:#16161A; --ink-soft:#5C5C64; --muted:#8E8E96; --faint:#B8B8C0;
+  --brand:#16161A; --brand-hover:#26262C; --ring:rgba(22,22,26,.10);
+  --success:#2FA05C; --danger:#D64545; --warning:#D08A1E;
+
+  --font:-apple-system,"SF Pro Text","PingFang SC","Microsoft YaHei",sans-serif;
+  --fs-1:11px; --fs-2:12.5px; --fs-3:14px; --fs-4:16px; --fs-5:18px; --fs-6:21px; --fs-7:26px;
+  --fw-regular:400; --fw-medium:500; --fw-semibold:600;
+  --lh-body:1.6; --lh-title:1.22; --ls-title:-0.025em;
+
+  --r-xs:8px; --r-sm:11px; --r-md:16px; --r-lg:22px; --r-xl:28px; --r-full:999px;
+
+  --shadow-card:0 1px 2px rgba(22,22,26,.04), 0 10px 24px -8px rgba(22,22,26,.10);
+  --shadow-float:0 4px 16px rgba(22,22,26,.10), 0 12px 32px -12px rgba(22,22,26,.18);
+}
+```
+
+### 8 · 自然生态 Eco
+
+奶油白底 + 深林绿 + 满幅自然摄影，浅绿胶囊按钮，方角卡片
+
+```css
+:root{
+  --bg:#F7F6F1; --surface:#FFFFFF; --surface-2:#EFEDE4;
+  --line:#DCD8C9; --line-hover:#C9C3AE;
+  --ink:#1C2118; --ink-soft:#4A5344; --muted:#7C8574; --faint:#A8B0A0;
+  --brand:#C9E06B; --brand-hover:#D6E98A; --brand-ink:#16210F; --deep:#2E5233; --ring:rgba(46,82,51,.16);
+  --success:#2E5233; --danger:#B4442F; --warning:#C08A2E;
+
+  --font:-apple-system,"SF Pro Text",Inter,"PingFang SC","Microsoft YaHei",sans-serif; --font-display:"Playfair Display","Songti SC",Georgia,serif;
+  --fs-1:11px; --fs-2:12.5px; --fs-3:14px; --fs-4:16px; --fs-5:22px; --fs-6:34px; --fs-7:56px;
+  --fw-regular:400; --fw-medium:500; --fw-semibold:600;
+  --lh-body:1.65; --lh-title:1.12; --ls-title:-0.02em;
+
+  --r-xs:2px; --r-sm:3px; --r-md:4px; --r-lg:6px; --r-xl:8px; --r-full:999px;
+
+  --shadow-card:none; --shadow-brand:none;
+}
+```
+
+### 9 · 疗愈有机 Organic
+
+米白 + 暖褐摄影，衬线大标题，圆形细线图标，全靠 1px 细线分区
+
+```css
+:root{
+  --bg:#FAF9F6; --surface:#FFFFFF; --surface-2:#F3F1EC;
+  --line:#E6E2D9; --line-hover:#D5CFC0;
+  --ink:#1F1E1B; --ink-soft:#55524A; --muted:#8A8579; --faint:#B5AFA2;
+  --brand:#2B2A26; --brand-hover:#3D3B35; --ring:rgba(43,42,38,.10); --accent:#E8E2D6;
+  --success:#3F6B4A; --danger:#A8443A; --warning:#A8761F;
+
+  --font:-apple-system,"SF Pro Text",Inter,"PingFang SC","Microsoft YaHei",sans-serif; --font-display:"Playfair Display","Songti SC",Georgia,serif;
+  --fs-1:11px; --fs-2:12.5px; --fs-3:14px; --fs-4:15px; --fs-5:20px; --fs-6:30px; --fs-7:44px;
+  --fw-regular:400; --fw-medium:500; --fw-semibold:600;
+  --lh-body:1.7; --lh-title:1.18; --ls-title:-0.015em;
+
+  --r-xs:10px; --r-sm:12px; --r-md:16px; --r-lg:20px; --r-xl:24px; --r-full:999px;
+
+  --shadow-card:none; --shadow-brand:none;
+}
+```
+
+### 10 · 图谱暗绿 Graph
+
+墨绿近黑底 + 紫色发光节点 + 玻璃面板 + 发丝连线，数据密集
+
+```css
+:root{
+  --bg:#06100E; --surface:rgba(255,255,255,.035); --surface-2:rgba(255,255,255,.06);
+  --line:rgba(255,255,255,.08); --line-hover:rgba(255,255,255,.20);
+  --ink:#E9F2EF; --ink-soft:#A9BDB7; --muted:#7A8E88; --faint:#4E5F5A;
+  --brand:#A855F7; --brand-2:#2DD4BF; --ring:rgba(168,85,247,.20); --glow:rgba(168,85,247,.35);
+  --success:#34D399; --danger:#F87171; --warning:#FBBF24;
+
+  --font:-apple-system,"SF Pro Text",Inter,"PingFang SC","Microsoft YaHei",sans-serif; --font-mono:"SF Mono","IBM Plex Mono",ui-monospace,monospace;
+  --fs-1:10.5px; --fs-2:12px; --fs-3:13px; --fs-4:14px; --fs-5:18px; --fs-6:22px; --fs-7:30px;
+  --fw-regular:400; --fw-medium:500; --fw-semibold:600;
+  --lh-body:1.6; --lh-title:1.2; --ls-label:.08em;
+
+  --r-xs:8px; --r-sm:10px; --r-md:12px; --r-lg:16px; --r-xl:20px; --r-full:999px;
+
+  --shadow-card:inset 0 1px 0 rgba(255,255,255,.06), 0 24px 60px rgba(0,0,0,.6); --shadow-brand:0 0 24px rgba(168,85,247,.45); --blur-glass:blur(20px);
+}
+```
+
+### 11 · 网格渐变 Mesh
+
+白底 + 大面积极柔网格渐变光斑，零边框零阴影，按钮反而用纯色
+
+```css
+:root{
+  --bg:#FFFFFF; --surface:#FFFFFF; --surface-2:#F7F7FA;
+  --line:rgba(17,17,20,.06); --line-hover:rgba(17,17,20,.14);
+  --ink:#17171A; --ink-soft:#5A5A62; --muted:#93939C; --faint:#C2C2CA;
+  --brand:#3B4CE0; --brand-2:#FF5C39; --ring:rgba(59,76,224,.16);
+  --success:#16A34A; --danger:#DC2626; --warning:#D97706;
+
+  --font:-apple-system,"SF Pro Text",Inter,"PingFang SC","Microsoft YaHei",sans-serif;
+  --fs-1:11px; --fs-2:12.5px; --fs-3:14px; --fs-4:16px; --fs-5:20px; --fs-6:28px; --fs-7:40px;
+  --fw-regular:400; --fw-medium:500; --fw-semibold:600;
+  --lh-body:1.65; --lh-title:1.18; --ls-title:-0.025em;
+
+  --r-xs:10px; --r-sm:14px; --r-md:20px; --r-lg:28px; --r-xl:36px; --r-full:999px;
+
+  --shadow-card:none; --shadow-brand:none;
+  --mesh-a:#FF5C39; --mesh-b:#3B4CE0; --mesh-c:#FFFFFF;
+}
+```
+
+### 12 · 彩色拟态 Chroma
+
+浅蓝灰底 + 双向阴影凸起，彩色渐变数据条是识别度
+
+```css
+:root{
+  --bg:#E2E8F4; --surface:#E6EBF6; --surface-2:#EDF1F9; --sh-light:#FFFFFF; --sh-dark:#C3CCE0;
+  --line:rgba(90,100,128,.10);
+  --ink:#4E5878; --ink-soft:#6E7899; --muted:#8E98B5; --faint:#AAB4CC;
+  --brand:#7B5CF0; --brand-2:#4CC3F0; --brand-3:#FF6B9D; --ring:rgba(123,92,240,.35);
+  --success:#4FA97A; --danger:#E5697A; --warning:#FFB547;
+
+  --font:-apple-system,"SF Pro Text",Inter,"PingFang SC","Microsoft YaHei",sans-serif;
+  --fs-1:11px; --fs-2:12.5px; --fs-3:13.5px; --fs-4:15px; --fs-5:20px; --fs-6:24px; --fs-7:30px;
+  --fw-regular:400; --fw-medium:500; --fw-semibold:600;
+  --lh-body:1.6; --lh-title:1.25; --ls-label:.10em;
+
+  --r-xs:12px; --r-sm:16px; --r-md:20px; --r-lg:26px; --r-xl:32px; --r-full:999px;
+
+  --shadow-raised:-8px -8px 20px var(--sh-light), 10px 10px 24px var(--sh-dark); --shadow-inset:inset 3px 3px 7px var(--sh-dark), inset -3px -3px 7px var(--sh-light); --shadow-card:-8px -8px 20px var(--sh-light), 10px 10px 24px var(--sh-dark); --shadow-brand:6px 6px 14px var(--sh-dark), -5px -5px 12px var(--sh-light);
+  --grad-data:linear-gradient(180deg,#4CC3F0,#7B5CF0 55%,#FF6B9D);
+}
+```
+
+### 13 · 巨型排版 Gigatype
+
+超大背景字 + 单一高饱和圆形色块 + 产品图叠压，导航极简
+
+```css
+:root{
+  --bg:#FFFFFF; --surface:#FFFFFF; --surface-2:#F4F4F5;
+  --line:rgba(17,17,20,.08); --line-hover:rgba(17,17,20,.16);
+  --ink:#111114; --ink-soft:#4A4A52; --muted:#8C8C94; --faint:#B8B8C0;
+  --brand:#E8502A; --brand-hover:#F0623C; --ring:rgba(232,80,42,.18); --ghost:#F0A184;
+  --success:#16A34A; --danger:#DC2626; --warning:#D97706;
+
+  --font:-apple-system,"SF Pro Text",Inter,"PingFang SC","Microsoft YaHei",sans-serif; --font-display:"Archivo Black","Arial Black","PingFang SC",sans-serif;
+  --fs-1:11px; --fs-2:12.5px; --fs-3:14px; --fs-4:16px; --fs-5:20px; --fs-6:40px; --fs-7:96px;
+  --fw-regular:400; --fw-medium:500; --fw-semibold:600;
+  --lh-body:1.6; --lh-title:0.94; --ls-title:-0.04em;
+
+  --r-xs:8px; --r-sm:10px; --r-md:14px; --r-lg:20px; --r-xl:24px; --r-full:999px;
+
+  --shadow-card:0 24px 60px -24px rgba(17,17,20,.28); --shadow-brand:0 12px 28px -8px rgba(232,80,42,.40);
+}
+```
+
+### 14 · 野兽派 Brutalist
+
+高饱和亮黄 + 近黑块 + 零圆角零阴影，粗黑字与手绘装饰
+
+```css
+:root{
+  --bg:#F2DF1B; --surface:#F2DF1B; --surface-2:#E6D41A;
+  --line:#0E0E0E; --line-hover:#2A2A20;
+  --ink:#0E0E0E; --ink-soft:#2A2A20; --muted:#6B6B55; --faint:#A8A88E; --ink-inv:#F5F5F0;
+  --block:#0E0E0E; --brand:#0E0E0E; --brand-hover:#2A2A20; --ring:rgba(14,14,14,.20); --accent:#FF3B8D;
+  --success:#0E0E0E; --danger:#E23B2E; --warning:#B07A10;
+
+  --font:-apple-system,"SF Pro Text",Inter,"PingFang SC","Microsoft YaHei",sans-serif; --font-display:"Archivo Black","Arial Black","Songti SC",sans-serif;
+  --fs-1:11px; --fs-2:12.5px; --fs-3:14px; --fs-4:16px; --fs-5:20px; --fs-6:34px; --fs-7:52px;
+  --fw-regular:400; --fw-medium:600; --fw-semibold:800;
+  --lh-body:1.55; --lh-title:0.98; --ls-title:-0.03em;
+
+  --r-xs:0px; --r-sm:0px; --r-md:0px; --r-lg:0px; --r-xl:0px; --r-full:0px;
+
+  --shadow-card:none; --shadow-brand:none;
+}
+```
+
+### 15 · 噪点暗红 Noise
+
+近黑底 + 荧光粉 + 位图噪点 + 印刷错位，等宽字为主
+
+```css
+:root{
+  --bg:#0B0B0B; --surface:#141414; --surface-2:#1C1C1C;
+  --line:rgba(255,255,255,.10); --line-hover:rgba(255,45,120,.55);
+  --ink:#F2F2F2; --ink-soft:#A8A8A8; --muted:#7A7A7A; --faint:#4A4A4A;
+  --brand:#FF2D78; --brand-2:#FF5C9E; --ring:rgba(255,45,120,.30);
+  --success:#3FBF7F; --danger:#FF4D4D; --warning:#FFC24D;
+
+  --font:-apple-system,"SF Pro Text",Inter,"PingFang SC","Microsoft YaHei",sans-serif; --font-mono:"SF Mono","IBM Plex Mono",ui-monospace,monospace;
+  --fs-1:10.5px; --fs-2:12px; --fs-3:13px; --fs-4:14px; --fs-5:18px; --fs-6:26px; --fs-7:38px;
+  --fw-regular:400; --fw-medium:500; --fw-semibold:700;
+  --lh-body:1.6; --lh-title:1.05; --ls-label:.12em;
+
+  --r-xs:2px; --r-sm:2px; --r-md:3px; --r-lg:4px; --r-xl:6px; --r-full:2px;
+
+  --shadow-card:0 0 0 1px rgba(255,255,255,.08); --shadow-brand:0 0 28px rgba(255,45,120,.45);
+}
+```
+
+### 16 · 液态铬 Chrome
+
+纯黑底 + 铬合金渐变面 + 镜面高光 + 大圆角
+
+```css
+:root{
+  --bg:#08080A; --surface:#121215; --surface-2:#1A1A1E;
+  --line:rgba(255,255,255,.10); --line-hover:rgba(255,255,255,.24);
+  --ink:#F0F0F4; --ink-soft:#A8A8B4; --muted:#75757F; --faint:#4A4A52;
+  --brand:#6E8BFF; --brand-hover:#8AA2FF; --brand-ink:#0B0B14; --brand-2:#E0C9A6; --ring:rgba(110,139,255,.26);
+  --success:#34D399; --danger:#F87171; --warning:#FBBF24;
+
+  --font:-apple-system,"SF Pro Text",Inter,"PingFang SC","Microsoft YaHei",sans-serif; --font-mono:"SF Mono",ui-monospace,monospace;
+  --fs-1:11px; --fs-2:12.5px; --fs-3:14px; --fs-4:15px; --fs-5:20px; --fs-6:26px; --fs-7:36px;
+  --fw-regular:400; --fw-medium:500; --fw-semibold:600;
+  --lh-body:1.6; --lh-title:1.15; --ls-title:-0.02em;
+
+  --r-xs:10px; --r-sm:14px; --r-md:18px; --r-lg:24px; --r-xl:32px; --r-full:999px;
+
+  --shadow-card:inset 0 1px 0 rgba(255,255,255,.10), 0 30px 70px rgba(0,0,0,.7); --shadow-brand:0 0 40px rgba(110,139,255,.28);
+  --chrome:linear-gradient(135deg,#FFFFFF 0%,#B8C4E0 18%,#4A5A8A 38%,#E8D9C0 55%,#8A9BC8 72%,#2A3050 88%,#F0F4FF 100%);
+}
+```
+
+### 17 · 复古印刷 Retro Print
+
+哑光中饱和色块 + 等宽编号与条码装饰 + 细分割线，机械制图感
+
+```css
+:root{
+  --bg:#101010; --surface:#C4554A; --surface-2:#E0A15E; --surface-3:#7FA37F; --surface-4:#B5B5B5;
+  --line:rgba(16,16,16,.35); --line-hover:rgba(16,16,16,.6);
+  --ink:#141414; --ink-soft:#3A322C; --muted:#6B6058; --faint:#8E8378; --ink-inv:#F0EDE8;
+  --brand:#141414; --brand-hover:#2E2A26; --ring:rgba(196,85,74,.30); --accent:#7FA37F;
+  --success:#7FA37F; --danger:#C4554A; --warning:#E0A15E;
+
+  --font:-apple-system,"SF Pro Text",Inter,"PingFang SC","Microsoft YaHei",sans-serif; --font-mono:"SF Mono","IBM Plex Mono",ui-monospace,monospace;
+  --fs-1:10px; --fs-2:11.5px; --fs-3:13px; --fs-4:14px; --fs-5:18px; --fs-6:26px; --fs-7:40px;
+  --fw-regular:400; --fw-medium:500; --fw-semibold:700;
+  --lh-body:1.55; --lh-title:1.06; --ls-label:.14em;
+
+  --r-xs:8px; --r-sm:12px; --r-md:16px; --r-lg:20px; --r-xl:24px; --r-full:999px;
+
+  --shadow-card:none; --shadow-brand:none;
+}
+```
+
+### 18 · 奢华暗调 Luxury
+
+深褐暗底 + 象牙白 + 细衬线大标题 + 金色发丝线，方角
+
+```css
+:root{
+  --bg:#2A1E19; --surface:#38291F; --surface-2:#4A3728; --ivory:#F5F2EB;
+  --line:rgba(245,242,235,.14); --line-hover:rgba(201,162,39,.55);
+  --ink:#F5F2EB; --ink-soft:#D8CFC0; --muted:#A99C8A; --faint:#7A6E5E;
+  --brand:#C9A227; --brand-hover:#DDB43A; --brand-ink:#2A1E19; --ring:rgba(201,162,39,.24);
+  --success:#7A8C5A; --danger:#B4442F; --warning:#C9A227;
+
+  --font:-apple-system,"SF Pro Text",Inter,"PingFang SC","Microsoft YaHei",sans-serif; --font-display:"Cormorant Garamond","Songti SC",Georgia,serif;
+  --fs-1:10px; --fs-2:11.5px; --fs-3:13px; --fs-4:15px; --fs-5:22px; --fs-6:36px; --fs-7:56px;
+  --fw-regular:300; --fw-medium:400; --fw-semibold:500;
+  --lh-body:1.75; --lh-title:1.1; --ls-label:.18em; --ls-title:-0.01em;
+
+  --r-xs:0px; --r-sm:0px; --r-md:2px; --r-lg:2px; --r-xl:4px; --r-full:999px;
+
+  --shadow-card:none; --shadow-brand:none;
+}
+```
+
 ---
 
 ## 二·补 · 质感组（第五组）
 
-与颜色 / 字体 / 圆角 / 阴影同源，不得跨风格借。
+与颜色 / 字体 / 圆角 / 阴影同源。质感是颜色与圆角的结果，不随风格独立挑选；跨款搭配时按三·补的绑定关系处理。
 
-> **渐变按钮不是通用解。Minimal / Editorial / Soft / Bold 四款明确禁止。**
+> **渐变按钮不是通用解。仅 Dark Tech 一款允许渐变按钮，其余 17 款明确禁止。**
 
 | 风格 | 按钮 | 卡片 | 图标 | 图片 |
 | --- | --- | --- | --- | --- |
@@ -208,6 +493,18 @@
 | Editorial | 方角 `2px` 纯黑实心，**零渐变零阴影**。hover 靠**字距变化** | **不用阴影**，靠 `1px` 线条与纸色分区 | 线性 `1.5px`，细，出现频率低 | 圆角 `2` 或全出血，可黑白 |
 | Soft | 双向立体：外阴影凸起，按下转 `inset`。**禁止发光** | 同色底 + 双层反向阴影，**禁止边框** | 线性 `1.75px`，与主色同色系 | 圆角 `16`，叠内阴影 |
 | Bold | 纯黑实心 + `3px` 描边 + **硬阴影零模糊**，hover 位移。**禁止渐变** | 白面 + `3px` 黑描边 + `10px` 硬阴影 | 线性 `2.5px`，`#111`，圆端点 | 圆角 `16`，可加 `3px` 黑描边 |
+| Neutral | 近黑实心 pill，**无渐变无发光**。hover 变深一档 | 白面 + 极弱双层阴影，**无描边**，圆角 `22` | 线性 `1.75px`，`#B8B8C0`，选中态转 `#16161A` | 圆角 `16`，图上标题叠暗色遮罩 |
+| Eco | 浅绿 pill，深绿字。**无渐变无发光** | 白面 + `1px` 描边，方角，**无阴影** | 线性 `1.5px`，`#4A5344` | 满幅自然摄影，方角，可加深绿叠加 |
+| Organic | 深墨或米色 pill，**无渐变无发光** | 白面 + `1px` 细线，圆角 `16`，**无阴影** | 线性 `1.5px`，`#55524A`，外裹圆形细线徽章 | 圆角 `16`，暖调压暗，不加滤镜 |
+| Graph | 紫色实心 + **同色发光**，**不用渐变** | 玻璃 `blur(20px)` + `1px` 半透明描边 + inset 顶部高光 | 线性 `1.75px`，`#A9BDB7`，激活转紫 | 圆角 `12`，叠深色遮罩压亮度 |
+| Mesh | 纯色实心，**禁止渐变**——渐变只给背景大面 | 白面或全透明，**无边框无阴影**，靠光斑分区 | 线性 `1.75px`，`#5A5A62` | 圆角 `20`，不加滤镜 |
+| Chroma | 双向立体：外阴影凸起，按下转 `inset`。**禁止发光** | 同色底 + 双向反向阴影，**禁止边框** | 线性 `1.75px`，与主色同色系 | 圆角 `16`，叠内阴影 |
+| Gigatype | 橙红实心 pill，**无渐变**，hover 加深一档 | 白面 + 极弱阴影，圆角 `14` | 线性 `1.75px`，`#4A4A52` | 产品图无边框，叠在背景字之上 |
+| Brutalist | 近黑实心方块，零圆角零阴影，hover 反色 | 单色块 + `2px` 黑描边，**零圆角零阴影** | 线性 `2.5px`，`#0E0E0E` | 方角，可叠 `2px` 黑描边 |
+| Noise | 荧光粉实心 + 同色发光，方角 | 近黑面 + `1px` 白线，**方角**，可叠噪点 | 线性 `1.5px`，`#A8A8A8`，等宽字标签 | 方角，叠噪点与粉色调 |
+| Chrome | 蓝铬实心 + 冷光晕，**不用渐变** | 铬合金渐变面 + inset 顶部高光，圆角 `24` | 线性 `1.75px`，`#A8A8B4` | 圆角 `18`，叠冷色高光 |
+| Retro Print | 近黑实心 pill，**无渐变无阴影** | 哑光色块 + `1px` 深描边，**无阴影** | 线性 `1.5px`，`#141414`，配等宽编号 | 圆角 `16`，可叠单色遮罩 |
+| Luxury | 金色细描边或实心，**无渐变无发光** | 深褐面 + `1px` 金色发丝，**方角零阴影** | 线性 `1.25px`，细，`#D8CFC0` | 方角，暖调压暗，可全出血 |
 
 与 `prompt.md` 第 3.5 节冲突时，**3.5 的通用规则优先**；风格质感只决定**形态**（渐变还是实心），不决定**有无**。
 
@@ -276,7 +573,7 @@
 ### 反例
 
 - ❌ "高级感"→丢一堆灰（高级感来自留白与层级，不是灰度）
-- ❌ 只换颜色组就称新风格（那是换皮）
+- ❌ 只换颜色组就称新风格（那是**变体**，记作「基底 + 换组」，见三·补）
 - ❌ 五组各自独立挑（圆角与阴影不能脱钩）
 - ❌ 主色用原色
 
@@ -297,10 +594,42 @@
 
 ---
 
+## 三·补 · 组合用法
+
+**风格不是单选锁定项。** 第二节每一款都是可复用的规范组，任何场景都可整组取用，也可从多款各取所需。
+
+### 三种用法
+
+| 用法 | 做法 | 适用 |
+| --- | --- | --- |
+| **整组套用** | 选一款，颜色 / 字体 / 圆角 / 阴影 / 质感全取 | 默认，最稳 |
+| **基底 + 换组** | 选一款为基底，只替换其中若干组 | 常用：换颜色不改形态 |
+| **跨款拼装** | 从多款各取所需，自由搭配 | 有明确意图时 |
+
+### 绑定关系（不可拆）
+
+```text
+圆角 ↔ 阴影       必须同源或同档：方角配硬阴影，大圆角配柔阴影
+质感 ← 颜色 + 圆角  质感是这两者的结果，不能独立挑
+字体 ↔ 场景       可自由换，与形态无绑定
+```
+
+### 一致性检查（拼装后必过）
+
+1. 圆角与阴影同档？方角必须配硬阴影，大圆角必须配柔阴影
+2. 质感形态与圆角冲突？如 Bold 的硬阴影不得配 Soft 的圆角
+3. 主色面积 ≤ `10%`、正文对比度 ≥ `4.5:1` 是否仍成立
+4. 是否出现纯黑纯白？是否混用两套图标？
+
+任一不过 → 退回整组套用。
+
+---
+
 ## 四 · 使用规则
 
-1. 先选风格，再取 token。风格未确认前不动 token
+1. 先确认风格，再取 token。风格未确认前不动 token
 2. 顺序：通用基础组 → 该风格五组 → 写入 `:root` → 全程只引用变量，不得再出现字面色值
-3. 五组同源，不得跨风格混用
-4. 风格特征优先于通用审美，冲突时以风格为准
-5. 新增风格：菜单内按第二节补齐；菜单外走第三节并交用户确认
+3. **默认整组取用**；换组或跨款拼装必须过三·补的一致性检查
+4. 圆角与阴影必须同源；质感由颜色与圆角决定，不得单独挑选
+5. 风格特征优先于通用审美，冲突时以风格为准
+6. 新增风格：菜单内按第二节补齐；菜单外走第三节并交用户确认

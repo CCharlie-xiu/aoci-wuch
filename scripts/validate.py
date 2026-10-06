@@ -42,7 +42,7 @@ def main() -> int:
             index_path.read_text(encoding="utf-8").splitlines(), start=1
         ):
             stripped = line.strip()
-            if not stripped or stripped.startswith("#") or stripped.startswith("`"):
+            if not stripped or stripped.startswith("#") or "`" in stripped:
                 continue
             if stripped.startswith("name[tag]:"):
                 continue
