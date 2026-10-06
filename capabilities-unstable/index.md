@@ -16,4 +16,5 @@ name[tag]: 一句话核心职责
 
 ```text
 ui-design-prompt[KD9DH]: 让 AI 先确认风格再直出可运行的界面设计
+video-frame-extract[TM8DH]: 按自然语言要求从视频中提取画面并生成有序图片集合
 ```
