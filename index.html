@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-CN" class="h-full overflow-hidden">
+<html lang="zh-CN" class="min-h-full">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -38,6 +38,7 @@
           },
           boxShadow: {
             'craft': '0 20px 40px -15px rgba(45, 52, 30, 0.07)',
+            'sponsor': '0 2px 8px -2px rgba(34, 30, 26, 0.04), 0 1px 3px -1px rgba(34, 30, 26, 0.02)',
           }
         }
       }
@@ -45,11 +46,9 @@
   </script>
 
   <style>
-    /* Full viewport locked without scrolling */
+    /* Let the capability list flow naturally on smaller screens. */
     html, body {
-      height: 100dvh;
-      max-height: 100dvh;
-      overflow: hidden;
+      min-height: 100dvh;
       background-color: #fbf9f5;
       color: #221e1a;
       font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
@@ -67,7 +66,7 @@
     }
   </style>
 </head>
-<body class="bg-paper-grain h-full flex flex-col justify-between px-6 sm:px-12 py-5 sm:py-7 max-w-7xl mx-auto selection:bg-brand selection:text-white">
+<body class="bg-paper-grain min-h-screen flex flex-col px-6 sm:px-12 py-5 sm:py-7 max-w-7xl mx-auto selection:bg-brand selection:text-white">
 
   <!-- Toast Notification Overlay -->
   <div id="toast" class="fixed top-6 left-1/2 -translate-x-1/2 z-50 transform -translate-y-12 opacity-0 transition-all duration-300 pointer-events-none">
@@ -86,7 +85,10 @@
       <span class="font-serif text-base tracking-tight">至关重要</span>
     </a>
 
-    <span class="text-xs text-muted font-medium tracking-wide">个人 AI 能力库</span>
+      <div class="flex items-center gap-4">
+        <span class="hidden sm:inline text-xs text-muted font-medium tracking-wide" data-i18n="siteLabel">个人 AI 能力库</span>
+        <button id="languageToggle" type="button" aria-label="Switch language" class="rounded-full border border-line bg-white/70 px-3 py-1.5 text-xs font-semibold text-muted hover:border-brand hover:text-brand transition-craft"><span id="languageCurrent">中</span><span class="mx-1 text-faint">/</span><span id="languageNext" class="text-faint">EN</span></button>
+      </div>
   </header>
 
   <!-- Hero Main Section (Fits in First View) -->
@@ -96,23 +98,23 @@
     <div class="lg:col-span-6 space-y-5">
       <div class="inline-flex items-center gap-2 text-[11px] font-semibold text-muted tracking-widest uppercase">
         <span class="w-6 h-[1px] bg-brand"></span>
-        <span>A LIBRARY OF USEFUL WAYS</span>
+        <span data-i18n="eyebrow">A LIBRARY OF USEFUL WAYS</span>
       </div>
 
       <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl font-normal leading-[1.12] text-ink tracking-tight">
-        把好方法<br>
-        <span class="text-brand">带进你的 AI。</span>
+        <span data-i18n="headline">把好方法</span><br>
+        <span class="text-brand" data-i18n="headlineAccent">带进你的 AI。</span>
       </h1>
 
       <p class="text-sm sm:text-base text-muted max-w-md leading-relaxed font-normal">
-        一套持续生长的个人能力库，让 AI 在每个新项目里，都能复用经过整理的方法与经验。
+        <span data-i18n="intro">一套持续生长的个人能力库，让 AI 在每个新项目里，都能复用经过整理的方法与经验。</span>
       </p>
 
       <!-- AI Skill installation prompt and repository download -->
       <div class="pt-3">
         <div class="text-[11px] font-medium text-faint mb-2 flex items-center gap-1.5">
           <i data-lucide="terminal" class="w-3.5 h-3.5 text-brand"></i>
-          <span>给 AI 助手的安装指令</span>
+          <span data-i18n="installLabel">给 AI 助手的安装指令</span>
         </div>
 
         <div class="flex items-center gap-2 p-1.5 bg-surface rounded-2xl border border-line shadow-sm max-w-lg hover:border-brand/50 transition-craft">
@@ -125,7 +127,7 @@
           <!-- One-click Copy Button -->
           <button id="copyBtn" type="button" class="px-4 py-2.5 bg-brand hover:bg-brand-hover active:scale-[0.98] text-white rounded-xl text-xs font-medium flex items-center gap-1.5 shrink-0 transition-craft shadow-sm">
             <i id="copyIcon" data-lucide="copy" class="w-3.5 h-3.5"></i>
-            <span id="copyBtnText">复制安装指令</span>
+            <span id="copyBtnText" data-i18n="copyPrompt">复制安装指令</span>
           </button>
 
           <!-- Direct Zip Download Icon Action -->
@@ -165,14 +167,14 @@
         <!-- Top Badge -->
         <div class="absolute top-4 left-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-black/10 bg-white/80 backdrop-blur-md text-muted text-xs">
           <i data-lucide="trending-up" class="w-3.5 h-3.5 text-brand"></i>
-          <span>一直生长的能力库</span>
+          <span data-i18n="artBadge">一直生长的能力库</span>
         </div>
 
         <!-- Bottom Caption Overlay -->
         <div class="absolute inset-x-5 bottom-5 flex items-end justify-between gap-4 text-white">
           <div>
-            <strong class="block font-serif text-xl sm:text-2xl font-normal tracking-tight">经验，值得被带走。</strong>
-            <span class="text-xs text-white/80">从一个项目，到下一个项目。</span>
+            <strong class="block font-serif text-xl sm:text-2xl font-normal tracking-tight" data-i18n="artTitle">经验，值得被带走。</strong>
+            <span class="text-xs text-white/80" data-i18n="artCaption">从一个项目，到下一个项目。</span>
           </div>
           <span class="text-[11px] tracking-widest font-mono text-white/70">LIBRARY · 01</span>
         </div>
@@ -181,16 +183,25 @@
 
   </main>
 
+  <section class="shrink-0 pt-4 border-t border-line/50 text-center pb-6" aria-labelledby="capabilitiesTitle">
+    <div class="inline-flex items-center gap-2 mb-3">
+      <span class="h-[1px] w-8 bg-line"></span>
+      <h2 id="capabilitiesTitle" class="text-[11px] font-semibold text-faint tracking-widest uppercase" data-i18n="capabilitiesTitle">能力库包含技能 · INCLUDED SKILLS</h2>
+      <span class="h-[1px] w-8 bg-line"></span>
+    </div>
+    <div id="capabilityList" class="flex flex-wrap items-center justify-center gap-2 sm:gap-3 max-w-4xl mx-auto"></div>
+  </section>
+
   <!-- Footer Shell -->
-  <footer class="w-full shrink-0 pt-2 flex items-center justify-between text-xs text-muted">
+  <footer class="w-full shrink-0 pt-3 pb-1 flex items-center justify-between text-xs text-muted">
     <div class="flex items-center gap-2">
       <span class="font-serif">至关重要</span>
       <span class="text-faint">·</span>
-      <span>GitHub Pages</span>
+      <span data-i18n="pagesLabel">GitHub Pages</span>
     </div>
 
     <a href="https://github.com/CCharlie-xiu" target="_blank" rel="noreferrer" class="inline-flex items-center gap-1 hover:text-ink transition-colors underline decoration-muted/40 underline-offset-4">
-      <span>作者 CCharlie-xiu</span>
+      <span data-i18n="authorLabel">作者 CCharlie-xiu</span>
       <i data-lucide="external-link" class="w-3 h-3"></i>
     </a>
   </footer>
@@ -202,10 +213,76 @@
     const copyBtn = document.getElementById("copyBtn");
     const copyBtnText = document.getElementById("copyBtnText");
     const copyIcon = document.getElementById("copyIcon");
-    const installPromptText = document.getElementById("installPromptText").textContent.trim();
     const toast = document.getElementById("toast");
+    const languageToggle = document.getElementById("languageToggle");
+    const capabilityList = document.getElementById("capabilityList");
+    const installPrompts = {
+      zh: "请将这个 GitHub 仓库安装为当前 AI 助手可复用的 Agent Skill：https://github.com/CCharlie-xiu/aoci-wuch.git",
+      en: "Install this GitHub repository as a reusable Agent Skill for this AI assistant: https://github.com/CCharlie-xiu/aoci-wuch.git"
+    };
+    const translations = {
+      zh: {
+        siteLabel: "个人 AI 能力库", eyebrow: "A LIBRARY OF USEFUL WAYS", headline: "把好方法", headlineAccent: "带进你的 AI。",
+        intro: "一套持续生长的个人能力库，让 AI 在每个新项目里，都能复用经过整理的方法与经验。", installLabel: "给 AI 助手的安装指令", copyPrompt: "复制安装指令",
+        artBadge: "一直生长的能力库", artTitle: "经验，值得被带走。", artCaption: "从一个项目，到下一个项目。", capabilitiesTitle: "能力库包含技能 · INCLUDED SKILLS",
+        pagesLabel: "GitHub Pages", authorLabel: "作者 CCharlie-xiu", copied: "已复制", copyAgain: "复制安装指令",
+        copiedToast: "安装指令已成功复制到剪贴板！"
+      },
+      en: {
+        siteLabel: "Personal AI Capability Library", eyebrow: "A LIBRARY OF USEFUL WAYS", headline: "Bring good methods", headlineAccent: "into your AI.",
+        intro: "A growing personal capability library that lets AI reuse carefully shaped methods and experience in every new project.", installLabel: "Install for your AI assistant", copyPrompt: "Copy install command",
+        artBadge: "A library that keeps growing", artTitle: "Good experience travels.", artCaption: "From one project to the next.", capabilitiesTitle: "INCLUDED SKILLS",
+        pagesLabel: "GitHub Pages", authorLabel: "By CCharlie-xiu", copied: "Copied", copyAgain: "Copy install command",
+        copiedToast: "Install command copied to clipboard!"
+      }
+    };
+    const capabilities = [
+      { id: "github-authorize", icon: "shield-check", name: "GitHub 应用授权", nameEn: "GitHub App Authorization" },
+      { id: "mobile-template-app", icon: "smartphone", name: "原生移动应用搭建", nameEn: "Native App Project Setup" },
+      { id: "logic-space-enumeration", icon: "workflow", name: "复杂设计逻辑枚举", nameEn: "Complex Logic Enumeration" },
+      { id: "dbx-mcp-setup", icon: "database", name: "DBX 数据库连接配置", nameEn: "DBX Database MCP Setup" },
+      { id: "excel-capability", icon: "table-2", name: "Excel 后端选择配置", nameEn: "Excel Backend Configuration" },
+      { id: "libtv-mcp-setup", icon: "clapperboard", name: "LibTV 影像服务接入", nameEn: "LibTV MCP Connection" },
+      { id: "ui-design-prompt", icon: "panels-top-left", name: "UI 风格提示设计", nameEn: "UI Style Design" },
+      { id: "video-frame-extract", icon: "video", name: "视频画面抽帧", nameEn: "Video Frame Extraction" }
+    ];
+
+    let currentLanguage = "zh";
+
+    function renderCapabilities() {
+      capabilityList.innerHTML = capabilities.map((capability) => `
+        <div class="px-3.5 py-2 rounded-xl bg-surface border border-line/70 text-xs font-medium text-ink flex items-center gap-2 shadow-sponsor hover:border-brand/40 hover:-translate-y-0.5 transition-craft group">
+          <i data-lucide="${capability.icon}" class="w-3.5 h-3.5 text-brand group-hover:scale-110 transition-transform"></i>
+          <span>${currentLanguage === "zh" ? capability.name : capability.nameEn}</span>
+        </div>`).join("");
+      lucide.createIcons();
+    }
+
+    function setLanguage(language) {
+      currentLanguage = language;
+      document.documentElement.lang = language === "zh" ? "zh-CN" : "en";
+      document.querySelectorAll("[data-i18n]").forEach((element) => {
+        element.textContent = translations[language][element.dataset.i18n];
+      });
+      document.getElementById("languageCurrent").textContent = language === "zh" ? "中" : "EN";
+      document.getElementById("languageNext").textContent = language === "zh" ? "EN" : "中";
+      document.getElementById("installPromptText").textContent = installPrompts[language];
+      document.title = language === "zh" ? "至关重要 — 给 AI 一套值得复用的方法" : "AOCI — Reusable methods for your AI";
+      document.querySelector('meta[name="description"]').content = language === "zh"
+        ? "至关重要：一套可安装到 AI 编码助手中的个人能力库。"
+        : "AOCI: a personal capability library for AI coding assistants.";
+      renderCapabilities();
+      try { localStorage.setItem("aoci-language", language); } catch {}
+    }
+
+    languageToggle.addEventListener("click", () => setLanguage(currentLanguage === "zh" ? "en" : "zh"));
+    try {
+      if (localStorage.getItem("aoci-language") === "en") setLanguage("en");
+      else renderCapabilities();
+    } catch { renderCapabilities(); }
 
     async function copyInstallPrompt() {
+      const installPromptText = document.getElementById("installPromptText").textContent.trim();
       try {
         await navigator.clipboard.writeText(installPromptText);
       } catch {
@@ -221,13 +298,13 @@
       }
 
       // UI Feedback
-      showToast("安装指令已成功复制到剪贴板！");
-      copyBtnText.textContent = "已复制";
+      showToast(translations[currentLanguage].copiedToast);
+      copyBtnText.textContent = translations[currentLanguage].copied;
       copyIcon.setAttribute("data-lucide", "check");
       lucide.createIcons();
 
       setTimeout(() => {
-        copyBtnText.textContent = "复制安装指令";
+        copyBtnText.textContent = translations[currentLanguage].copyAgain;
         copyIcon.setAttribute("data-lucide", "copy");
         lucide.createIcons();
       }, 2000);
