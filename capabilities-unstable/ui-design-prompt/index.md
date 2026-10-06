@@ -23,7 +23,12 @@ UI 设计判断力 → 提示词 + 18 款可复用风格组 + 13 组实测色卡
 
 常驻注入 `baseline` → `style-color` → `style-motion` → `style-looklike` → `prompt` → `tokens`，再给设计需求。
 
-命中后按需读，**不要全量注入**：风格 → `styles/<name>.md`；配色 → `style-color/palettes.html`。
+命中后按需读，**不要全量注入**：
+
+- 选风格 → `styles/<name>.md`
+- 选配色 → **不读文件**。用户看 `style-color/palettes.html` 选定后告知编号或色值
+
+**`style-color/palettes.html` 是给人看的展示页，AI 默认不读** —— 仅在**新增色阶**时才打开作格式参考。
 
 ## 最不能违反什么
 

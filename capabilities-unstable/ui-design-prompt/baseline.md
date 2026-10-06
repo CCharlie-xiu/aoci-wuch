@@ -39,6 +39,9 @@ baseline.md
 → 命中风格后读 styles/<name>.md
 ```
 
+**不注入**：`style-color/palettes.html` —— 给人看的展示页，AI 默认不读，
+仅在**新增色阶**时才打开作格式参考。
+
 **不要全量注入 `styles/`** —— 一次只用一款。
 
 ---
