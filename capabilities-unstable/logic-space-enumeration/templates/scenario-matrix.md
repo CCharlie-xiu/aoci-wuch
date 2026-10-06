@@ -33,9 +33,11 @@
 
 ## 场景推演
 
-| 场景 ID | 输入组合/初始状态 | 操作路径与条件分支 | 中间状态变化/资源变化 | 最终结果 | 分类 | 依据/未决问题 |
-| --- | --- | --- | --- | --- | --- | --- |
-| S1 |  |  |  |  | EXPECTED / EDGE / CONFLICT / UNDEFINED / IMPOSSIBLE / UNSAFE |  |
+| 场景 ID | 输入组合/初始状态 | 路径是否存在及证据 | 操作路径与条件分支 | 中间状态变化/资源变化 | 规则是否定义/外部依赖 | 最终结果 | 结论分类 | 依据/未决问题 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| S1 |  | YES / NO_PATH / 待确认 |  |  | 已定义 / 未定义 / EXTERNAL |  | EXPECTED / EDGE / CONFLICT / UNSAFE / UNDEFINED / EXTERNAL / IMPOSSIBLE / NO_PATH |  |
+
+先记录路径是否存在，再记录规则覆盖和最终分类。`EXPECTED` 必须能引用明确的预期规则；没有发现路径不能自动判为 `EXPECTED`。
 
 ## 问题与闭合检查
 

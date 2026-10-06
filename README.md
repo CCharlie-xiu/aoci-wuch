@@ -46,6 +46,25 @@ python3 scripts/validate.py
 
 检查索引、目录、标签和成熟度。
 
+## 更新源仓库
+
+源仓库更新只支持 GitHub `main` 到当前 checkout，且只允许 fast-forward。先检查：
+
+```bash
+python3 scripts/update_skills.py check
+```
+
+若状态为 `BEHIND`，检查输出会列出本地/远程 commit 和变更摘要。确认后将输出的 commit 值传给：
+
+```bash
+python3 scripts/update_skills.py apply \
+  --expected-local <检查时的本地 commit> \
+  --expected-remote <检查时的远程 commit> \
+  --confirm
+```
+
+工作区有改动、分支分叉、remote/upstream 不符合配置或网络不可用时会停止。成功快进后自动运行 `scripts/validate.py`。此命令不更新任何产品中的已安装 skill 副本。
+
 ## 使用标记
 
 只要本次任务读取、引用或使用了本仓库内容，回答最后一行必须添加：

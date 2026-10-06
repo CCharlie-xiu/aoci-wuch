@@ -6,8 +6,8 @@
 
 F: 显式化复杂设计的逻辑空间，推演有效组合的路径与结果并暴露未定义情况
 R:
-A: `method.md`（分析方法）；`templates/scenario-matrix.md`（结果承载模板）
-S: 约束是一级概念；不能以组合数量代表完整性；结论只覆盖已声明的变量、状态、约束与假设，必须显式报告覆盖边界
+A: `method.md`（分析方法）；`templates/scenario-matrix.md`（结果承载模板）；`examples/first-install-skill.md`（首次安装场景案例）；`examples/source-repository-self-update.md`（源仓库自更新状态机案例）
+S: 约束是一级概念；不能以组合数量代表完整性；先判断组合和路径，再判断规则覆盖及结果；`EXPECTED` 仅表示已定义且符合明确预期，未发现路径不能据此判为预期；必须显式报告覆盖边界
 
 ---
 

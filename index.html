@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="zh-CN" class="h-full overflow-hidden">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#fbf9f5">
+  <meta name="description" content="至关重要：一套可安装到 AI 编码助手中的个人能力库。">
+  <title>至关重要 — 给 AI 一套值得复用的方法</title>
+
+  <!-- Google Fonts & Lucide Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            bg: '#fbf9f5',
+            surface: '#ffffff',
+            'surface-subtle': '#f2f0ea',
+            ink: '#221e1a',
+            muted: '#4e4235',
+            faint: '#71695c',
+            line: '#cfcfce',
+            brand: {
+              DEFAULT: '#545f2a',
+              hover: '#455021',
+              light: '#f1f4e8',
+            }
+          },
+          fontFamily: {
+            serif: ['"Noto Serif SC"', '"Songti SC"', 'Georgia', 'serif'],
+            sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', '"PingFang SC"', '"Microsoft YaHei"', 'sans-serif'],
+          },
+          boxShadow: {
+            'craft': '0 20px 40px -15px rgba(45, 52, 30, 0.07)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Full viewport locked without scrolling */
+    html, body {
+      height: 100dvh;
+      max-height: 100dvh;
+      overflow: hidden;
+      background-color: #fbf9f5;
+      color: #221e1a;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Tactile Paper Texture */
+    .bg-paper-grain {
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.025'/%3E%3C/svg%3E");
+    }
+
+    /* Custom Smooth Micro-transitions */
+    .transition-craft {
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+  </style>
+</head>
+<body class="bg-paper-grain h-full flex flex-col justify-between px-6 sm:px-12 py-5 sm:py-7 max-w-7xl mx-auto selection:bg-brand selection:text-white">
+
+  <!-- Toast Notification Overlay -->
+  <div id="toast" class="fixed top-6 left-1/2 -translate-x-1/2 z-50 transform -translate-y-12 opacity-0 transition-all duration-300 pointer-events-none">
+    <div class="bg-brand text-white px-5 py-2.5 rounded-full shadow-lg flex items-center gap-2.5 text-xs font-medium border border-white/20">
+      <i data-lucide="check-circle" class="w-4 h-4 text-emerald-300"></i>
+      <span id="toast-message">安装指令已成功复制</span>
+    </div>
+  </div>
+
+  <!-- Header Header Shell -->
+  <header class="w-full flex items-center justify-between shrink-0">
+    <a href="#" class="inline-flex items-center gap-3 text-ink font-semibold text-sm hover:opacity-80 transition-opacity">
+      <div class="w-8 h-8 rounded-full border border-black/20 flex items-center justify-center text-brand bg-white/50">
+        <i data-lucide="sparkles" class="w-4 h-4"></i>
+      </div>
+      <span class="font-serif text-base tracking-tight">至关重要</span>
+    </a>
+
+    <span class="text-xs text-muted font-medium tracking-wide">个人 AI 能力库</span>
+  </header>
+
+  <!-- Hero Main Section (Fits in First View) -->
+  <main class="my-auto py-2 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+
+    <!-- Hero Left Column: Title & Description -->
+    <div class="lg:col-span-6 space-y-5">
+      <div class="inline-flex items-center gap-2 text-[11px] font-semibold text-muted tracking-widest uppercase">
+        <span class="w-6 h-[1px] bg-brand"></span>
+        <span>A LIBRARY OF USEFUL WAYS</span>
+      </div>
+
+      <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl font-normal leading-[1.12] text-ink tracking-tight">
+        把好方法<br>
+        <span class="text-brand">带进你的 AI。</span>
+      </h1>
+
+      <p class="text-sm sm:text-base text-muted max-w-md leading-relaxed font-normal">
+        一套持续生长的个人能力库，让 AI 在每个新项目里，都能复用经过整理的方法与经验。
+      </p>
+
+      <!-- AI Skill installation prompt and repository download -->
+      <div class="pt-3">
+        <div class="text-[11px] font-medium text-faint mb-2 flex items-center gap-1.5">
+          <i data-lucide="terminal" class="w-3.5 h-3.5 text-brand"></i>
+          <span>给 AI 助手的安装指令</span>
+        </div>
+
+        <div class="flex items-center gap-2 p-1.5 bg-surface rounded-2xl border border-line shadow-sm max-w-lg hover:border-brand/50 transition-craft">
+          <!-- Copyable AI Skill installation prompt -->
+          <div class="px-3 py-2 bg-surface-subtle rounded-xl text-xs font-mono text-muted truncate flex-1 flex items-center gap-2 border border-line/40 select-all">
+            <i data-lucide="link" class="w-3.5 h-3.5 text-brand shrink-0"></i>
+            <span id="installPromptText" class="truncate">请将这个 GitHub 仓库安装为当前 AI 助手可复用的 Agent Skill：https://github.com/CCharlie-xiu/aoci-wuch.git</span>
+          </div>
+
+          <!-- One-click Copy Button -->
+          <button id="copyBtn" type="button" class="px-4 py-2.5 bg-brand hover:bg-brand-hover active:scale-[0.98] text-white rounded-xl text-xs font-medium flex items-center gap-1.5 shrink-0 transition-craft shadow-sm">
+            <i id="copyIcon" data-lucide="copy" class="w-3.5 h-3.5"></i>
+            <span id="copyBtnText">复制安装指令</span>
+          </button>
+
+          <!-- Direct Zip Download Icon Action -->
+          <a href="https://github.com/CCharlie-xiu/aoci-wuch/archive/refs/heads/main.zip" download title="下载 ZIP 压缩包" class="p-2.5 bg-surface-subtle hover:bg-white text-muted hover:text-ink rounded-xl border border-line/50 transition-craft shrink-0">
+            <i data-lucide="download" class="w-3.5 h-3.5"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hero Right Column: SVG Illustration Card -->
+    <div class="lg:col-span-6 hidden sm:block">
+      <div class="relative w-full h-[280px] sm:h-[340px] lg:h-[390px] rounded-3xl overflow-hidden border border-line bg-[#dfe4d8] shadow-craft">
+
+        <!-- Mountain Landscape SVG Art -->
+        <svg class="absolute inset-0 w-full h-full object-cover" viewBox="0 0 720 720" preserveAspectRatio="xMidYMid slice" role="img" aria-label="层叠山野景观插画">
+          <defs>
+            <linearGradient id="sky" x1="0" y1="0" x2="0.1" y2="1">
+              <stop offset="0" stop-color="#cbd2c3" />
+              <stop offset="1" stop-color="#e8e9df" />
+            </linearGradient>
+            <linearGradient id="sun" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#e8d9bd" />
+              <stop offset="1" stop-color="#d3c39f" />
+            </linearGradient>
+          </defs>
+          <rect width="720" height="720" fill="url(#sky)" />
+          <circle cx="505" cy="205" r="88" fill="url(#sun)" opacity="0.9" />
+          <path d="M0 386 121 288l92 79 128-161 116 139 78-74 185 141v308H0Z" fill="#a2ad9a" opacity="0.7" />
+          <path d="m0 450 143-115 102 77 156-130 116 119 80-53 123 83v289H0Z" fill="#74866d" />
+          <path d="m0 522 135-76 104 46 135-75 118 64 109-79 119 83v235H0Z" fill="#505c4a" />
+          <path d="M0 585c114-58 215-65 324-14 100 46 213 28 396-55v204H0Z" fill="#343f30" />
+          <path d="M0 626c130-30 230-14 330 26 115 45 250 30 390-24v92H0Z" fill="#283225" />
+          <path d="M0 421c87-18 141-7 212 30m147-99c65-21 103-14 161 18m43 71c51-12 96-9 157 14" fill="none" stroke="#dfe3d7" stroke-opacity="0.7" stroke-width="2" />
+        </svg>
+
+        <!-- Top Badge -->
+        <div class="absolute top-4 left-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-black/10 bg-white/80 backdrop-blur-md text-muted text-xs">
+          <i data-lucide="trending-up" class="w-3.5 h-3.5 text-brand"></i>
+          <span>一直生长的能力库</span>
+        </div>
+
+        <!-- Bottom Caption Overlay -->
+        <div class="absolute inset-x-5 bottom-5 flex items-end justify-between gap-4 text-white">
+          <div>
+            <strong class="block font-serif text-xl sm:text-2xl font-normal tracking-tight">经验，值得被带走。</strong>
+            <span class="text-xs text-white/80">从一个项目，到下一个项目。</span>
+          </div>
+          <span class="text-[11px] tracking-widest font-mono text-white/70">LIBRARY · 01</span>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer Shell -->
+  <footer class="w-full shrink-0 pt-2 flex items-center justify-between text-xs text-muted">
+    <div class="flex items-center gap-2">
+      <span class="font-serif">至关重要</span>
+      <span class="text-faint">·</span>
+      <span>GitHub Pages</span>
+    </div>
+
+    <a href="https://github.com/CCharlie-xiu" target="_blank" rel="noreferrer" class="inline-flex items-center gap-1 hover:text-ink transition-colors underline decoration-muted/40 underline-offset-4">
+      <span>作者 CCharlie-xiu</span>
+      <i data-lucide="external-link" class="w-3 h-3"></i>
+    </a>
+  </footer>
+
+  <script>
+    // Initialize icons
+    lucide.createIcons();
+
+    const copyBtn = document.getElementById("copyBtn");
+    const copyBtnText = document.getElementById("copyBtnText");
+    const copyIcon = document.getElementById("copyIcon");
+    const installPromptText = document.getElementById("installPromptText").textContent.trim();
+    const toast = document.getElementById("toast");
+
+    async function copyInstallPrompt() {
+      try {
+        await navigator.clipboard.writeText(installPromptText);
+      } catch {
+        // Fallback for strict sandbox/iframe
+        const textArea = document.createElement("textarea");
+        textArea.value = installPromptText;
+        textArea.style.position = "fixed";
+        textArea.style.opacity = "0";
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textArea);
+      }
+
+      // UI Feedback
+      showToast("安装指令已成功复制到剪贴板！");
+      copyBtnText.textContent = "已复制";
+      copyIcon.setAttribute("data-lucide", "check");
+      lucide.createIcons();
+
+      setTimeout(() => {
+        copyBtnText.textContent = "复制安装指令";
+        copyIcon.setAttribute("data-lucide", "copy");
+        lucide.createIcons();
+      }, 2000);
+    }
+
+    function showToast(msg) {
+      document.getElementById("toast-message").textContent = msg;
+      toast.classList.remove("-translate-y-12", "opacity-0", "pointer-events-none");
+      toast.classList.add("translate-y-0", "opacity-100");
+
+      setTimeout(() => {
+        toast.classList.remove("translate-y-0", "opacity-100");
+        toast.classList.add("-translate-y-12", "opacity-0", "pointer-events-none");
+      }, 2200);
+    }
+
+    copyBtn.addEventListener("click", copyInstallPrompt);
+  </script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 ---
 name: aoci-wuch
-description: 个人能力库「至关重要」的入口。当前任务可能复用已有能力时使用：先读 GitHub 最新索引，命中后再按需读取对应能力文件；本地仓库是编辑工作区和离线副本。
+description: 个人能力库「至关重要」的入口。当前任务可能复用已有能力时使用：先读 GitHub 最新索引，命中后再按需读取对应能力文件；用户要求更新本能力库源仓库时，执行安全的 GitHub main 快进更新流程。
 description_zh: 个人能力库「至关重要」——按需读取远程能力索引，复用已沉淀的能力
 description_en: Personal capability library - read the remote index on demand
 ---
@@ -48,6 +48,35 @@ curl -fsSL "https://raw.githubusercontent.com/CCharlie-xiu/aoci-wuch/main/capabi
 命中后按需读取对应能力文件。常规复用只用正式能力；待验证能力仅在任务适合试用时读取。退役能力只用于追溯或迁移。
 
 远程不可用时回退本地，并说明副本可能过期。远程请求失败不代表索引为空。
+
+## 更新源仓库
+
+本节只负责 **Skill Source Self-Update**：从 GitHub `main` 更新当前能力库源仓库。它不扫描、安装或更新 Cursor、Claude Code、Codex、豆包或其他产品中的副本。
+
+请求路由：
+
+- “更新这个能力库 / skill 源仓库” → 执行本节的源仓库更新流程。
+- “更新 Cursor / Claude Code / Codex / 豆包里的副本” → 这属于产品目标同步；当前版本不执行，说明需要对应平台适配器。
+- “所有地方都更新” → 先完成源仓库更新；产品副本同步暂不在本版本范围内。
+
+执行规则见 [`follow/update-skills.md`](follow/update-skills.md)。简要流程：
+
+1. 运行 `python3 scripts/update_skills.py check`。
+2. 根据脚本状态处理：`UP_TO_DATE` 时结束；只有 `BEHIND` 才展示将要进入的提交和文件差异。
+3. 更新前明确告知目标是当前源仓库，并取得用户对本次 fast-forward 的确认。
+4. 用户确认后，使用检查结果中的本地与远程 commit 调用 `apply`：
+
+   ```bash
+   python3 scripts/update_skills.py apply \
+     --expected-local <检查时的本地 commit> \
+     --expected-remote <检查时的远程 commit> \
+     --confirm
+   ```
+
+5. 若工作区不干净、分支/上游不匹配、发生分叉或远程不可用，按脚本状态停止；不得 stash、普通 merge、rebase、reset 或覆盖文件来绕过阻断。更新只允许脚本执行 `git merge --ff-only`。
+6. `apply` 完成 fast-forward 后自动运行 `scripts/validate.py`。校验失败时如实报告；不得自动回滚或再尝试其他合并方式。
+
+将“更新 skill”默认理解为更新当前源仓库，但在 apply 前必须展示目标和差异并确认。不要把更新仓库等同于更新已安装副本。
 
 写入前检查工作区，并读取远程规则和目标文件；保留未提交修改。提交并推送后才算发布。
 

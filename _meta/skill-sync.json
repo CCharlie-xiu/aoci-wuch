@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "repository": "https://github.com/CCharlie-xiu/aoci-wuch",
+    "remote": "origin",
+    "branch": "main"
+  },
+  "targets": [],
+  "policy": {
+    "scope": "source-repository-only",
+    "updateMode": "fast-forward-only",
+    "requireCleanWorktree": true,
+    "requireUserConfirmation": true,
+    "validateAfterUpdate": "scripts/validate.py"
+  }
+}
