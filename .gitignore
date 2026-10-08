@@ -1,3 +1,4 @@
 .DS_Store
 # 私有仓库 aoci-wuch-pro 的本地 clone，订阅能力正文，禁止进入公开仓库
 capabilities-pro/
+__pycache__/

@@ -47,6 +47,8 @@ curl -fsSL "https://raw.githubusercontent.com/CCharlie-xiu/aoci-wuch/main/capabi
 
 命中后按需读取对应能力文件。常规复用只用正式能力；待验证能力仅在任务适合试用时读取。退役能力只用于追溯或迁移。
 
+本机存在能力库源仓库且其中有 `capabilities-pro/` 时（作者本机），另读私有孵化索引 `capabilities-pro/capabilities-unstable/index.md`；孵化能力仅在任务适合试用时读取，**不得把其内容写入公开仓库或公开输出**。
+
 远程不可用时回退本地，并说明副本可能过期。远程请求失败不代表索引为空。
 
 ## 更新源仓库
@@ -95,11 +97,11 @@ name[tag]: 一句话核心职责
 命中 `[PRO]` 能力时，按顺序：
 
 1. 本机存在能力库源仓库且其中有 `capabilities-pro/` 时，直接读取 `capabilities-pro/<bucket>/<name>/`。
-2. 否则用本机订阅码向授权服务读取（`<bucket>` 为 `capabilities` 或 `capabilities-unstable`，`<file>` 缺省为 `index.md`）：
+2. 否则用本机订阅码向授权服务读取（`<file>` 缺省为 `index.md`）：
 
    ```bash
    curl -fsS -H "X-Aoci-Code: $(cat ~/.aoci/license 2>/dev/null)" \
-     "https://aoci-auth.aoci-wuch.workers.dev/cap/<bucket>/<name>/<file>"
+     "https://aoci-auth.aoci-wuch.workers.dev/cap/capabilities/<name>/<file>"
    ```
 
 3. 返回 401/403 时，告诉用户该能力需要订阅，并给出授权页 `https://ccharlie-xiu.github.io/aoci-wuch/auth.html`，然后按常规方式完成任务。**不得根据索引行猜测或编造正文。**
@@ -109,10 +111,10 @@ name[tag]: 一句话核心职责
 ## 边界
 
 - 写入 / 修改 / 晋升 / 退役能力前，先读对应的 `follow/` 规则
-- 订阅能力正文只能写入 `capabilities-pro/`，不得出现在公开目录或公开提交中
-- 新建能力前先确认免费还是订阅；未确认时按订阅写入私有区（公开历史不可收回）
-- 新增、晋升、退役、转订阅都必须同步首页 `index.html`（GitHub Pages）与 `README.md`，以 `scripts/validate.py` 通过为准
-- **不得自行晋升能力**（`capabilities-unstable/` → `capabilities/` 必须由人确认）
+- 新能力一律写入私有孵化区 `capabilities-pro/capabilities-unstable/`，孵化期间不进公开索引、首页与 README（公开历史不可收回）
+- 订阅能力正文只能在 `capabilities-pro/`，不得出现在公开目录或公开提交中
+- 发布、晋升、退役都必须同步首页 `index.html`（GitHub Pages）与 `README.md`，以 `scripts/validate.py` 通过为准
+- **不得自行发布或晋升能力**，免费 / 订阅的选择必须由人确认（见 `follow/promote.md`）
 
 ## 使用标记
 

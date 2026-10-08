@@ -101,6 +101,43 @@ def check_pages(catalog: dict[str, tuple[set[str], set[str]]], errors: list[str]
             fail(f"README.md「{heading}」：订阅能力 {name} 不得链接到公开目录", errors)
 
 
+def check_incubator(catalog: dict[str, tuple[set[str], set[str]]], errors: list[str]) -> None:
+    """Private incubator: indexed only in capabilities-pro/capabilities-unstable/index.md."""
+    incubator = PRO_ROOT / "capabilities-unstable"
+    index_path = incubator / "index.md"
+    label = "capabilities-pro/capabilities-unstable/index.md"
+    if not index_path.is_file():
+        fail(f"缺少私有孵化索引：{label}", errors)
+        return
+    names: set[str] = set()
+    for line_number, line in enumerate(index_path.read_text(encoding="utf-8").splitlines(), start=1):
+        stripped = line.strip()
+        if not stripped or stripped.startswith("#") or "`" in stripped or stripped.startswith("name[tag]:"):
+            continue
+        if "[" not in stripped:
+            continue
+        match = ENTRY.fullmatch(stripped)
+        if not match:
+            fail(f"{label}:{line_number}: 索引行格式错误：{stripped}", errors)
+            continue
+        name, tag, pro_flag, _ = match.groups()
+        if pro_flag:
+            fail(f"{label}:{line_number}: 孵化区不标 [PRO]，发布时再决定：{name}", errors)
+        if tag[3] not in {"E", "D"}:
+            fail(f"{label}:{line_number}: {name} 的成熟度 {tag[3]} 不适用于孵化区（允许：D/E）", errors)
+        if name in names:
+            fail(f"{label}: 重复条目 {name}", errors)
+        names.add(name)
+        if not (incubator / name / "index.md").is_file():
+            fail(f"{label}:{line_number}: 缺少能力文件 capabilities-pro/capabilities-unstable/{name}/index.md", errors)
+
+    for name in sorted(subdirectories(incubator) - names):
+        fail(f"capabilities-pro/capabilities-unstable/：目录未登记在私有孵化索引：{name}", errors)
+    public_names = set().union(*(entries for entries, _ in catalog.values())) if catalog else set()
+    for name in sorted(names & public_names):
+        fail(f"{label}：{name} 同时出现在公开索引，孵化能力不得公开登记", errors)
+
+
 def main() -> int:
     errors: list[str] = []
     pro_available = PRO_ROOT.is_dir()
@@ -158,6 +195,13 @@ def main() -> int:
                     errors,
                 )
 
+            if pro_flag and bucket == "capabilities-unstable":
+                fail(
+                    f"{index_path.relative_to(ROOT)}:{line_number}: 公开待验证区不允许 [PRO]：{name}；"
+                    "孵化中的能力只登记在私有索引 capabilities-pro/capabilities-unstable/index.md",
+                    errors,
+                )
+                continue
             if pro_flag:
                 if (bucket_path / name).exists():
                     fail(
@@ -185,7 +229,7 @@ def main() -> int:
         for name in sorted(public_indexed - directories):
             fail(f"{bucket}/：索引条目没有对应目录：{name}", errors)
 
-        if pro_available:
+        if pro_available and bucket != "capabilities-unstable":
             pro_directories = subdirectories(PRO_ROOT / bucket)
             for name in sorted(pro_directories - pro_entries):
                 fail(
@@ -195,6 +239,8 @@ def main() -> int:
             for name in sorted(pro_entries - pro_directories):
                 fail(f"capabilities-pro/{bucket}/：[PRO] 索引条目没有对应目录：{name}", errors)
 
+    if pro_available:
+        check_incubator(catalog, errors)
     check_pages(catalog, errors)
 
     if errors:
