@@ -97,16 +97,16 @@ name[tag]: 一句话核心职责
 命中 `[PRO]` 能力时，按顺序：
 
 1. 本机存在能力库源仓库且其中有 `capabilities-pro/` 时，直接读取 `capabilities-pro/<bucket>/<name>/`。
-2. 否则用本机订阅码向授权服务读取（`<file>` 缺省为 `index.md`）：
+2. 否则用本机读取工具（`<file>` 缺省为 `index.md`）：
 
    ```bash
-   curl -fsS -H "X-Aoci-Code: $(cat ~/.aoci/license 2>/dev/null)" \
-     "https://aoci-auth.aoci-wuch.workers.dev/cap/capabilities/<name>/<file>"
+   ~/.aoci/fetch capabilities/<name>/<file>                       # macOS / Linux
+   powershell -NoProfile -ExecutionPolicy Bypass -File "$HOME\.aoci\fetch.ps1" capabilities/<name>/<file>   # Windows
    ```
 
-3. 返回 401/403 时，告诉用户该能力需要订阅，并给出授权页 `https://ccharlie-xiu.github.io/aoci-wuch/auth.html`，然后按常规方式完成任务。**不得根据索引行猜测或编造正文。**
+3. 读取工具不存在，或返回未订阅、已过期、本机未激活等提示时，如实转告，给出授权页 `https://ccharlie-xiu.github.io/aoci-wuch/auth.html`，然后按常规方式完成任务。**不得根据索引行猜测或编造正文。**
 
-订阅码只从 `~/.aoci/license` 读取，不要在回答中输出订阅码。
+不要读取或输出 `~/.aoci/` 下的订阅码与工具内容。
 
 ## 边界
 

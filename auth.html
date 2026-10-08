@@ -104,11 +104,11 @@
         </li>
         <li class="flex items-center gap-2.5 text-sm text-ink">
           <span class="w-5 h-5 rounded-full bg-brand/10 text-brand flex items-center justify-center shrink-0"><i data-lucide="check" class="w-3 h-3"></i></span>
-          <span>可下载完整的订阅能力包</span>
+          <span>仅限一台设备使用</span>
         </li>
         <li class="flex items-center gap-2.5 text-sm text-ink">
           <span class="w-5 h-5 rounded-full bg-brand/10 text-brand flex items-center justify-center shrink-0"><i data-lucide="check" class="w-3 h-3"></i></span>
-          <span>在终端保存一次，之后自动使用</span>
+          <span>续费后自动延长</span>
         </li>
       </ul>
     </div>
@@ -166,14 +166,20 @@
           <i data-lucide="badge-check" class="w-3.5 h-3.5"></i>
           <span>已授权</span>
         </div>
-        <h2 class="font-serif text-2xl sm:text-3xl font-normal text-ink tracking-tight">授权成功，还差一步</h2>
+        <h2 id="successTitle" class="font-serif text-2xl sm:text-3xl font-normal text-ink tracking-tight">授权成功</h2>
         <p id="planInfo" class="text-xs text-muted"></p>
       </div>
 
       <div class="text-left space-y-2">
-        <div class="flex items-center gap-1.5 text-xs font-medium text-faint">
-          <i data-lucide="terminal" class="w-3.5 h-3.5 text-brand"></i>
-          <span>在终端运行一次，保存订阅码（AI 助手读取 [PRO] 能力时会自动使用）</span>
+        <div class="flex items-center justify-between gap-2">
+          <div class="flex items-center gap-1.5 text-xs font-medium text-faint">
+            <i data-lucide="terminal" class="w-3.5 h-3.5 text-brand"></i>
+            <span>复制到终端运行一次即可</span>
+          </div>
+          <div class="flex items-center gap-0.5 bg-surface-subtle p-0.5 rounded-lg border border-line/60 text-[11px] shrink-0">
+            <button type="button" data-os="unix" class="os-tab px-2 py-0.5 rounded-md font-medium transition-craft">macOS / Linux</button>
+            <button type="button" data-os="win" class="os-tab px-2 py-0.5 rounded-md font-medium transition-craft">Windows</button>
+          </div>
         </div>
         <div class="flex items-center gap-2 p-1.5 bg-[#1f2318] rounded-2xl border border-brand/30">
           <code id="licenseCmd" class="px-3 py-2 text-xs font-mono text-[#dfe6c8] flex-1 truncate select-all"></code>
@@ -181,19 +187,8 @@
             <i data-lucide="copy" class="w-3.5 h-3.5"></i><span>复制</span>
           </button>
         </div>
+        <p id="boundNotice" class="hidden text-[11px] text-amber-800">此订阅码已在一台设备上激活。</p>
       </div>
-
-      <div class="text-left space-y-2">
-        <div class="flex items-center gap-1.5 text-xs font-medium text-faint">
-          <i data-lucide="package" class="w-3.5 h-3.5 text-brand"></i>
-          <span>可选：下载完整订阅能力包（链接几分钟内有效）</span>
-        </div>
-        <button id="downloadBtn" type="button" class="w-full px-5 py-2.5 bg-surface-subtle hover:bg-white text-ink rounded-xl border border-line text-xs font-medium flex items-center justify-center gap-1.5 transition-craft disabled:opacity-60 disabled:cursor-wait">
-          <i data-lucide="download" class="w-3.5 h-3.5"></i><span>下载 ZIP</span>
-        </button>
-      </div>
-
-      <p id="successMessage" class="hidden text-xs text-rose-700 bg-rose-50 border border-rose-200 rounded-lg px-3 py-2"></p>
 
       <div class="pt-2 border-t border-line/60 flex flex-col sm:flex-row items-center justify-center gap-3">
         <a href="./" class="w-full sm:w-auto px-6 py-2.5 bg-brand hover:bg-brand-hover text-white rounded-xl text-xs font-medium flex items-center justify-center gap-2 transition-craft shadow-sm">
@@ -273,9 +268,9 @@
         localStorage.setItem(STORAGE_KEY, activeCode);
         const expires = new Date(data.expiresAt).toLocaleDateString('zh-CN');
         document.getElementById('planInfo').textContent = `套餐 ${data.plan} · 有效期至 ${expires}`;
-        document.getElementById('licenseCmd').textContent =
-          `mkdir -p ~/.aoci && printf '%s' '${activeCode}' > ~/.aoci/license`;
-        setMessage(document.getElementById('successMessage'), '');
+        document.getElementById('successTitle').textContent = data.bound ? '订阅有效' : '授权成功';
+        document.getElementById('boundNotice').classList.toggle('hidden', !data.bound);
+        renderCommand();
         swapView(formView, successView);
       } catch (err) {
         setMessage(document.getElementById('message'), err.message);
@@ -285,23 +280,28 @@
       }
     });
 
+    let currentOs = /Windows/i.test(navigator.userAgent) ? 'win' : 'unix';
+
+    function renderCommand() {
+      document.getElementById('licenseCmd').textContent = currentOs === 'win'
+        ? `irm "${AUTH_API}/install.ps1?code=${activeCode}" | iex`
+        : `curl -fsSL "${AUTH_API}/install.sh?code=${activeCode}" | sh`;
+      document.querySelectorAll('.os-tab').forEach((b) => {
+        const active = b.dataset.os === currentOs;
+        b.classList.toggle('bg-brand', active);
+        b.classList.toggle('text-white', active);
+        b.classList.toggle('text-muted', !active);
+      });
+    }
+
+    document.querySelectorAll('.os-tab').forEach((b) => b.addEventListener('click', () => {
+      currentOs = b.dataset.os;
+      renderCommand();
+    }));
+
     document.getElementById('copyCmdBtn').addEventListener('click', async () => {
       await navigator.clipboard.writeText(document.getElementById('licenseCmd').textContent);
       showToast('命令已复制，粘贴到终端运行即可');
-    });
-
-    document.getElementById('downloadBtn').addEventListener('click', async (event) => {
-      const btn = event.currentTarget;
-      btn.disabled = true;
-      setMessage(document.getElementById('successMessage'), '');
-      try {
-        const data = await post('/download', { code: activeCode });
-        window.location.href = data.url;
-      } catch (err) {
-        setMessage(document.getElementById('successMessage'), err.message);
-      } finally {
-        btn.disabled = false;
-      }
     });
 
     document.getElementById('changeCodeBtn').addEventListener('click', () => {
