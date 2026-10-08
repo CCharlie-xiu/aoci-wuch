@@ -52,6 +52,7 @@ The assistant does not need to load every capability in full at the start of a c
 | [DBX 数据库接入](capabilities-unstable/dbx-mcp-setup/) | 检查并配置 DBX MCP，验证数据库工具可用 |
 | [Excel 后端配置](capabilities-unstable/excel-capability/) | 为 Excel 任务选择并接通合适的处理后端 |
 | [LibTV 影像接入](capabilities-unstable/libtv-mcp-setup/) | 接入并验证 LibTV Remote MCP |
+| [订阅授权方案](capabilities-unstable/subscription-gate/) | 公开仓库部分内容改为订阅可得，含授权服务、授权页与后台 |
 
 ## 仓库内容 / Repository contents
 
