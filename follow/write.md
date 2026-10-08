@@ -22,6 +22,14 @@
 python3 scripts/new_capability.py <name> --tag <tag> --desc "一句话核心职责"
 ```
 
+## 创建前先决定是否收费
+
+公开仓库的 git 历史永久可追溯，写进公开目录的内容事后无法真正收回。因此：
+
+- **新建能力前先确定免费还是订阅**，订阅能力从第一次落笔就用 `--pro` 写入私有仓库。
+- **拿不准时默认按订阅写入私有区**：从私有转公开随时可以，从公开转私有不可逆。
+- 禁止先在公开目录起草、再移入 `capabilities-pro/`。
+
 ## 订阅能力（[PRO]）
 
 订阅能力的正文放在私有仓库 `aoci-wuch-pro`，本地固定 clone 在 `capabilities-pro/`（已被 `.gitignore` 排除）。索引行仍写在公开 `index.md`，带 `[PRO]`：
