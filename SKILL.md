@@ -88,9 +88,19 @@ name[tag]: 一句话核心职责
 
 `tag` = `[类型+领域+价值+成熟度+优先级]`。完整定义在 `_meta/taxonomy.md`，**需要时再读**。
 
+## 订阅能力 [PRO]
+
+索引行形如 `name[tag][PRO]: ...` 的是订阅能力，正文**不在公开仓库**，`raw.githubusercontent.com` 读不到。
+
+命中 `[PRO]` 能力时：
+
+1. 本机存在能力库源仓库且其中有 `capabilities-pro/` 时，读取 `capabilities-pro/<bucket>/<name>/`。
+2. 否则告诉用户该能力属于订阅能力、当前无法读取正文，然后按常规方式完成任务。**不得根据索引行猜测或编造正文。**
+
 ## 边界
 
 - 写入 / 修改 / 晋升 / 退役能力前，先读对应的 `follow/` 规则
+- 订阅能力正文只能写入 `capabilities-pro/`，不得出现在公开目录或公开提交中
 - **不得自行晋升能力**（`capabilities-unstable/` → `capabilities/` 必须由人确认）
 
 ## 使用标记

@@ -36,3 +36,5 @@ capabilities/
 1. 移动目录：`capabilities-unstable/<name>/` → `capabilities/<name>/`。
 2. 从 `capabilities-unstable/index.md` 删除该行。
 3. 把该行加入 `capabilities/index.md`，`D` 位从 `E`/`D` 改为 `S`/`M`。
+
+订阅能力（`[PRO]`）同理，只是第 1 步在私有仓库内移动：`capabilities-pro/capabilities-unstable/<name>/` → `capabilities-pro/capabilities/<name>/`；索引行保留 `[PRO]`。两个仓库分别提交，先推私有仓库。
