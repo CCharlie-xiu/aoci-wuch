@@ -57,10 +57,55 @@ def check_pro_isolation(errors: list[str]) -> None:
         fail(f"公开仓库已跟踪 capabilities-pro/ 下的文件：{tracked.splitlines()[0]} 等", errors)
 
 
+PAGES_BUCKETS = {
+    "capabilities": "### 正式能力",
+    "capabilities-unstable": "### 待验证能力",
+}
+PAGE_ENTRY = re.compile(r'\{\s*id:\s*"([a-z0-9-]+)"[^}]*\}')
+
+
+def check_pages(catalog: dict[str, tuple[set[str], set[str]]], errors: list[str]) -> None:
+    """index.html (GitHub Pages) and README must list exactly the live capabilities."""
+    live = {name for bucket in PAGES_BUCKETS for name in catalog.get(bucket, (set(), set()))[0]}
+    pro = {name for bucket in PAGES_BUCKETS for name in catalog.get(bucket, (set(), set()))[1]}
+
+    html = (ROOT / "index.html").read_text(encoding="utf-8")
+    page_entries = {m.group(1): "pro: true" in m.group(0) for m in PAGE_ENTRY.finditer(html)}
+    for name in sorted(live - set(page_entries)):
+        fail(f"index.html：能力未出现在首页能力列表：{name}", errors)
+    for name in sorted(set(page_entries) - live):
+        fail(f"index.html：首页列出了不存在或已退役的能力：{name}", errors)
+    for name in sorted(live & set(page_entries)):
+        if page_entries[name] != (name in pro):
+            expected = "需要" if name in pro else "不应"
+            fail(f"index.html：{name} {expected}标记 pro: true", errors)
+
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    for bucket, heading in PAGES_BUCKETS.items():
+        start = readme.find(heading)
+        if start < 0:
+            fail(f"README.md：缺少「{heading}」小节", errors)
+            continue
+        end = readme.find("\n#", start + len(heading))
+        section = readme[start : end if end > 0 else len(readme)]
+        names, pro_names = catalog.get(bucket, (set(), set()))
+        listed = set(re.findall(rf"\({re.escape(bucket)}/([a-z0-9-]+)/\)", section))
+        listed_pro = set(re.findall(r"<!-- pro:([a-z0-9-]+) -->", section))
+        for name in sorted(names - pro_names - listed):
+            fail(f"README.md「{heading}」：缺少能力行（链接 {bucket}/{name}/）：{name}", errors)
+        for name in sorted(pro_names - listed_pro):
+            fail(f"README.md「{heading}」：订阅能力行需链接授权页并带 <!-- pro:{name} -->：{name}", errors)
+        for name in sorted((listed | listed_pro) - names):
+            fail(f"README.md「{heading}」：列出了不在本分区的能力：{name}", errors)
+        for name in sorted(listed & pro_names):
+            fail(f"README.md「{heading}」：订阅能力 {name} 不得链接到公开目录", errors)
+
+
 def main() -> int:
     errors: list[str] = []
     pro_available = PRO_ROOT.is_dir()
     check_pro_isolation(errors)
+    catalog: dict[str, tuple[set[str], set[str]]] = {}
 
     for bucket, allowed_maturities in BUCKETS.items():
         bucket_path = ROOT / bucket
@@ -132,6 +177,7 @@ def main() -> int:
                     errors,
                 )
 
+        catalog[bucket] = (set(entries), pro_entries)
         public_indexed = set(entries) - pro_entries
         directories = subdirectories(bucket_path) - pro_entries
         for name in sorted(directories - public_indexed):
@@ -148,6 +194,8 @@ def main() -> int:
                 )
             for name in sorted(pro_entries - pro_directories):
                 fail(f"capabilities-pro/{bucket}/：[PRO] 索引条目没有对应目录：{name}", errors)
+
+    check_pages(catalog, errors)
 
     if errors:
         print("能力库校验失败：", file=sys.stderr)

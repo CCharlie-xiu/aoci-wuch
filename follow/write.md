@@ -16,11 +16,16 @@
 3. 放入资产：脚本、工作流、示例、配置——有就放，没有就不放。
 4. 在 `capabilities-unstable/index.md` 追加一行：`name[tag]: 一句话核心职责`。
 
-步骤 1、2、4 可用脚本一次完成：
+5. 同步 GitHub Pages 与 README：`index.html` 的 `capabilities` 列表加一项（订阅能力带 `pro: true`）；`README.md`「待验证能力」表加一行（订阅能力链接授权页并带 `<!-- pro:<name> -->`）。
+
+步骤 1、2、4、5 用脚本一次完成：
 
 ```bash
-python3 scripts/new_capability.py <name> --tag <tag> --desc "一句话核心职责"
+python3 scripts/new_capability.py <name> --tag <tag> --desc "一句话核心职责" \
+  --title "中文显示名" [--title-en "English Name"] [--icon <lucide 图标名>] [--pro]
 ```
+
+`scripts/validate.py` 会核对索引、首页与 README 三处一致，漏改即失败。
 
 ## 创建前先决定是否收费
 
@@ -46,4 +51,4 @@ name[tag][PRO]: 一句话核心职责
 
 ## 完成标准
 
-目录可独立看懂；FRAS 符合 taxonomy；索引行已追加；`python3 scripts/validate.py` 通过。
+目录可独立看懂；FRAS 符合 taxonomy；索引行已追加；首页与 README 已同步；`python3 scripts/validate.py` 通过；推送后 Pages 自动重建。

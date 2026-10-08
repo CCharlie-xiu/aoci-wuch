@@ -13,3 +13,4 @@
 
 1. 检查替代项和依赖。
 2. 移动目录，更新原索引、退役索引及相关链接。
+3. 从首页 `index.html` 的 `capabilities` 列表和 `README.md` 能力目录中移除该能力；运行 `scripts/validate.py` 确认三处一致。

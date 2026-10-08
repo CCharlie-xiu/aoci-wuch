@@ -111,6 +111,7 @@ name[tag]: 一句话核心职责
 - 写入 / 修改 / 晋升 / 退役能力前，先读对应的 `follow/` 规则
 - 订阅能力正文只能写入 `capabilities-pro/`，不得出现在公开目录或公开提交中
 - 新建能力前先确认免费还是订阅；未确认时按订阅写入私有区（公开历史不可收回）
+- 新增、晋升、退役、转订阅都必须同步首页 `index.html`（GitHub Pages）与 `README.md`，以 `scripts/validate.py` 通过为准
 - **不得自行晋升能力**（`capabilities-unstable/` → `capabilities/` 必须由人确认）
 
 ## 使用标记

@@ -37,4 +37,6 @@ capabilities/
 2. 从 `capabilities-unstable/index.md` 删除该行。
 3. 把该行加入 `capabilities/index.md`，`D` 位从 `E`/`D` 改为 `S`/`M`。
 
+4. 把 `README.md` 中该能力的行从「待验证能力」表移到「正式能力」表；公开能力的链接改为 `capabilities/<name>/`。首页 `index.html` 列表无需改动。运行 `scripts/validate.py` 确认三处一致。
+
 订阅能力（`[PRO]`）同理，只是第 1 步在私有仓库内移动：`capabilities-pro/capabilities-unstable/<name>/` → `capabilities-pro/capabilities/<name>/`；索引行保留 `[PRO]`。两个仓库分别提交，先推私有仓库。

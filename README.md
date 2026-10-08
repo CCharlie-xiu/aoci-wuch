@@ -40,7 +40,7 @@ The assistant does not need to load every capability in full at the start of a c
 | 能力 | 用途 |
 | --- | --- |
 | [GitHub 应用授权](capabilities/github-authorize/) | 为指定 GitHub 应用完成授权流程 |
-| [原生移动应用搭建](https://ccharlie-xiu.github.io/aoci-wuch/auth.html) `PRO` | 使用 mobile-template 家族创建 iOS / Android 项目（订阅能力） |
+| [原生移动应用搭建](https://ccharlie-xiu.github.io/aoci-wuch/auth.html) `PRO` | 使用 mobile-template 家族创建 iOS / Android 项目（订阅能力） <!-- pro:mobile-template-app --> |
 | [复杂设计逻辑枚举](capabilities/logic-space-enumeration/) | 推演复杂设计中的有效场景、路径与结果 |
 
 ### 待验证能力 / Experimental
@@ -52,7 +52,7 @@ The assistant does not need to load every capability in full at the start of a c
 | [DBX 数据库接入](capabilities-unstable/dbx-mcp-setup/) | 检查并配置 DBX MCP，验证数据库工具可用 |
 | [Excel 后端配置](capabilities-unstable/excel-capability/) | 为 Excel 任务选择并接通合适的处理后端 |
 | [LibTV 影像接入](capabilities-unstable/libtv-mcp-setup/) | 接入并验证 LibTV Remote MCP |
-| [订阅授权方案](capabilities-unstable/subscription-gate/) | 公开仓库部分内容改为订阅可得，含授权服务、授权页与后台 |
+| [订阅授权方案](https://ccharlie-xiu.github.io/aoci-wuch/auth.html) `PRO` | 公开仓库部分内容改为订阅可得，含授权服务、授权页与后台（订阅能力） <!-- pro:subscription-gate --> |
 
 ## 仓库内容 / Repository contents
 

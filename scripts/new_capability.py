@@ -46,11 +46,46 @@ def append_index_line(index_path: Path, line: str) -> None:
     index_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
+AUTH_PAGE = "https://ccharlie-xiu.github.io/aoci-wuch/auth.html"
+
+
+def add_to_homepage(name: str, title: str, title_en: str, icon: str, pro: bool) -> None:
+    path = ROOT / "index.html"
+    html = path.read_text(encoding="utf-8")
+    match = re.search(r"(const capabilities = \[\n)(.*?)(\n\s*\];)", html, re.S)
+    if not match:
+        raise SystemExit("index.html 中找不到 const capabilities = [...]")
+    body = match.group(2).rstrip()
+    if not body.endswith(","):
+        body += ","
+    entry = f'      {{ id: "{name}", icon: "{icon}", name: "{title}", nameEn: "{title_en}"{", pro: true" if pro else ""} }}'
+    path.write_text(html[: match.start(2)] + body + "\n" + entry + html[match.end(2) :], encoding="utf-8")
+
+
+def add_to_readme(name: str, title: str, desc: str, pro: bool) -> None:
+    path = ROOT / "README.md"
+    lines = path.read_text(encoding="utf-8").splitlines()
+    start = next((i for i, l in enumerate(lines) if l.startswith("### 待验证能力")), None)
+    if start is None:
+        raise SystemExit("README.md 中找不到「### 待验证能力」小节")
+    last_row = max(i for i in range(start, len(lines)) if lines[i].startswith("|") and all(
+        not lines[j].startswith("#") for j in range(start + 1, i + 1)))
+    if pro:
+        row = f"| [{title}]({AUTH_PAGE}) `PRO` | {desc}（订阅能力） <!-- pro:{name} --> |"
+    else:
+        row = f"| [{title}]({BUCKET}/{name}/) | {desc} |"
+    lines.insert(last_row + 1, row)
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
 def main() -> int:
-    parser = argparse.ArgumentParser(description="新建待验证能力（默认公开，--pro 为订阅能力）")
+    parser = argparse.ArgumentParser(description="新建待验证能力（默认公开，--pro 为订阅能力），并同步首页与 README")
     parser.add_argument("name", help="能力名，小写连字符，如 pdf-to-md")
     parser.add_argument("--tag", required=True, help="五位标签，成熟度只能是 E/D，如 TF8DH")
     parser.add_argument("--desc", required=True, help="一句话核心职责（同时写入 F 与索引行）")
+    parser.add_argument("--title", required=True, help="首页与 README 显示的中文名，如 PDF 转 Markdown")
+    parser.add_argument("--title-en", help="首页英文名，默认同能力名")
+    parser.add_argument("--icon", default="sparkles", help="首页图标，lucide 图标名，默认 sparkles")
     parser.add_argument("--pro", action="store_true", help="订阅能力：正文写入私有仓库 capabilities-pro/")
     args = parser.parse_args()
 
@@ -91,16 +126,20 @@ def main() -> int:
         encoding="utf-8",
     )
     append_index_line(index_path, f"{args.name}[{args.tag}]{pro_flag}: {args.desc}")
+    add_to_homepage(args.name, args.title, args.title_en or args.name, args.icon, args.pro)
+    add_to_readme(args.name, args.title, args.desc, args.pro)
 
     print(f"已创建 {target.relative_to(ROOT)}/index.md")
     print(f"已在 {BUCKET}/index.md 追加索引行")
+    print("已同步首页 index.html 能力列表与 README 能力目录")
     print("\n补全 FRAS 与正文后，运行 python3 scripts/validate.py，再提交：")
+    pages = f"{BUCKET}/index.md index.html README.md"
     if args.pro:
         print(f"  1. 私有仓库：cd capabilities-pro && git add {BUCKET}/{args.name} && git commit && git push")
-        print(f"  2. 公开仓库：git add {BUCKET}/index.md && git commit && git push")
+        print(f"  2. 公开仓库：git add {pages} && git commit && git push")
         print("  顺序不能反：先推正文，再公开索引，避免出现无正文的 [PRO] 条目。")
     else:
-        print(f"  git add {BUCKET}/{args.name} {BUCKET}/index.md && git commit && git push")
+        print(f"  git add {BUCKET}/{args.name} {pages} && git commit && git push")
     return 0
 
 
