@@ -2,13 +2,13 @@
 """校验 LibTV Remote MCP 接入的固定契约与状态。
 
 只读：不握手、不联网、不创建连接器、不改任何配置。
-本脚本只做配置常量与状态规则校验；接入时 AI 应使用当前环境可用的获准入口完成配置，账户登录/授权再交给用户。
+本脚本只做配置常量、配置模式与状态规则校验；连接是否真正就绪以 LibTV 的 doctor 工具为准。
 
 用法：
     python3 validate.py                              # 打印契约 + 状态机 + 下一步
     python3 validate.py --state READY                # 校验状态枚举，输出裁决
     python3 validate.py --name LibTV-wuch --url https://mcp.liblib.tv/mcp
-    python3 validate.py --config ~/.cursor/mcp.json  # 在配置里查找 LibTV 条目（best-effort）
+    python3 validate.py --config ~/.cursor/mcp.json  # 查找 LibTV 条目并判断模式：bridge / direct-url / not-found
 
 退出码：
     0 校验通过（无状态参数，或状态为 READY）
@@ -26,27 +26,32 @@ CONNECTOR_NAME = "LibTV-wuch"
 MCP_URL = "https://mcp.liblib.tv/mcp"
 PROVIDER = "LibTV"
 
+RECOMMENDED_ENTRY = {
+    "command": "npx",
+    "args": ["-y", "mcp-remote@latest", MCP_URL],
+}
+
 STATES = {
-    "NOT_FOUND": "没有 LibTV-wuch 连接器",
-    "CONNECTED_UNAUTHORIZED": "连接存在，但未完成 LibTV 账户授权",
-    "READY": "连接存在 + 地址正确 + 已连接 + 账户已授权",
+    "NOT_FOUND": "配置中没有 LibTV-wuch",
+    "CONNECTED_UNAUTHORIZED": "配置存在，等待 LibTV 账户授权",
+    "READY": "工具已加载，doctor 返回 status: ready 且带 identity",
     "ERROR": "连接失败",
 }
 
 NEXT_ACTION = {
-    "NOT_FOUND": "AI 通过当前可用且获准的 MCP 管理入口、客户端 UI 或配置文件创建 LibTV-wuch（地址 https://mcp.liblib.tv/mcp），保留其他配置并验证；到登录/账户授权时交给用户",
-    "CONNECTED_UNAUTHORIZED": "不重复创建；把 LibTV 登录/账户授权交给用户，完成后复查状态",
+    "NOT_FOUND": "只增补 mcpServers.LibTV-wuch 为推荐桥接配置，保留其他条目；重载后交给用户授权",
+    "CONNECTED_UNAUTHORIZED": "不重复创建；让用户在自动弹出的浏览器页登录并授权（或发日志中的授权链接），完成后调用 doctor 复查",
     "READY": "结束接入，进入用户的影像创作任务",
-    "ERROR": "不宣称已连接；返回实际错误，先重新授权或检查连接，不动其他 MCP",
+    "ERROR": "不宣称已连接；读 mcp-server-user-LibTV-wuch.log 定位，按 method.md 排错表修复后复查，不动其他 MCP",
 }
 
 ALIASES = {"UNAUTHORIZED": "CONNECTED_UNAUTHORIZED", "CONNECTED": "READY"}
 
 READY_CONDITIONS = [
     "连接器 LibTV-wuch 存在",
-    f"MCP 地址为 {MCP_URL}",
-    "MCP 已成功连接",
-    "LibTV 账户授权完成",
+    f"MCP 地址为 {MCP_URL}（推荐经 mcp-remote 桥接）",
+    "LibTV-wuch 工具列表已加载",
+    "doctor 返回 status: ready 且带 identity",
 ]
 
 
@@ -79,9 +84,28 @@ def find_in_config(path: Path) -> dict:
         for name, entry in block.items():
             blob = json.dumps(entry, ensure_ascii=False) if isinstance(entry, (dict, list)) else str(entry)
             if name == CONNECTOR_NAME or MCP_URL in blob or "liblib" in blob.lower():
+                mode, advice = config_mode(entry)
                 return {"config": str(path), "exists": True, "found": True,
+                        "name_ok": name == CONNECTOR_NAME, "mode": mode, "advice": advice,
                         "entry": {"name": name, "value": redact_secrets(entry)}}
-    return {"config": str(path), "exists": True, "found": False, "entry": None}
+    return {"config": str(path), "exists": True, "found": False, "mode": "not-found",
+            "advice": "写入推荐桥接配置", "entry": None}
+
+
+def config_mode(entry) -> tuple[str, str]:
+    if not isinstance(entry, dict):
+        return "unknown", "条目格式异常，按推荐桥接配置重写"
+    args = entry.get("args") or []
+    url = str(entry.get("url") or entry.get("serverUrl") or "")
+    if any("mcp-remote" in str(a) for a in args):
+        if any(str(a).rstrip("/") == MCP_URL for a in args):
+            return "bridge", "配置正确；授权后调用 doctor 复查"
+        return "bridge-wrong-url", f"桥接地址应为 {MCP_URL}"
+    if url:
+        if url.rstrip("/") != MCP_URL:
+            return "direct-url-wrong", f"地址应为 {MCP_URL}，并改为桥接配置"
+        return "direct-url", "直连 url 在 Cursor 等自定义协议回调客户端会报 redirect URI is not allowed，改为桥接配置"
+    return "unknown", "未识别的配置形态，按推荐桥接配置重写"
 
 
 def redact_secrets(value):
@@ -137,6 +161,7 @@ def main() -> int:
     payload = {
         "capability": "libtv-mcp-setup",
         "contract": contract,
+        "recommended_entry": {CONNECTOR_NAME: RECOMMENDED_ENTRY},
         "ready_conditions": READY_CONDITIONS,
         "states": STATES,
         "checked": {"state": state, "name": args.name, "url": args.url},

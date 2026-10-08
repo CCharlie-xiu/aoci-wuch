@@ -6,98 +6,89 @@
 
 F: 当需要 LibTV 影像创作时，由 AI 尽可能完成 LibTV Remote MCP 配置与连接检查；仅在账户登录/授权时交由用户确认，随后复查就绪状态
 R:
-A: `scripts/validate.py`（固定契约与状态校验）；固定契约：连接器名 `LibTV-wuch`、MCP 地址 `https://mcp.liblib.tv/mcp`；就绪 = 连接存在 + 地址正确 + 已连接 + 账户已授权
-S: 不伪造连接成功状态；账户未授权前不得宣称「已可创作」；本能力只负责「接入与就绪」，不负责创作方法；不修改其他 MCP；已有有效 LibTV 连接时不重复创建；连接名固定 `LibTV-wuch`，除非用户明确要求改；默认由 AI 通过可用的 MCP 管理能力、客户端 UI 或配置文件完成创建/修复/检查，不能把常规配置步骤直接推给用户；遵守当前客户端的文件、UI 与安全权限，不绕过阻止；只有登录/账户授权或明确的权限阻断需要用户接手，阻断时说明具体原因与唯一待办步骤
+A: `method.md`（已验证的配置、排错与就绪判定步骤）；`scripts/validate.py`（契约、状态与配置模式校验）；固定契约：连接器名 `LibTV-wuch`、MCP 地址 `https://mcp.liblib.tv/mcp`；就绪 = 连接器存在 + 地址正确 + 工具已加载 + `doctor` 返回 `status: ready` 且带 `identity`
+S: LibTV OAuth 只接受 `http://localhost` / `http://127.0.0.1` 回调，客户端用自定义协议回调（如 Cursor 的 `cursor://`）时直接填 `url` 必定失败（`redirect URI is not allowed`），须改用 `mcp-remote` 桥接；不伪造连接成功状态；`doctor` 未返回 ready 与身份前不得宣称「已可创作」；连接就绪不等于生成/导出已验收；本能力只负责「接入与就绪」，不负责创作方法；不修改其他 MCP；已有有效 LibTV 连接时不重复创建；连接名固定 `LibTV-wuch`，除非用户明确要求改；常规配置由 AI 完成，不推给用户；遵守客户端权限，不绕过阻止；只有登录/账户授权或明确的权限阻断需要用户接手，阻断时说明具体原因与唯一待办步骤
 
 ---
 
 ## 这是什么
 
-远程 MCP 接入能力：让 AI 在「需要 LibTV 影像创作」时，知道**何时触发、如何自行配置和检查连接、何时把账户授权交给用户、连接完成后如何进入创作**。
+远程 MCP 接入能力：让 AI 在「需要 LibTV 影像创作」时完成**检查 → 配置 → 交给用户授权 → 复查就绪**，然后交给创作任务。
 
-它**不实现** LibTV，但应主动使用当前环境可用的管理入口完成连接器配置；只有需要用户身份验证/授权或遇到明确权限阻断时才交接。
+它不实现 LibTV，也不负责怎么创作；只负责把 `LibTV-wuch` 接到可用状态。
 
 ## 关键区分
 
 ```text
-libtv-mcp-setup（本能力）        ≠   libtv-mcp（创作能力）
+libtv-mcp-setup（本能力）        ≠   LibTV MCP 本身（创作能力）
    「我需要 LibTV」                     创作图片 / 视频
    → 找到/创建连接器                    修改图片 / 生成影像
    → 等用户登录/确认授权                 分镜设计 / 参数优化
-   → Ready                             …
+   → doctor ready                      …
 ```
-
-「怎么接入」与「怎么使用」必须分开。本能力只做前者。这也是可复用的模式：以后接即梦、可灵、Runway、Midjourney 等其他远程 MCP，沿用同一套「接入能力」设计。
 
 ## 什么时候用
 
 | 用户说 | 判定 |
 | --- | --- |
-| 使用 LibTV 创作影像 | 触发 |
-| 用 LibTV 生成图片 / 视频 | 触发 |
-| 让我连接 LibTV / 帮我接入 LibTV MCP | 触发 |
-| 开始使用 LibTV 创作 | 触发 |
+| 使用 LibTV 创作影像 / 生成图片或视频 | 触发 |
+| 帮我连接 / 接入 LibTV MCP | 触发 |
+| LibTV 在 MCP 列表里看不到 / 连不上 | 触发（走 ERROR 排查） |
 
-已有可用且已授权的 `LibTV-wuch` 时**不重复创建**，直接进入创作。
+已有可用且 `doctor` ready 的 `LibTV-wuch` 时**不重复创建**，直接进入创作。
+
+## 推荐配置（已验证）
+
+```json
+"LibTV-wuch": {
+  "command": "npx",
+  "args": ["-y", "mcp-remote@latest", "https://mcp.liblib.tv/mcp"]
+}
+```
+
+`mcp-remote` 在本地起 `http://localhost:<port>/oauth/callback` 完成 OAuth，再以 stdio 把 MCP 交给客户端。前提：本机有 `node` / `npx`。
+
+不要用 `{"url": "https://mcp.liblib.tv/mcp"}` 直连——在 Cursor 中实测会被 LibTV 拒绝回调地址，工具永远加载不出来。
 
 ## 核心流程
 
 ```text
-用户需要 LibTV
+检查 LibTV-wuch ── 工具已加载且 doctor ready ──▶ 直接进入创作
       │
+   无 / 直连 url / 报错
       ▼
-检查当前是否已有 LibTV-wuch ── 有且已授权 ──▶ 直接进入创作
-      │
-     无 / 未授权
+写入（或改为）推荐配置，只动 LibTV-wuch 一条
       ▼
-AI 创建 LibTV-wuch（名称 + 地址 https://mcp.liblib.tv/mcp）
+客户端自动重载 → mcp-remote 自动打开浏览器授权页
       ▼
-保存并重载客户端（如需要）
+交给用户：登录 LibTV 并同意授权（唯一人工步骤）
       ▼
-到达登录/账户授权步骤时交给用户确认
+复查：工具列表已加载 → 调用 doctor
       ▼
-重新检查连接状态
-      ▼
-确认 READY
-      ▼
-告知用户可以开始创作
+status: ready + identity.userId → READY
 ```
 
 ## 状态机
 
-| 状态 | 含义 | 下一步 |
+| 状态 | 判定依据 | 下一步 |
 | --- | --- | --- |
-| `NOT_FOUND` | 没有 `LibTV-wuch` | AI 通过可用入口创建（名称 + 地址），保留其他配置 → 重载并验证 → 等授权 |
-| `CONNECTED_UNAUTHORIZED` | 连接在，未完成授权 | 不重复创建；把登录/授权交给用户，完成后复查 |
-| `READY` | 四项条件全满足 | 结束接入，进入创作 |
-| `ERROR` | 连接失败 | AI 先检查并修复可安全修复的配置/连接问题；需要账户授权时再交给用户，始终返回实际错误 |
-
-## 就绪条件
-
-必须**同时**满足才算 Ready：
-
-```text
-1. 连接器 LibTV-wuch 存在
-2. MCP 地址为 https://mcp.liblib.tv/mcp
-3. MCP 已成功连接
-4. LibTV 账户授权完成
-```
+| `NOT_FOUND` | 配置中没有 `LibTV-wuch` | 写入推荐配置 → 等授权 |
+| `CONNECTED_UNAUTHORIZED` | 配置在，客户端日志显示等待授权 / 只有 `mcp_auth` 工具 | 不重复创建；交给用户在浏览器完成授权，再复查 |
+| `READY` | 工具已加载，`doctor` 返回 `status: ready` 且有 `identity` | 结束接入，进入创作 |
+| `ERROR` | 连接失败 | 读客户端 MCP 日志定位原因，按 `method.md` 修复后复查 |
 
 ## 使用入口
 
 ```text
-python3 scripts/validate.py                    # 打印固定契约 + 状态机 + 各状态下一步
-python3 scripts/validate.py --state READY      # 校验状态枚举，输出裁决与下一步
-python3 scripts/validate.py --name X --url Y   # 校验名称/地址是否符合固定契约
-python3 scripts/validate.py --config <file>    # 在客户端配置里查找 LibTV 条目（best-effort）
+method.md                                        # 具体步骤、日志位置、排错表
+python3 scripts/validate.py --config ~/.cursor/mcp.json   # 检查配置模式是否正确
+python3 scripts/validate.py --state READY        # 状态枚举校验
 ```
 
 ## 边界
 
 ```text
-AI 可以且应当：检查当前连接 / 通过可用管理入口或客户端配置创建连接器 / 保留其他 MCP 配置 / 重载并验证 / 在授权后复查就绪 / 告诉用户如何开始
-AI 不得：伪造连接成功 / 未授权就宣称可创作 / 绕过客户端权限或替用户作出未授权决定 / 改其他 MCP /
+AI 应当：检查现状 / 写入或修复 LibTV-wuch 配置 / 保留其他 MCP / 读日志排错 / 授权后调用 doctor 复查 / 告诉用户可以开始
+AI 不得：伪造连接成功 / doctor 未 ready 就宣称可创作 / 绕过客户端权限 / 改其他 MCP /
          重复创建已有连接 / 在本能力内承担创作（提示词、生成、改图、分镜、参数、评价）
-
-若当前会话不能访问客户端 UI 或配置文件，不要把这描述为该流程通常必须由用户完成；说明实际的权限/能力阻断，并只交给用户完成被阻断的那一步。
 ```

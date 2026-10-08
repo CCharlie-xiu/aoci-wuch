@@ -1,7 +1,6 @@
 # method
 
 `libtv-mcp-setup` 的执行细节。认知层见 `index.md`。
-固定契约取自用户给定配置（2026-10 核实地址在线：`GET https://mcp.liblib.tv/mcp` 返回 `401`，端点存在、需授权）。
 
 ## 固定配置
 
@@ -9,53 +8,89 @@
 | --- | --- |
 | Connector Name | `LibTV-wuch` |
 | MCP URL | `https://mcp.liblib.tv/mcp` |
-| Provider | LibTV |
-| 用途 | 影像创作 |
-| 传输 | Remote MCP（HTTP） |
+| 接入方式 | `npx -y mcp-remote@latest https://mcp.liblib.tv/mcp`（stdio 桥接） |
+| 授权 | OAuth 2.1 + PKCE，动态注册客户端，回调须为 `http://localhost` / `http://127.0.0.1` |
+| 前提 | 本机有 `node` / `npx` |
 
-**这些值不得自行更改**，除非用户明确要求。名称固定 `LibTV-wuch`。
+名称与地址不得自行更改，除非用户明确要求。
 
-## 状态判断与操作
+## 为什么必须桥接
 
-### NOT_FOUND
-
-没有 `LibTV-wuch`。AI 应先检查当前会话的 MCP 管理入口、客户端 UI 与相应客户端配置位置，并选择当前可用且获准的方式自行添加。配置文件方式须先读取并解析现有文件，只增补 `mcpServers.LibTV-wuch`，保留其他 MCP 条目和设置；不得覆盖整个文件或输出其中的密钥。保存后按客户端要求重载/重启，再检查配置与连接状态。
+LibTV 授权服务（`https://mcp.liblib.tv/register`）对回调地址做白名单：
 
 ```text
-1. AI 使用当前可用且获准的 MCP 管理入口、客户端 UI 或配置文件创建远程 MCP
-2. 名称为 LibTV-wuch，地址为 https://mcp.liblib.tv/mcp
-3. 保留所有其他配置；按客户端要求重载/重启
-4. 验证连接器存在、地址正确，并读取实际连接/授权状态
-5. 只有到达登录或账户授权步骤时，才暂停并交给用户完成
+cursor://anysphere.cursor-mcp/oauth/callback   → invalid_redirect_uri（拒绝）
+http://localhost:<port>/callback               → 注册成功
+http://127.0.0.1:<port>/callback               → 注册成功
 ```
 
-### CONNECTED_UNAUTHORIZED
+Cursor 直连 `url` 时用 `cursor://` 回调，因此日志报 `redirect URI is not allowed`，授权页都不会弹出，MCP 列表里也看不到 LibTV 工具。`mcp-remote` 用本地 HTTP 回调，正好满足白名单。
 
-连接存在，但未完成 LibTV 授权。
+其他客户端：若其远程 MCP 授权回调也是自定义协议，同样用桥接；若回调本身就是 localhost，可直连 `url`，但仍以 `doctor` 复查为准（未逐一实测）。
+
+## 步骤
+
+### 1. 检查现状
 
 ```text
-1. 不重复创建连接
-2. 尽可能打开客户端提供的授权流程；登录、账号选择和授权确认交给用户
-3. 授权完成后重新检查状态；未能自动观察完成时，请用户告知授权已完成后继续复查
+- 读取客户端 MCP 配置（Cursor：~/.cursor/mcp.json，项目级 .cursor/mcp.json）
+- python3 scripts/validate.py --config <配置文件>   # 判断 NOT_FOUND / 直连 url / 桥接
+- 查看 LibTV-wuch 的工具是否已加载；已加载就直接调用 doctor
 ```
 
-### READY
+### 2. 写入或修复配置（NOT_FOUND / 直连 url）
 
-四项条件同时满足：
+只增补或替换 `mcpServers.LibTV-wuch` 这一条，保留其他条目，不输出其中的密钥：
 
-```text
-连接器存在 + 地址正确 + MCP Connected + LibTV Account Authorized
+```json
+"LibTV-wuch": {
+  "command": "npx",
+  "args": ["-y", "mcp-remote@latest", "https://mcp.liblib.tv/mcp"]
+}
 ```
 
-结束接入流程，进入用户的影像创作任务。
+写完用 `python3 -m json.tool <配置文件>` 确认 JSON 合法。Cursor 会自动重载 `mcp.json`，无需重启。
 
-### ERROR
+### 3. 交给用户授权（唯一人工步骤）
+
+重载后 `mcp-remote` 会自动打开浏览器的 LibTV 授权页。告诉用户：登录 LibTV 并点同意。
+
+浏览器没弹出时，从客户端 MCP 日志里找 `Please authorize this client by visiting:` 后面的链接发给用户。
+
+授权成功后 token 缓存在 `~/.mcp-auth/mcp-remote-*/`，之后重启客户端不需要再授权。
+
+### 4. 复查就绪
 
 ```text
-- 不宣称已经连接
-- 先读取错误并检查当前连接配置；AI 自行修复可安全修复的问题，再重载并复查
-- 只有需要用户登录/重新授权或环境权限阻断时才交接，并说明具体状态
-- 不修改其他 MCP 配置
+1. LibTV-wuch 工具列表已加载（实测 48 个业务工具，含 doctor / generate_video / generation_submit 等）
+2. 调用 doctor（无参数）
+3. 返回 status: "ready" + connectionStateReady: true + identity.userId → READY
+```
+
+`doctor` 只证明身份与连接就绪；首次生成/导出仍以实际任务结果为准。
+
+## 排错
+
+Cursor 日志位置：
+
+```text
+~/Library/Application Support/Cursor/logs/<最新时间戳>/mcp-server-user-LibTV-wuch.log
+```
+
+| 日志 / 现象 | 原因 | 处理 |
+| --- | --- | --- |
+| `redirect URI is not allowed` | 直连 `url`，回调被 LibTV 拒绝 | 改为桥接配置 |
+| `Waiting for authorization...` | 已打开授权页，用户未完成 | 交给用户授权；必要时发日志里的授权链接 |
+| `npx: command not found` / spawn 失败 | 本机无 Node | 告知需安装 Node（如 `brew install node`），属环境阻断 |
+| 工具已加载但调用返回 401 | token 失效或被撤销 | 删除 `~/.mcp-auth/mcp-remote-*/` 中对应缓存后重载，重新授权（未实测） |
+| 只看到 `mcp_auth` 一个工具、状态 error | 连接未建立 | 先看日志定位，不要反复调用 `mcp_auth`（直连模式下实测会 30 秒超时） |
+
+服务端连通性自检（不需要授权）：
+
+```bash
+curl -sS -o /dev/null -w "%{http_code}\n" -X POST https://mcp.liblib.tv/mcp \
+  -H 'Content-Type: application/json' -d '{}'
+# 401 = 服务在线、需授权；超时或 5xx = 服务端问题，属外部阻断
 ```
 
 ## 用户交互话术
@@ -63,45 +98,42 @@
 **首次接入**
 
 ```text
-我会先替你配置并检查 LibTV 连接。到 LibTV 登录/授权时，我会停下来交给你确认；授权后我会继续复查连接状态。
+我来配置 LibTV 连接。浏览器会弹出 LibTV 授权页，请登录并点同意，完成后告诉我，我再复查。
 ```
 
-不得在 `NOT_FOUND` 时仅给出手动编辑 JSON 的说明并要求用户从头配置。仅当当前环境确实不允许 AI 访问所需 UI/文件时，才说明具体阻断，并给出最小待办动作；配置成功后仍应由 AI 继续验证。
-
-**授权完成后**
+**就绪后**
 
 ```text
-LibTV 已连接并完成授权，可以开始创作了。
+LibTV 已连接并完成授权（doctor: ready），可以开始创作了。
 ```
 
-**连接失败**
+**失败时**
 
 ```text
-LibTV 连接没有成功，当前状态是 <ERROR 详情>。我已检查/处理 <已执行的修复>；目前只需要你完成 <登录/授权或明确的权限阻断步骤>，之后我会继续复查。
+LibTV 连接没有成功，原因是 <日志中的实际错误>。我已 <已执行的修复>；现在只需要你 <唯一待办步骤>，之后我继续复查。
 ```
 
-## 校验
+## 校验脚本
 
 ```text
-python3 scripts/validate.py                    # 契约 + 状态机 + 下一步
-python3 scripts/validate.py --state READY      # 状态枚举校验 + 裁决
+python3 scripts/validate.py                              # 契约 + 状态机
+python3 scripts/validate.py --state READY                # 状态枚举校验
 python3 scripts/validate.py --name LibTV-wuch --url https://mcp.liblib.tv/mcp
-python3 scripts/validate.py --config ~/.cursor/mcp.json
+python3 scripts/validate.py --config ~/.cursor/mcp.json  # 配置模式：bridge / direct-url / not-found
 ```
 
-`validate.py` **只做配置常量与状态规则校验**，不握手、不创建连接器。其能力边界不代表执行本能力的 AI 不能通过其他获准入口配置连接器。`--config` 输出不得泄露配置文件中的 token、密码或其他密钥。
+脚本只读、不联网、不改配置；输出会脱敏 token 等字段。
 
 ## 边界
 
 本能力不负责：影像提示词设计 / 图片生成 / 视频生成 / 画面修改 / 分镜设计 / LibTV 参数优化 / 生成结果评价。
-这些属于后续独立能力或 LibTV MCP 本身提供的执行能力。
 
-## 本机实测（2026-10-06）
-
-以下只是 2026-10-06 的历史快照，不代表当前状态；每次执行时都要重新检查，不能据此跳过配置或复查。
+## 实测记录（2026-10-08，macOS + Cursor）
 
 ```text
-地址探测   GET https://mcp.liblib.tv/mcp → 401（在线，需授权）
-客户端     WorkBuddy / Cursor / Codex / Windsurf 配置均无 libtv|liblib 条目
-状态       NOT_FOUND（本机尚无 LibTV 连接）
+直连 url          → redirect URI is not allowed，工具不加载
+改 mcp-remote 桥接 → 自动弹出授权页，用户授权后工具加载
+doctor            → status: ready，identity.userId 存在，toolRegistry 48 个
 ```
+
+历史快照，每次执行仍须重新检查。
