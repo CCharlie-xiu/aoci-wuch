@@ -9,7 +9,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
 
@@ -30,8 +30,12 @@
           fontFamily: {
             serif: ['"Noto Serif SC"', '"Songti SC"', 'Georgia', 'serif'],
             sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', '"PingFang SC"', '"Microsoft YaHei"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
           },
-          boxShadow: { 'craft': '0 20px 40px -15px rgba(45, 52, 30, 0.07)' }
+          boxShadow: {
+            'craft': '0 20px 40px -15px rgba(45, 52, 30, 0.07)',
+            'card-glow': '0 0 0 1px rgba(84, 95, 42, 0.18), 0 20px 40px -12px rgba(84, 95, 42, 0.16)'
+          }
         }
       }
     }
@@ -48,84 +52,164 @@
     .bg-paper-grain {
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.025'/%3E%3C/svg%3E");
     }
-    .transition-craft { transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1); }
+    .transition-craft { transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+    .view { transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1); }
+    .view.is-leaving { opacity: 0; transform: translateY(-8px) scale(0.98); }
+    .view.is-entering { opacity: 0; transform: translateY(8px) scale(0.98); }
+    @media (prefers-reduced-motion: reduce) {
+      .view, .transition-craft { transition: none; }
+    }
   </style>
 </head>
-<body class="bg-paper-grain min-h-screen flex flex-col px-6 sm:px-12 py-5 sm:py-7 max-w-3xl mx-auto selection:bg-brand selection:text-white">
+<body class="bg-paper-grain min-h-screen flex flex-col px-6 sm:px-10 py-5 sm:py-7 max-w-5xl mx-auto selection:bg-brand selection:text-white">
+
+  <div id="toast" class="fixed top-6 left-1/2 -translate-x-1/2 -translate-y-12 opacity-0 pointer-events-none z-50 transition-craft">
+    <div class="bg-brand text-white px-4 py-2 rounded-full shadow-xl flex items-center gap-2 text-xs font-medium border border-white/20">
+      <i data-lucide="check-circle" class="w-4 h-4"></i>
+      <span id="toastMessage"></span>
+    </div>
+  </div>
 
   <header class="w-full flex items-center justify-between shrink-0">
-    <a href="./" class="inline-flex items-center gap-3 text-ink font-semibold text-sm hover:opacity-80 transition-opacity">
+    <a href="./" class="inline-flex items-center gap-2.5 text-ink font-semibold text-sm hover:opacity-80 transition-opacity">
       <div class="w-8 h-8 rounded-full border border-black/20 flex items-center justify-center text-brand bg-white/50">
         <i data-lucide="sparkles" class="w-4 h-4"></i>
       </div>
       <span class="font-serif text-base tracking-tight">至关重要</span>
     </a>
-    <span class="text-xs text-muted font-medium tracking-wide">订阅授权</span>
+    <a href="./" class="inline-flex items-center gap-1.5 rounded-full border border-line bg-white/70 px-3 py-1.5 text-xs font-semibold text-muted hover:border-brand hover:text-brand transition-craft">
+      <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i><span>返回首页</span>
+    </a>
   </header>
 
-  <main class="my-auto py-10 space-y-6">
-    <div class="space-y-3">
-      <div class="inline-flex items-center gap-2 text-[11px] font-semibold text-muted tracking-widest uppercase">
-        <span class="w-6 h-[1px] bg-brand"></span>
-        <span>SUBSCRIPTION</span>
+  <main id="formView" class="view my-auto py-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center w-full">
+    <div class="lg:col-span-5 space-y-5">
+      <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-amber-300 bg-amber-50 text-amber-900 text-[11px] font-semibold tracking-wide">
+        <i data-lucide="shield-alert" class="w-3.5 h-3.5 text-amber-600"></i>
+        <span>待授权</span>
       </div>
+
       <h1 class="font-serif text-3xl sm:text-4xl font-normal leading-tight text-ink tracking-tight">
-        解锁 <span class="text-brand">[PRO]</span> 订阅能力
+        解锁 <span class="text-brand">[PRO]</span><br>订阅能力
       </h1>
-      <p class="text-sm text-muted leading-relaxed max-w-xl">
-        能力索引中标记 <code class="font-mono text-xs bg-surface-subtle px-1.5 py-0.5 rounded">[PRO]</code> 的能力需要订阅。输入订阅码完成授权后，AI 助手即可读取这些能力，你也可以下载完整的订阅能力包。
+
+      <p class="text-sm text-muted leading-relaxed">
+        能力索引中标记 <code class="font-mono text-xs bg-surface-subtle px-1.5 py-0.5 rounded">[PRO]</code> 的能力需要订阅。输入订阅码完成授权后，AI 助手即可读取这些能力。
       </p>
+
+      <ul class="space-y-2.5">
+        <li class="flex items-center gap-2.5 text-sm text-ink">
+          <span class="w-5 h-5 rounded-full bg-brand/10 text-brand flex items-center justify-center shrink-0"><i data-lucide="check" class="w-3 h-3"></i></span>
+          <span>AI 助手可直接读取全部 [PRO] 能力</span>
+        </li>
+        <li class="flex items-center gap-2.5 text-sm text-ink">
+          <span class="w-5 h-5 rounded-full bg-brand/10 text-brand flex items-center justify-center shrink-0"><i data-lucide="check" class="w-3 h-3"></i></span>
+          <span>可下载完整的订阅能力包</span>
+        </li>
+        <li class="flex items-center gap-2.5 text-sm text-ink">
+          <span class="w-5 h-5 rounded-full bg-brand/10 text-brand flex items-center justify-center shrink-0"><i data-lucide="check" class="w-3 h-3"></i></span>
+          <span>在终端保存一次，之后自动使用</span>
+        </li>
+      </ul>
     </div>
 
-    <form id="activateForm" class="bg-surface rounded-3xl border border-line shadow-craft p-6 space-y-4">
-      <label class="block space-y-2">
-        <span class="text-xs font-medium text-faint">订阅码</span>
-        <input id="codeInput" required autocomplete="off" spellcheck="false" placeholder="AOCI-XXXX-XXXX-XXXX"
-          class="w-full px-4 py-3 bg-surface-subtle rounded-xl border border-line/60 font-mono text-sm uppercase tracking-wider focus:outline-none focus:border-brand transition-craft">
-      </label>
-      <label class="block space-y-2">
-        <span class="text-xs font-medium text-faint">你主要用它来做什么？<span class="text-faint/70">（选填，帮助我改进能力库）</span></span>
-        <input id="purposeInput" maxlength="200" placeholder="例如：独立开发 iOS App、公司内部 AI 提效"
-          class="w-full px-4 py-3 bg-surface-subtle rounded-xl border border-line/60 text-sm focus:outline-none focus:border-brand transition-craft">
-      </label>
-      <div class="flex items-center gap-3">
-        <button id="activateBtn" type="submit" class="px-5 py-2.5 bg-brand hover:bg-brand-hover active:scale-[0.98] text-white rounded-xl text-xs font-medium flex items-center gap-1.5 transition-craft shadow-sm disabled:opacity-60">
-          <i data-lucide="key-round" class="w-3.5 h-3.5"></i>
-          <span>验证并授权</span>
-        </button>
-        <span id="message" class="text-xs text-muted"></span>
-      </div>
-    </form>
+    <div class="lg:col-span-7">
+      <form id="activateForm" class="bg-surface rounded-3xl border border-line shadow-craft p-6 sm:p-7 space-y-5">
+        <div class="flex items-center justify-between border-b border-line/60 pb-3">
+          <div class="flex items-center gap-2">
+            <span class="relative flex w-2.5 h-2.5">
+              <span class="absolute inline-flex w-full h-full rounded-full bg-amber-400 opacity-60 motion-safe:animate-ping"></span>
+              <span class="relative inline-flex w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+            </span>
+            <span class="text-xs font-semibold text-ink tracking-wider">当前状态</span>
+          </div>
+          <span class="text-[11px] px-3 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300 font-semibold">未授权</span>
+        </div>
 
-    <section id="success" class="hidden bg-brand-light rounded-3xl border border-brand/30 p-6 space-y-5">
-      <div class="flex items-center gap-2 text-sm text-ink font-medium">
-        <i data-lucide="badge-check" class="w-4 h-4 text-brand"></i>
-        <span>授权成功</span>
-        <span id="planInfo" class="text-xs text-muted font-normal"></span>
+        <label class="block space-y-2">
+          <span class="flex items-center justify-between text-xs">
+            <span class="font-semibold text-faint tracking-wide">订阅码 <span class="text-rose-500">*</span></span>
+            <span class="text-[11px] text-faint font-mono">AOCI-XXXX-XXXX-XXXX</span>
+          </span>
+          <span class="relative block">
+            <input id="codeInput" required autocomplete="off" spellcheck="false" placeholder="AOCI-XXXX-XXXX-XXXX"
+              class="w-full pl-4 pr-10 py-3 bg-surface-subtle rounded-xl border border-line/60 font-mono text-sm uppercase tracking-widest text-ink placeholder:text-faint/60 focus:outline-none focus:border-brand focus:bg-white transition-craft">
+            <i data-lucide="key" class="w-4 h-4 text-faint absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+          </span>
+        </label>
+
+        <label class="block space-y-2">
+          <span class="text-xs font-medium text-faint">你主要用它来做什么？<span class="text-faint/70">（选填，帮助我改进能力库）</span></span>
+          <input id="purposeInput" maxlength="200" placeholder="例如：独立开发 iOS App、公司内部 AI 提效"
+            class="w-full px-4 py-3 bg-surface-subtle rounded-xl border border-line/60 text-sm text-ink placeholder:text-faint/60 focus:outline-none focus:border-brand focus:bg-white transition-craft">
+        </label>
+
+        <div class="space-y-2 pt-1">
+          <button id="activateBtn" type="submit" class="w-full py-3 bg-brand hover:bg-brand-hover active:scale-[0.98] text-white rounded-xl text-sm font-medium flex items-center justify-center gap-2 transition-craft shadow-sm disabled:opacity-60 disabled:cursor-wait">
+            <i data-lucide="key-round" class="w-4 h-4"></i>
+            <span id="activateText">验证并授权</span>
+          </button>
+          <p id="message" class="hidden text-xs text-rose-700 bg-rose-50 border border-rose-200 rounded-lg px-3 py-2"></p>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <main id="successView" class="view hidden my-auto py-10 w-full max-w-xl mx-auto">
+    <section class="bg-surface rounded-3xl border border-brand/40 shadow-card-glow ring-8 ring-brand/5 p-6 sm:p-8 text-center space-y-6">
+      <div class="w-14 h-14 rounded-full bg-brand text-white flex items-center justify-center mx-auto shadow-lg ring-8 ring-brand-light">
+        <i data-lucide="check" class="w-7 h-7"></i>
       </div>
 
       <div class="space-y-2">
-        <div class="text-xs font-medium text-faint">第 1 步：在终端运行，保存订阅码（只需一次，AI 助手读取 [PRO] 能力时会自动使用）</div>
-        <div class="flex items-center gap-2 p-1.5 bg-surface rounded-2xl border border-line">
-          <code id="licenseCmd" class="px-3 py-2 bg-surface-subtle rounded-xl text-xs font-mono text-muted flex-1 truncate select-all"></code>
-          <button id="copyCmdBtn" type="button" class="px-4 py-2.5 bg-brand hover:bg-brand-hover text-white rounded-xl text-xs font-medium flex items-center gap-1.5 shrink-0 transition-craft">
-            <i data-lucide="copy" class="w-3.5 h-3.5"></i><span id="copyCmdText">复制</span>
+        <div class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-brand-light border border-brand/30 text-brand text-[11px] font-semibold">
+          <i data-lucide="badge-check" class="w-3.5 h-3.5"></i>
+          <span>已授权</span>
+        </div>
+        <h2 class="font-serif text-2xl sm:text-3xl font-normal text-ink tracking-tight">授权成功，还差一步</h2>
+        <p id="planInfo" class="text-xs text-muted"></p>
+      </div>
+
+      <div class="text-left space-y-2">
+        <div class="flex items-center gap-1.5 text-xs font-medium text-faint">
+          <i data-lucide="terminal" class="w-3.5 h-3.5 text-brand"></i>
+          <span>在终端运行一次，保存订阅码（AI 助手读取 [PRO] 能力时会自动使用）</span>
+        </div>
+        <div class="flex items-center gap-2 p-1.5 bg-[#1f2318] rounded-2xl border border-brand/30">
+          <code id="licenseCmd" class="px-3 py-2 text-xs font-mono text-[#dfe6c8] flex-1 truncate select-all"></code>
+          <button id="copyCmdBtn" type="button" class="px-4 py-2 bg-brand hover:bg-brand-hover text-white rounded-xl text-xs font-medium flex items-center gap-1.5 shrink-0 transition-craft">
+            <i data-lucide="copy" class="w-3.5 h-3.5"></i><span>复制</span>
           </button>
         </div>
       </div>
 
-      <div class="space-y-2">
-        <div class="text-xs font-medium text-faint">可选：下载完整订阅能力包（链接几分钟内有效）</div>
-        <button id="downloadBtn" type="button" class="px-5 py-2.5 bg-surface hover:bg-white text-ink rounded-xl border border-line text-xs font-medium flex items-center gap-1.5 transition-craft disabled:opacity-60">
+      <div class="text-left space-y-2">
+        <div class="flex items-center gap-1.5 text-xs font-medium text-faint">
+          <i data-lucide="package" class="w-3.5 h-3.5 text-brand"></i>
+          <span>可选：下载完整订阅能力包（链接几分钟内有效）</span>
+        </div>
+        <button id="downloadBtn" type="button" class="w-full px-5 py-2.5 bg-surface-subtle hover:bg-white text-ink rounded-xl border border-line text-xs font-medium flex items-center justify-center gap-1.5 transition-craft disabled:opacity-60 disabled:cursor-wait">
           <i data-lucide="download" class="w-3.5 h-3.5"></i><span>下载 ZIP</span>
         </button>
       </div>
-    </section>
 
-    <p class="text-xs text-faint">
-      还没有订阅码？请通过 <a class="text-brand underline underline-offset-2" href="https://github.com/CCharlie-xiu" target="_blank" rel="noopener">GitHub</a> 联系作者获取。
-    </p>
+      <p id="successMessage" class="hidden text-xs text-rose-700 bg-rose-50 border border-rose-200 rounded-lg px-3 py-2"></p>
+
+      <div class="pt-2 border-t border-line/60 flex flex-col sm:flex-row items-center justify-center gap-3">
+        <a href="./" class="w-full sm:w-auto px-6 py-2.5 bg-brand hover:bg-brand-hover text-white rounded-xl text-xs font-medium flex items-center justify-center gap-2 transition-craft shadow-sm">
+          <i data-lucide="home" class="w-3.5 h-3.5"></i><span>返回首页</span>
+        </a>
+        <button id="changeCodeBtn" type="button" class="w-full sm:w-auto px-6 py-2.5 bg-surface-subtle border border-line text-ink rounded-xl text-xs font-medium hover:bg-white transition-craft">
+          换一个订阅码
+        </button>
+      </div>
+    </section>
   </main>
+
+  <footer class="w-full shrink-0 pt-3 border-t border-line/50 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-faint">
+    <span class="font-serif">至关重要 · 订阅授权</span>
+    <span>还没有订阅码？请通过 <a class="text-brand underline underline-offset-2" href="https://github.com/CCharlie-xiu" target="_blank" rel="noopener">GitHub</a> 联系作者获取。</span>
+  </footer>
 
   <script>
     const AUTH_API = 'https://aoci-auth.aoci-wuch.workers.dev';
@@ -135,11 +219,36 @@
     const codeInput = document.getElementById('codeInput');
     const purposeInput = document.getElementById('purposeInput');
     const activateBtn = document.getElementById('activateBtn');
-    const message = document.getElementById('message');
-    const success = document.getElementById('success');
+    const activateText = document.getElementById('activateText');
+    const formView = document.getElementById('formView');
+    const successView = document.getElementById('successView');
     let activeCode = '';
 
     codeInput.value = localStorage.getItem(STORAGE_KEY) || '';
+
+    function setMessage(el, text) {
+      el.textContent = text;
+      el.classList.toggle('hidden', !text);
+    }
+
+    function showToast(text) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toastMessage').textContent = text;
+      toast.classList.remove('-translate-y-12', 'opacity-0');
+      clearTimeout(showToast.timer);
+      showToast.timer = setTimeout(() => toast.classList.add('-translate-y-12', 'opacity-0'), 1800);
+    }
+
+    function swapView(from, to) {
+      from.classList.add('is-leaving');
+      setTimeout(() => {
+        from.classList.add('hidden');
+        from.classList.remove('is-leaving');
+        to.classList.add('is-entering');
+        to.classList.remove('hidden');
+        requestAnimationFrame(() => requestAnimationFrame(() => to.classList.remove('is-entering')));
+      }, 250);
+    }
 
     async function post(path, body) {
       const res = await fetch(AUTH_API + path, {
@@ -155,7 +264,8 @@
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
       activateBtn.disabled = true;
-      message.textContent = '验证中…';
+      activateText.textContent = '验证中…';
+      setMessage(document.getElementById('message'), '');
       try {
         const code = codeInput.value.trim().toUpperCase();
         const data = await post('/activate', { code, purpose: purposeInput.value.trim() });
@@ -165,34 +275,39 @@
         document.getElementById('planInfo').textContent = `套餐 ${data.plan} · 有效期至 ${expires}`;
         document.getElementById('licenseCmd').textContent =
           `mkdir -p ~/.aoci && printf '%s' '${activeCode}' > ~/.aoci/license`;
-        success.classList.remove('hidden');
-        message.textContent = '';
+        setMessage(document.getElementById('successMessage'), '');
+        swapView(formView, successView);
       } catch (err) {
-        success.classList.add('hidden');
-        message.textContent = err.message;
+        setMessage(document.getElementById('message'), err.message);
       } finally {
         activateBtn.disabled = false;
+        activateText.textContent = '验证并授权';
       }
     });
 
     document.getElementById('copyCmdBtn').addEventListener('click', async () => {
       await navigator.clipboard.writeText(document.getElementById('licenseCmd').textContent);
-      const label = document.getElementById('copyCmdText');
-      label.textContent = '已复制';
-      setTimeout(() => (label.textContent = '复制'), 1500);
+      showToast('命令已复制，粘贴到终端运行即可');
     });
 
     document.getElementById('downloadBtn').addEventListener('click', async (event) => {
       const btn = event.currentTarget;
       btn.disabled = true;
+      setMessage(document.getElementById('successMessage'), '');
       try {
         const data = await post('/download', { code: activeCode });
         window.location.href = data.url;
       } catch (err) {
-        message.textContent = err.message;
+        setMessage(document.getElementById('successMessage'), err.message);
       } finally {
         btn.disabled = false;
       }
+    });
+
+    document.getElementById('changeCodeBtn').addEventListener('click', () => {
+      codeInput.value = '';
+      swapView(successView, formView);
+      setTimeout(() => codeInput.focus(), 300);
     });
 
     lucide.createIcons();
