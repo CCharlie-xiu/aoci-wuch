@@ -16,6 +16,6 @@ name[tag]: 一句话核心职责
 
 ```text
 github-authorize[OA8SH]: 为指定 GitHub 应用执行用户授权流程
-mobile-template-app[KD9SH]: 使用 mobile-template 家族创建原生移动端项目
+mobile-template-app[KD9SH][PRO]: 使用 mobile-template 家族创建原生移动端项目
 logic-space-enumeration[KW9SH]: 显式化复杂设计的逻辑空间，推演有效组合的路径与结果并暴露未定义情况
 ```

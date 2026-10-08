@@ -239,7 +239,7 @@
     };
     const capabilities = [
       { id: "github-authorize", icon: "shield-check", name: "GitHub 应用授权", nameEn: "GitHub App Authorization" },
-      { id: "mobile-template-app", icon: "smartphone", name: "原生移动应用搭建", nameEn: "Native App Project Setup" },
+      { id: "mobile-template-app", icon: "smartphone", name: "原生移动应用搭建", nameEn: "Native App Project Setup", pro: true },
       { id: "logic-space-enumeration", icon: "workflow", name: "复杂设计逻辑枚举", nameEn: "Complex Logic Enumeration" },
       { id: "dbx-mcp-setup", icon: "database", name: "DBX 数据库连接配置", nameEn: "DBX Database MCP Setup" },
       { id: "excel-capability", icon: "table-2", name: "Excel 后端选择配置", nameEn: "Excel Backend Configuration" },
@@ -255,6 +255,7 @@
         <div class="px-3.5 py-2 rounded-xl bg-surface border border-line/70 text-xs font-medium text-ink flex items-center gap-2 shadow-sponsor hover:border-brand/40 hover:-translate-y-0.5 transition-craft group">
           <i data-lucide="${capability.icon}" class="w-3.5 h-3.5 text-brand group-hover:scale-110 transition-transform"></i>
           <span>${currentLanguage === "zh" ? capability.name : capability.nameEn}</span>
+          ${capability.pro ? '<a href="auth.html" class="ml-0.5 px-1.5 py-0.5 rounded-md bg-brand text-white text-[10px] font-semibold tracking-wide hover:bg-brand-hover">PRO</a>' : ""}
         </div>`).join("");
       lucide.createIcons();
     }

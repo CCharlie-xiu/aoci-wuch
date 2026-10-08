@@ -40,7 +40,7 @@ The assistant does not need to load every capability in full at the start of a c
 | 能力 | 用途 |
 | --- | --- |
 | [GitHub 应用授权](capabilities/github-authorize/) | 为指定 GitHub 应用完成授权流程 |
-| [原生移动应用搭建](capabilities/mobile-template-app/) | 使用 mobile-template 家族创建 iOS / Android 项目 |
+| [原生移动应用搭建](https://ccharlie-xiu.github.io/aoci-wuch/auth.html) `PRO` | 使用 mobile-template 家族创建 iOS / Android 项目（订阅能力） |
 | [复杂设计逻辑枚举](capabilities/logic-space-enumeration/) | 推演复杂设计中的有效场景、路径与结果 |
 
 ### 待验证能力 / Experimental
