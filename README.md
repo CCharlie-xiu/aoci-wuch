@@ -94,3 +94,9 @@ python3 scripts/update_skills.py apply \
 ```
 
 The update command only fast-forwards this source checkout from GitHub `main`; it does not update copies installed in AI products.
+
+## 许可 / License
+
+保留所有权利，仅供查看与个人自用；禁止修改后再分发；不接受外部贡献。详见 [LICENSE](LICENSE)。
+
+All rights reserved. Personal use only; no redistribution of modified copies; external contributions are not accepted. See [LICENSE](LICENSE).
