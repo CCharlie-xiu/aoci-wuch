@@ -2,7 +2,7 @@
 """校验 LibTV Remote MCP 接入的固定契约与状态。
 
 只读：不握手、不联网、不创建连接器、不改任何配置。
-连接器的创建与账户授权在客户端 UI 完成，本脚本只做配置常量与状态规则校验。
+本脚本只做配置常量与状态规则校验；接入时 AI 应使用当前环境可用的获准入口完成配置，账户登录/授权再交给用户。
 
 用法：
     python3 validate.py                              # 打印契约 + 状态机 + 下一步
@@ -34,8 +34,8 @@ STATES = {
 }
 
 NEXT_ACTION = {
-    "NOT_FOUND": "新建远程 MCP/Connector：名称 LibTV-wuch，地址 https://mcp.liblib.tv/mcp，保存后等授权",
-    "CONNECTED_UNAUTHORIZED": "不重复创建；引导用户完成 LibTV 账户授权，再复查状态",
+    "NOT_FOUND": "AI 通过当前可用且获准的 MCP 管理入口、客户端 UI 或配置文件创建 LibTV-wuch（地址 https://mcp.liblib.tv/mcp），保留其他配置并验证；到登录/账户授权时交给用户",
+    "CONNECTED_UNAUTHORIZED": "不重复创建；把 LibTV 登录/账户授权交给用户，完成后复查状态",
     "READY": "结束接入，进入用户的影像创作任务",
     "ERROR": "不宣称已连接；返回实际错误，先重新授权或检查连接，不动其他 MCP",
 }
@@ -80,8 +80,24 @@ def find_in_config(path: Path) -> dict:
             blob = json.dumps(entry, ensure_ascii=False) if isinstance(entry, (dict, list)) else str(entry)
             if name == CONNECTOR_NAME or MCP_URL in blob or "liblib" in blob.lower():
                 return {"config": str(path), "exists": True, "found": True,
-                        "entry": {"name": name, "value": entry}}
+                        "entry": {"name": name, "value": redact_secrets(entry)}}
     return {"config": str(path), "exists": True, "found": False, "entry": None}
+
+
+def redact_secrets(value):
+    """Redact likely credentials before including a config entry in stdout."""
+    secret_words = ("token", "secret", "password", "credential", "authorization", "api_key", "apikey")
+    if isinstance(value, dict):
+        result = {}
+        for key, item in value.items():
+            if any(word in str(key).lower().replace("-", "_") for word in secret_words):
+                result[key] = "<redacted>"
+            else:
+                result[key] = redact_secrets(item)
+        return result
+    if isinstance(value, list):
+        return [redact_secrets(item) for item in value]
+    return value
 
 
 def main() -> int:

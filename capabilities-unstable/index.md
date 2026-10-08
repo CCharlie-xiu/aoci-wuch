@@ -19,5 +19,5 @@ ui-design-prompt[KD9DH]: 让 AI 先确认风格再直出可运行的界面设计
 video-frame-extract[TM8DH]: 按自然语言要求从视频中提取画面并生成有序图片集合
 dbx-mcp-setup[TI8DH]: 需要看数据库时发现并打通 DBX MCP 环境，完成安装配置并验证可用
 excel-capability[TF8DH]: 处理 Excel 时在文件级与桌面级后端间选择并打通，默认文件级、必要时升级桌面级
-libtv-mcp-setup[TI8DH]: 需要 LibTV 影像创作时接入 LibTV Remote MCP，完成连接与授权并确认就绪
+libtv-mcp-setup[TI8DH]: 需要 LibTV 影像创作时由 AI 配置并验证 LibTV Remote MCP，仅在账户登录/授权时交接用户
 ```
