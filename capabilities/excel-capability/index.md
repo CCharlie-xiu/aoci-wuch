@@ -2,7 +2,7 @@
 
 > 认知前置：若尚未阅读本仓库外层的 `README.md` 与 `SKILL.md`，须优先阅读二者完成认知搭建，再读本文件。
 
-`excel-capability[TF8DH]`
+`excel-capability[TF8SH]`
 
 F: 按用户的 Excel 任务选择文件级或桌面级后端并打通，默认文件级，仅在必要时升级桌面级
 R:

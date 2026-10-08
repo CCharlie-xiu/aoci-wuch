@@ -18,4 +18,5 @@ name[tag]: 一句话核心职责
 github-authorize[OA8SH]: 为指定 GitHub 应用执行用户授权流程
 mobile-template-app[KD9SH][PRO]: 使用 mobile-template 家族创建原生移动端项目
 logic-space-enumeration[KW9SH]: 显式化复杂设计的逻辑空间，推演有效组合的路径与结果并暴露未定义情况
+excel-capability[TF8SH]: 处理 Excel 时在文件级与桌面级后端间选择并打通，默认文件级、必要时升级桌面级
 ```

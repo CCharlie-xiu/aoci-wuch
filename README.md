@@ -42,6 +42,7 @@ The assistant does not need to load every capability in full at the start of a c
 | [GitHub 应用授权](capabilities/github-authorize/) | 为指定 GitHub 应用完成授权流程 |
 | [原生移动应用搭建](https://ccharlie-xiu.github.io/aoci-wuch/auth.html) `PRO` | 使用 mobile-template 家族创建 iOS / Android 项目（订阅能力） <!-- pro:mobile-template-app --> |
 | [复杂设计逻辑枚举](capabilities/logic-space-enumeration/) | 推演复杂设计中的有效场景、路径与结果 |
+| [Excel 后端选择配置](capabilities/excel-capability/) | 处理 Excel 时在文件级与桌面级后端间选择并打通，默认文件级、必要时升级桌面级 |
 
 ### 待验证能力 / Experimental
 
@@ -50,7 +51,6 @@ The assistant does not need to load every capability in full at the start of a c
 | [界面风格设计](capabilities-unstable/ui-design-prompt/) | 先确认风格，再生成可运行的界面 |
 | [视频画面抽帧](capabilities-unstable/video-frame-extract/) | 按要求从视频提取有序画面 |
 | [DBX 数据库接入](capabilities-unstable/dbx-mcp-setup/) | 检查并配置 DBX MCP，验证数据库工具可用 |
-| [Excel 后端配置](capabilities-unstable/excel-capability/) | 为 Excel 任务选择并接通合适的处理后端 |
 | [LibTV 影像接入](capabilities-unstable/libtv-mcp-setup/) | 接入并验证 LibTV Remote MCP |
 
 ## 仓库内容 / Repository contents
