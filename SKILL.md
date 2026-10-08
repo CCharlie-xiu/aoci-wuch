@@ -92,10 +92,19 @@ name[tag]: 一句话核心职责
 
 索引行形如 `name[tag][PRO]: ...` 的是订阅能力，正文**不在公开仓库**，`raw.githubusercontent.com` 读不到。
 
-命中 `[PRO]` 能力时：
+命中 `[PRO]` 能力时，按顺序：
 
-1. 本机存在能力库源仓库且其中有 `capabilities-pro/` 时，读取 `capabilities-pro/<bucket>/<name>/`。
-2. 否则告诉用户该能力属于订阅能力、当前无法读取正文，然后按常规方式完成任务。**不得根据索引行猜测或编造正文。**
+1. 本机存在能力库源仓库且其中有 `capabilities-pro/` 时，直接读取 `capabilities-pro/<bucket>/<name>/`。
+2. 否则用本机订阅码向授权服务读取（`<bucket>` 为 `capabilities` 或 `capabilities-unstable`，`<file>` 缺省为 `index.md`）：
+
+   ```bash
+   curl -fsS -H "X-Aoci-Code: $(cat ~/.aoci/license 2>/dev/null)" \
+     "https://aoci-auth.aoci-wuch.workers.dev/cap/<bucket>/<name>/<file>"
+   ```
+
+3. 返回 401/403 时，告诉用户该能力需要订阅，并给出授权页 `https://ccharlie-xiu.github.io/aoci-wuch/auth.html`，然后按常规方式完成任务。**不得根据索引行猜测或编造正文。**
+
+订阅码只从 `~/.aoci/license` 读取，不要在回答中输出订阅码。
 
 ## 边界
 

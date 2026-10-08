@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="zh-CN" class="min-h-full">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#fbf9f5">
+  <meta name="robots" content="noindex">
+  <title>订阅授权 — 至关重要</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            bg: '#fbf9f5',
+            surface: '#ffffff',
+            'surface-subtle': '#f2f0ea',
+            ink: '#221e1a',
+            muted: '#4e4235',
+            faint: '#71695c',
+            line: '#cfcfce',
+            brand: { DEFAULT: '#545f2a', hover: '#455021', light: '#f1f4e8' }
+          },
+          fontFamily: {
+            serif: ['"Noto Serif SC"', '"Songti SC"', 'Georgia', 'serif'],
+            sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', '"PingFang SC"', '"Microsoft YaHei"', 'sans-serif'],
+          },
+          boxShadow: { 'craft': '0 20px 40px -15px rgba(45, 52, 30, 0.07)' }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    html, body {
+      min-height: 100dvh;
+      background-color: #fbf9f5;
+      color: #221e1a;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .bg-paper-grain {
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.025'/%3E%3C/svg%3E");
+    }
+    .transition-craft { transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1); }
+  </style>
+</head>
+<body class="bg-paper-grain min-h-screen flex flex-col px-6 sm:px-12 py-5 sm:py-7 max-w-3xl mx-auto selection:bg-brand selection:text-white">
+
+  <header class="w-full flex items-center justify-between shrink-0">
+    <a href="./" class="inline-flex items-center gap-3 text-ink font-semibold text-sm hover:opacity-80 transition-opacity">
+      <div class="w-8 h-8 rounded-full border border-black/20 flex items-center justify-center text-brand bg-white/50">
+        <i data-lucide="sparkles" class="w-4 h-4"></i>
+      </div>
+      <span class="font-serif text-base tracking-tight">至关重要</span>
+    </a>
+    <span class="text-xs text-muted font-medium tracking-wide">订阅授权</span>
+  </header>
+
+  <main class="my-auto py-10 space-y-6">
+    <div class="space-y-3">
+      <div class="inline-flex items-center gap-2 text-[11px] font-semibold text-muted tracking-widest uppercase">
+        <span class="w-6 h-[1px] bg-brand"></span>
+        <span>SUBSCRIPTION</span>
+      </div>
+      <h1 class="font-serif text-3xl sm:text-4xl font-normal leading-tight text-ink tracking-tight">
+        解锁 <span class="text-brand">[PRO]</span> 订阅能力
+      </h1>
+      <p class="text-sm text-muted leading-relaxed max-w-xl">
+        能力索引中标记 <code class="font-mono text-xs bg-surface-subtle px-1.5 py-0.5 rounded">[PRO]</code> 的能力需要订阅。输入订阅码完成授权后，AI 助手即可读取这些能力，你也可以下载完整的订阅能力包。
+      </p>
+    </div>
+
+    <form id="activateForm" class="bg-surface rounded-3xl border border-line shadow-craft p-6 space-y-4">
+      <label class="block space-y-2">
+        <span class="text-xs font-medium text-faint">订阅码</span>
+        <input id="codeInput" required autocomplete="off" spellcheck="false" placeholder="AOCI-XXXX-XXXX-XXXX"
+          class="w-full px-4 py-3 bg-surface-subtle rounded-xl border border-line/60 font-mono text-sm uppercase tracking-wider focus:outline-none focus:border-brand transition-craft">
+      </label>
+      <label class="block space-y-2">
+        <span class="text-xs font-medium text-faint">你主要用它来做什么？<span class="text-faint/70">（选填，帮助我改进能力库）</span></span>
+        <input id="purposeInput" maxlength="200" placeholder="例如：独立开发 iOS App、公司内部 AI 提效"
+          class="w-full px-4 py-3 bg-surface-subtle rounded-xl border border-line/60 text-sm focus:outline-none focus:border-brand transition-craft">
+      </label>
+      <div class="flex items-center gap-3">
+        <button id="activateBtn" type="submit" class="px-5 py-2.5 bg-brand hover:bg-brand-hover active:scale-[0.98] text-white rounded-xl text-xs font-medium flex items-center gap-1.5 transition-craft shadow-sm disabled:opacity-60">
+          <i data-lucide="key-round" class="w-3.5 h-3.5"></i>
+          <span>验证并授权</span>
+        </button>
+        <span id="message" class="text-xs text-muted"></span>
+      </div>
+    </form>
+
+    <section id="success" class="hidden bg-brand-light rounded-3xl border border-brand/30 p-6 space-y-5">
+      <div class="flex items-center gap-2 text-sm text-ink font-medium">
+        <i data-lucide="badge-check" class="w-4 h-4 text-brand"></i>
+        <span>授权成功</span>
+        <span id="planInfo" class="text-xs text-muted font-normal"></span>
+      </div>
+
+      <div class="space-y-2">
+        <div class="text-xs font-medium text-faint">第 1 步：在终端运行，保存订阅码（只需一次，AI 助手读取 [PRO] 能力时会自动使用）</div>
+        <div class="flex items-center gap-2 p-1.5 bg-surface rounded-2xl border border-line">
+          <code id="licenseCmd" class="px-3 py-2 bg-surface-subtle rounded-xl text-xs font-mono text-muted flex-1 truncate select-all"></code>
+          <button id="copyCmdBtn" type="button" class="px-4 py-2.5 bg-brand hover:bg-brand-hover text-white rounded-xl text-xs font-medium flex items-center gap-1.5 shrink-0 transition-craft">
+            <i data-lucide="copy" class="w-3.5 h-3.5"></i><span id="copyCmdText">复制</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <div class="text-xs font-medium text-faint">可选：下载完整订阅能力包（链接几分钟内有效）</div>
+        <button id="downloadBtn" type="button" class="px-5 py-2.5 bg-surface hover:bg-white text-ink rounded-xl border border-line text-xs font-medium flex items-center gap-1.5 transition-craft disabled:opacity-60">
+          <i data-lucide="download" class="w-3.5 h-3.5"></i><span>下载 ZIP</span>
+        </button>
+      </div>
+    </section>
+
+    <p class="text-xs text-faint">
+      还没有订阅码？请通过 <a class="text-brand underline underline-offset-2" href="https://github.com/CCharlie-xiu" target="_blank" rel="noopener">GitHub</a> 联系作者获取。
+    </p>
+  </main>
+
+  <script>
+    const AUTH_API = 'https://aoci-auth.aoci-wuch.workers.dev';
+    const STORAGE_KEY = 'aoci-code';
+
+    const form = document.getElementById('activateForm');
+    const codeInput = document.getElementById('codeInput');
+    const purposeInput = document.getElementById('purposeInput');
+    const activateBtn = document.getElementById('activateBtn');
+    const message = document.getElementById('message');
+    const success = document.getElementById('success');
+    let activeCode = '';
+
+    codeInput.value = localStorage.getItem(STORAGE_KEY) || '';
+
+    async function post(path, body) {
+      const res = await fetch(AUTH_API + path, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      const data = await res.json().catch(() => ({ ok: false, error: '服务暂时不可用' }));
+      if (!data.ok) throw new Error(data.error || '请求失败');
+      return data;
+    }
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      activateBtn.disabled = true;
+      message.textContent = '验证中…';
+      try {
+        const code = codeInput.value.trim().toUpperCase();
+        const data = await post('/activate', { code, purpose: purposeInput.value.trim() });
+        activeCode = data.code;
+        localStorage.setItem(STORAGE_KEY, activeCode);
+        const expires = new Date(data.expiresAt).toLocaleDateString('zh-CN');
+        document.getElementById('planInfo').textContent = `套餐 ${data.plan} · 有效期至 ${expires}`;
+        document.getElementById('licenseCmd').textContent =
+          `mkdir -p ~/.aoci && printf '%s' '${activeCode}' > ~/.aoci/license`;
+        success.classList.remove('hidden');
+        message.textContent = '';
+      } catch (err) {
+        success.classList.add('hidden');
+        message.textContent = err.message;
+      } finally {
+        activateBtn.disabled = false;
+      }
+    });
+
+    document.getElementById('copyCmdBtn').addEventListener('click', async () => {
+      await navigator.clipboard.writeText(document.getElementById('licenseCmd').textContent);
+      const label = document.getElementById('copyCmdText');
+      label.textContent = '已复制';
+      setTimeout(() => (label.textContent = '复制'), 1500);
+    });
+
+    document.getElementById('downloadBtn').addEventListener('click', async (event) => {
+      const btn = event.currentTarget;
+      btn.disabled = true;
+      try {
+        const data = await post('/download', { code: activeCode });
+        window.location.href = data.url;
+      } catch (err) {
+        message.textContent = err.message;
+      } finally {
+        btn.disabled = false;
+      }
+    });
+
+    lucide.createIcons();
+  </script>
+</body>
+</html>
