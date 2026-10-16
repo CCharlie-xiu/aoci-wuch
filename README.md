@@ -43,6 +43,7 @@ The assistant does not need to load every capability in full at the start of a c
 | [原生移动应用搭建](https://ccharlie-xiu.github.io/aoci-wuch/auth.html) `PRO` | 使用 mobile-template 家族创建 iOS / Android 项目（订阅能力） <!-- pro:mobile-template-app --> |
 | [复杂设计逻辑枚举](capabilities/logic-space-enumeration/) | 推演复杂设计中的有效场景、路径与结果 |
 | [Excel 后端选择配置](capabilities/excel-capability/) | 处理 Excel 时在文件级与桌面级后端间选择并打通，默认文件级、必要时升级桌面级 |
+| [iOS 上架与 TestFlight](https://ccharlie-xiu.github.io/aoci-wuch/auth.html) `PRO` | 把 iOS App 从 Xcode 项目发布到 TestFlight 与 App Store（订阅能力） <!-- pro:ios-app-store-release --> |
 
 ### 待验证能力 / Experimental
 
