@@ -19,4 +19,5 @@ ui-design-prompt[KD9DH]: 让 AI 先确认风格再直出可运行的界面设计
 video-frame-extract[TM8DH]: 按自然语言要求从视频中提取画面并生成有序图片集合
 dbx-mcp-setup[TI8DH]: 需要看数据库时发现并打通 DBX MCP 环境，完成安装配置并验证可用
 libtv-mcp-setup[TI8DH]: 需要 LibTV 影像创作时由 AI 配置并验证 LibTV Remote MCP，仅在账户登录/授权时交接用户
+cf-workers-site-auth[KA8DH]: 在 Cloudflare Workers 上落地站点登录与防刷（GitHub OAuth / 邮件 / 限流）
 ```

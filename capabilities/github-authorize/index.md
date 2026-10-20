@@ -7,7 +7,7 @@ github-authorize[OA8SH]
 F: 为指定 GitHub 应用执行用户授权流程
 R:
 A: 启动授权流程、接收授权结果、确认授权状态
-S: 授权确认必须由用户本人完成；一个应用的授权不会自动代表其他应用已授权
+S: 授权确认必须由用户本人完成；一个应用的授权不会自动代表其他应用已授权；若在 Cloudflare Workers 上实现「站点自己的 GitHub 登录 OAuth」，不走本能力流程，见 unstable 能力 cf-workers-site-auth（Workers fetch 调 api.github.com 必须自带 User-Agent）
 
 ---
 

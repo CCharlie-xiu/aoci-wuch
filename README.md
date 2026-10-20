@@ -53,6 +53,7 @@ The assistant does not need to load every capability in full at the start of a c
 | [视频画面抽帧](capabilities-unstable/video-frame-extract/) | 按要求从视频提取有序画面 |
 | [DBX 数据库接入](capabilities-unstable/dbx-mcp-setup/) | 检查并配置 DBX MCP，验证数据库工具可用 |
 | [LibTV 影像接入](capabilities-unstable/libtv-mcp-setup/) | 接入并验证 LibTV Remote MCP |
+| [Workers 站点登录防刷](capabilities-unstable/cf-workers-site-auth/) | Cloudflare Workers 上落地 GitHub OAuth / 邮件登录与限流防刷 |
 
 ## 仓库内容 / Repository contents
 
