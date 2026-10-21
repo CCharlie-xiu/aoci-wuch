@@ -2,7 +2,7 @@
 
 > 认知前置：若尚未阅读本仓库外层的 `README.md` 与 `SKILL.md`，须优先阅读二者完成认知搭建，再读本文件。
 
-`video-frame-extract[TM8DH]`
+`video-frame-extract[TM8SH]`
 
 F: 按自然语言要求从视频中提取画面，生成有序图片集合
 R:

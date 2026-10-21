@@ -2,7 +2,7 @@
 
 > 认知前置：若尚未阅读本仓库外层的 `README.md` 与 `SKILL.md`，须优先阅读二者完成认知搭建，再读本文件。
 
-`dbx-mcp-setup[TI8DH]`
+`dbx-mcp-setup[TI8SH]`
 
 F: 当需要通过数据库工具查看数据时，发现 DBX / DBX MCP / 当前 AI 客户端三处状态，完成必要的安装与配置并验证可用
 R:
