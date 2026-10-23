@@ -46,12 +46,13 @@ The assistant does not need to load every capability in full at the start of a c
 | [iOS 上架与 TestFlight](https://ccharlie-xiu.github.io/aoci-wuch/auth.html) `PRO` | 把 iOS App 从 Xcode 项目发布到 TestFlight 与 App Store（订阅能力） <!-- pro:ios-app-store-release --> |
 | [DBX 数据库接入](capabilities/dbx-mcp-setup/) | 需要看数据库时发现并打通 DBX MCP 环境，完成安装配置并验证可用 |
 | [视频画面抽帧](capabilities/video-frame-extract/) | 按自然语言要求从视频中提取画面并生成有序图片集合 |
+| [设计风格 Canvas](capabilities/wuch-design-canvas/) | 按 wuch-ai 设计锚点询问用户所需效果，确认后产出设计风格 Canvas |
+| [UI 风格提示设计](https://ccharlie-xiu.github.io/aoci-wuch/auth.html) `PRO` | 让 AI 先确认风格再直出可运行的界面设计（订阅能力） <!-- pro:ui-design-prompt --> |
 
 ### 待验证能力 / Experimental
 
 | 能力 | 用途 |
 | --- | --- |
-| [界面风格设计](capabilities-unstable/ui-design-prompt/) | 先确认风格，再生成可运行的界面 |
 | [LibTV 影像接入](capabilities-unstable/libtv-mcp-setup/) | 接入并验证 LibTV Remote MCP |
 | [Workers 站点登录防刷](capabilities-unstable/cf-workers-site-auth/) | Cloudflare Workers 上落地 GitHub OAuth / 邮件登录与限流防刷 |
 

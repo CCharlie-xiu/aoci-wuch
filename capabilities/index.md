@@ -22,4 +22,6 @@ excel-capability[TF8SH]: 处理 Excel 时在文件级与桌面级后端间选择
 ios-app-store-release[TD9SH][PRO]: 把 iOS App 从 Xcode 项目发布到 TestFlight 与 App Store
 dbx-mcp-setup[TI8SH]: 需要看数据库时发现并打通 DBX MCP 环境，完成安装配置并验证可用
 video-frame-extract[TM8SH]: 按自然语言要求从视频中提取画面并生成有序图片集合
+wuch-design-canvas[KD8SH]: 按 wuch-ai 设计锚点询问用户所需效果，确认后产出设计风格 Canvas
+ui-design-prompt[KD9SH][PRO]: 让 AI 先确认风格再直出可运行的界面设计
 ```

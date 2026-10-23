@@ -15,7 +15,6 @@ name[tag]: 一句话核心职责
 ## 能力列表
 
 ```text
-ui-design-prompt[KD9DH]: 让 AI 先确认风格再直出可运行的界面设计
 libtv-mcp-setup[TI8DH]: 需要 LibTV 影像创作时由 AI 配置并验证 LibTV Remote MCP，仅在账户登录/授权时交接用户
 cf-workers-site-auth[KA8DH]: 在 Cloudflare Workers 上落地站点登录与防刷（GitHub OAuth / 邮件 / 限流）
 ```
