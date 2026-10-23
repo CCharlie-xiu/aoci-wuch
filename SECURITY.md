@@ -6,7 +6,7 @@
 
 Please do **not** open a public Issue for security reports.
 
-Email **chouxiucheng@gmail.com**, or report privately via GitHub Security Advisories:
+Email **1453346832@qq.com** or **chouxiucheng@gmail.com**, or report privately via GitHub Security Advisories:
 
 https://github.com/CCharlie-xiu/aoci-wuch/security/advisories/new
 

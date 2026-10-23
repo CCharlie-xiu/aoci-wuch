@@ -6,7 +6,7 @@
 
 请不要开公开 Issue 报告安全问题。
 
-发邮件到 **chouxiucheng@gmail.com**，或通过 GitHub Security Advisories 私下报告：
+发邮件到 **1453346832@qq.com** 或 **chouxiucheng@gmail.com**，或通过 GitHub Security Advisories 私下报告：
 
 https://github.com/CCharlie-xiu/aoci-wuch/security/advisories/new
 

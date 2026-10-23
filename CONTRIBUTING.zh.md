@@ -6,7 +6,7 @@
 
 本仓库**不接受**外部 Pull Request，也不以公开 Issue 驱动新增能力。自动关闭的外部 PR 见 [LICENSE](LICENSE)。
 
-若发现缺失工作流、错误边界或失效链接，可发邮件至 **chouxiucheng@gmail.com**。
+若发现缺失工作流、错误边界或失效链接，可发邮件至 **1453346832@qq.com** 或 **chouxiucheng@gmail.com**。
 
 ## 维护者流程
 

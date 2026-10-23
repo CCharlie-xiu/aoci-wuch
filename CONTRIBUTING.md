@@ -6,7 +6,7 @@
 
 This repository **does not accept** external Pull Requests or drive-by Issues for new capabilities. Unsolicited PRs are closed automatically. See [LICENSE](LICENSE).
 
-Feedback that helps (missing workflows, wrong boundaries, broken links) can be sent to **chouxiucheng@gmail.com**.
+Feedback that helps (missing workflows, wrong boundaries, broken links) can be sent to **1453346832@qq.com** or **chouxiucheng@gmail.com**.
 
 ## Maintainer workflow
 

@@ -106,7 +106,7 @@ python3 scripts/update_skills.py apply \
 - 相关产品：[wuch-ai](https://github.com/CCharlie-xiu/wuch-ai) · [https://wuch-ai.net](https://wuch-ai.net)
 - 参与说明：[CONTRIBUTING.zh.md](CONTRIBUTING.zh.md)
 - 安全：[SECURITY.zh.md](SECURITY.zh.md)
-- 联系：[chouxiucheng@gmail.com](mailto:chouxiucheng@gmail.com)
+- 联系：[1453346832@qq.com](mailto:1453346832@qq.com) · [chouxiucheng@gmail.com](mailto:chouxiucheng@gmail.com)
 - 许可：[LICENSE](LICENSE)
 
 ## 许可

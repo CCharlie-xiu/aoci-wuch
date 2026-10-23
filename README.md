@@ -106,7 +106,7 @@ Details: [`follow/update-skills.md`](follow/update-skills.md).
 - Related product: [wuch-ai](https://github.com/CCharlie-xiu/wuch-ai) · [https://wuch-ai.net](https://wuch-ai.net)
 - Contributing: [CONTRIBUTING.md](CONTRIBUTING.md)
 - Security: [SECURITY.md](SECURITY.md)
-- Contact: [chouxiucheng@gmail.com](mailto:chouxiucheng@gmail.com)
+- Contact: [1453346832@qq.com](mailto:1453346832@qq.com) · [chouxiucheng@gmail.com](mailto:chouxiucheng@gmail.com)
 - License: [LICENSE](LICENSE)
 
 ## License
