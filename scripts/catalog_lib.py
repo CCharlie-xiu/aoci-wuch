@@ -9,7 +9,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 PRO_ROOT = ROOT / "capabilities-pro"
 INCUBATOR = PRO_ROOT / "capabilities-unstable"
-AUTH_PAGE = "https://ccharlie-xiu.github.io/aoci-wuch/auth.html"
+AUTH_PAGE = "https://skill.wuch-ai.net/auth.html"
 NAME = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 README_SECTIONS = {"capabilities": "### 正式能力", "capabilities-unstable": "### 待验证能力"}
 

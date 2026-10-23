@@ -4,7 +4,7 @@
 
 **A reusable capability library for AI agents.** It gives AI coding assistants practical workflows, methods, and tool setup guides. The assistant checks the catalog for each task, then loads only the relevant capability.
 
-[项目主页 / Project site](https://ccharlie-xiu.github.io/aoci-wuch/) · [能力索引 / Stable index](capabilities/index.md) · [待验证索引 / Experimental index](capabilities-unstable/index.md)
+[项目主页 / Project site](https://skill.wuch-ai.net/) · [能力索引 / Stable index](capabilities/index.md) · [待验证索引 / Experimental index](capabilities-unstable/index.md)
 
 ## 安装 / Install
 
@@ -40,14 +40,14 @@ The assistant does not need to load every capability in full at the start of a c
 | 能力 | 用途 |
 | --- | --- |
 | [GitHub 应用授权](capabilities/github-authorize/) | 为指定 GitHub 应用完成授权流程 |
-| [原生移动应用搭建](https://ccharlie-xiu.github.io/aoci-wuch/auth.html) `PRO` | 使用 mobile-template 家族创建并维护原生双端 App（订阅能力，含 Figma/机型观感实践） <!-- pro:mobile-template-app --> |
+| [原生移动应用搭建](https://skill.wuch-ai.net/auth.html) `PRO` | 使用 mobile-template 家族创建并维护原生双端 App（订阅能力，含 Figma/机型观感实践） <!-- pro:mobile-template-app --> |
 | [复杂设计逻辑枚举](capabilities/logic-space-enumeration/) | 推演复杂设计中的有效场景、路径与结果 |
 | [Excel 后端选择配置](capabilities/excel-capability/) | 处理 Excel 时在文件级与桌面级后端间选择并打通，默认文件级、必要时升级桌面级 |
-| [iOS 上架与 TestFlight](https://ccharlie-xiu.github.io/aoci-wuch/auth.html) `PRO` | 把 iOS App 从 Xcode 项目发布到 TestFlight 与 App Store（订阅能力） <!-- pro:ios-app-store-release --> |
+| [iOS 上架与 TestFlight](https://skill.wuch-ai.net/auth.html) `PRO` | 把 iOS App 从 Xcode 项目发布到 TestFlight 与 App Store（订阅能力） <!-- pro:ios-app-store-release --> |
 | [DBX 数据库接入](capabilities/dbx-mcp-setup/) | 需要看数据库时发现并打通 DBX MCP 环境，完成安装配置并验证可用 |
 | [视频画面抽帧](capabilities/video-frame-extract/) | 按自然语言要求从视频中提取画面并生成有序图片集合 |
 | [设计风格 Canvas](capabilities/wuch-design-canvas/) | 按 wuch-ai 设计锚点询问用户所需效果，确认后产出设计风格 Canvas |
-| [UI 风格提示设计](https://ccharlie-xiu.github.io/aoci-wuch/auth.html) `PRO` | 让 AI 先确认风格再直出可运行的界面设计（订阅能力） <!-- pro:ui-design-prompt --> |
+| [UI 风格提示设计](https://skill.wuch-ai.net/auth.html) `PRO` | 让 AI 先确认风格再直出可运行的界面设计（订阅能力） <!-- pro:ui-design-prompt --> |
 
 ### 待验证能力 / Experimental
 

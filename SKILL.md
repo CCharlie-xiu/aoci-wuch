@@ -104,7 +104,7 @@ name[tag]: 一句话核心职责
    powershell -NoProfile -ExecutionPolicy Bypass -File "$HOME\.aoci\fetch.ps1" capabilities/<name>/<file>   # Windows
    ```
 
-3. 读取工具不存在，或返回未订阅、已过期、本机未激活等提示时，如实转告，给出授权页 `https://ccharlie-xiu.github.io/aoci-wuch/auth.html`，然后按常规方式完成任务。**不得根据索引行猜测或编造正文。**
+3. 读取工具不存在，或返回未订阅、已过期、本机未激活等提示时，如实转告，给出授权页 `https://skill.wuch-ai.net/auth.html`，然后按常规方式完成任务。**不得根据索引行猜测或编造正文。**
 
 不要读取或输出 `~/.aoci/` 下的订阅码与工具内容。
 
