@@ -11,7 +11,11 @@ PRO_ROOT = ROOT / "capabilities-pro"
 INCUBATOR = PRO_ROOT / "capabilities-unstable"
 AUTH_PAGE = "https://skill.wuch-ai.net/auth.html"
 NAME = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
-README_SECTIONS = {"capabilities": "### 正式能力", "capabilities-unstable": "### 待验证能力"}
+# English README is default; Chinese mirror is README.zh.md
+README_TARGETS = (
+    (ROOT / "README.md", {"capabilities": "### Stable", "capabilities-unstable": "### Experimental"}, "en"),
+    (ROOT / "README.zh.md", {"capabilities": "### 正式能力", "capabilities-unstable": "### 待验证能力"}, "zh"),
+)
 
 INCUBATOR_INDEX = """# Capability Index · Incubating (private)
 
@@ -94,30 +98,53 @@ def set_homepage_entry(name: str, title: str, title_en: str | None, icon: str | 
     path.write_text(html[: match.start(2)] + body + "\n      " + entry + html[match.end(2) :], encoding="utf-8")
 
 
+def _mostly_ascii(text: str) -> bool:
+    return (sum(1 for c in text if ord(c) < 128) / max(len(text), 1)) > 0.7
+
+
 def remove_readme_row(name: str) -> None:
-    path = ROOT / "README.md"
-    lines = path.read_text(encoding="utf-8").splitlines()
     marker = re.compile(rf"\(capabilities(?:-unstable)?/{re.escape(name)}/\)|<!-- pro:{re.escape(name)} -->")
-    path.write_text("\n".join(l for l in lines if not (l.startswith("|") and marker.search(l))) + "\n", encoding="utf-8")
+    for path, _, _ in README_TARGETS:
+        if not path.is_file():
+            continue
+        lines = path.read_text(encoding="utf-8").splitlines()
+        path.write_text("\n".join(l for l in lines if not (l.startswith("|") and marker.search(l))) + "\n", encoding="utf-8")
 
 
-def add_readme_row(bucket: str, name: str, title: str, desc: str, pro: bool) -> None:
-    path = ROOT / "README.md"
-    lines = path.read_text(encoding="utf-8").splitlines()
-    heading = README_SECTIONS[bucket]
-    start = next((i for i, l in enumerate(lines) if l.startswith(heading)), None)
-    if start is None:
-        raise SystemExit(f"README.md 中找不到「{heading}」小节")
-    end = next((i for i in range(start + 1, len(lines)) if lines[i].startswith("#")), len(lines))
-    rows = [i for i in range(start, end) if lines[i].startswith("|")]
-    if not rows:
-        raise SystemExit(f"README.md「{heading}」小节没有表格")
-    if pro:
-        row = f"| [{title}]({AUTH_PAGE}) `PRO` | {desc}（订阅能力） <!-- pro:{name} --> |"
-    else:
-        row = f"| [{title}]({bucket}/{name}/) | {desc} |"
-    lines.insert(rows[-1] + 1, row)
-    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+def add_readme_row(
+    bucket: str,
+    name: str,
+    title: str,
+    desc: str,
+    pro: bool,
+    title_en: str | None = None,
+) -> None:
+    for path, sections, lang in README_TARGETS:
+        if not path.is_file():
+            raise SystemExit(f"缺少 {path.relative_to(ROOT)}")
+        lines = path.read_text(encoding="utf-8").splitlines()
+        heading = sections[bucket]
+        start = next((i for i, l in enumerate(lines) if l.startswith(heading)), None)
+        if start is None:
+            raise SystemExit(f"{path.name} 中找不到「{heading}」小节")
+        end = next((i for i in range(start + 1, len(lines)) if lines[i].startswith("#")), len(lines))
+        rows = [i for i in range(start, end) if lines[i].startswith("|")]
+        if not rows:
+            raise SystemExit(f"{path.name}「{heading}」小节没有表格")
+        if lang == "en":
+            display = title_en or title
+            purpose = desc if _mostly_ascii(desc) else (title_en or desc)
+            if pro:
+                row = f"| [{display}]({AUTH_PAGE}) `PRO` | {purpose} <!-- pro:{name} --> |"
+            else:
+                row = f"| [{display}]({bucket}/{name}/) | {purpose} |"
+        else:
+            if pro:
+                row = f"| [{title}]({AUTH_PAGE}) `PRO` | {desc}（订阅能力） <!-- pro:{name} --> |"
+            else:
+                row = f"| [{title}]({bucket}/{name}/) | {desc} |"
+        lines.insert(rows[-1] + 1, row)
+        path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
 def name_taken(name: str) -> Path | None:

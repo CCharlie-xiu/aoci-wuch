@@ -58,10 +58,45 @@ def check_pro_isolation(errors: list[str]) -> None:
 
 
 PAGES_BUCKETS = {
+    "capabilities": "### Stable",
+    "capabilities-unstable": "### Experimental",
+}
+PAGES_BUCKETS_ZH = {
     "capabilities": "### 正式能力",
     "capabilities-unstable": "### 待验证能力",
 }
 PAGE_ENTRY = re.compile(r'\{\s*id:\s*"([a-z0-9-]+)"[^}]*\}')
+
+
+def _check_readme_catalog(
+    path: Path,
+    headings: dict[str, str],
+    catalog: dict[str, tuple[set[str], set[str]]],
+    errors: list[str],
+) -> None:
+    label = path.name
+    if not path.is_file():
+        fail(f"缺少 {label}", errors)
+        return
+    readme = path.read_text(encoding="utf-8")
+    for bucket, heading in headings.items():
+        start = readme.find(heading)
+        if start < 0:
+            fail(f"{label}：缺少「{heading}」小节", errors)
+            continue
+        end = readme.find("\n#", start + len(heading))
+        section = readme[start : end if end > 0 else len(readme)]
+        names, pro_names = catalog.get(bucket, (set(), set()))
+        listed = set(re.findall(rf"\({re.escape(bucket)}/([a-z0-9-]+)/\)", section))
+        listed_pro = set(re.findall(r"<!-- pro:([a-z0-9-]+) -->", section))
+        for name in sorted(names - pro_names - listed):
+            fail(f"{label}「{heading}」：缺少能力行（链接 {bucket}/{name}/）：{name}", errors)
+        for name in sorted(pro_names - listed_pro):
+            fail(f"{label}「{heading}」：订阅能力行需链接授权页并带 <!-- pro:{name} -->：{name}", errors)
+        for name in sorted((listed | listed_pro) - names):
+            fail(f"{label}「{heading}」：列出了不在本分区的能力：{name}", errors)
+        for name in sorted(listed & pro_names):
+            fail(f"{label}「{heading}」：订阅能力 {name} 不得链接到公开目录", errors)
 
 
 def check_pages(catalog: dict[str, tuple[set[str], set[str]]], errors: list[str]) -> None:
@@ -80,25 +115,8 @@ def check_pages(catalog: dict[str, tuple[set[str], set[str]]], errors: list[str]
             expected = "需要" if name in pro else "不应"
             fail(f"index.html：{name} {expected}标记 pro: true", errors)
 
-    readme = (ROOT / "README.md").read_text(encoding="utf-8")
-    for bucket, heading in PAGES_BUCKETS.items():
-        start = readme.find(heading)
-        if start < 0:
-            fail(f"README.md：缺少「{heading}」小节", errors)
-            continue
-        end = readme.find("\n#", start + len(heading))
-        section = readme[start : end if end > 0 else len(readme)]
-        names, pro_names = catalog.get(bucket, (set(), set()))
-        listed = set(re.findall(rf"\({re.escape(bucket)}/([a-z0-9-]+)/\)", section))
-        listed_pro = set(re.findall(r"<!-- pro:([a-z0-9-]+) -->", section))
-        for name in sorted(names - pro_names - listed):
-            fail(f"README.md「{heading}」：缺少能力行（链接 {bucket}/{name}/）：{name}", errors)
-        for name in sorted(pro_names - listed_pro):
-            fail(f"README.md「{heading}」：订阅能力行需链接授权页并带 <!-- pro:{name} -->：{name}", errors)
-        for name in sorted((listed | listed_pro) - names):
-            fail(f"README.md「{heading}」：列出了不在本分区的能力：{name}", errors)
-        for name in sorted(listed & pro_names):
-            fail(f"README.md「{heading}」：订阅能力 {name} 不得链接到公开目录", errors)
+    _check_readme_catalog(ROOT / "README.md", PAGES_BUCKETS, catalog, errors)
+    _check_readme_catalog(ROOT / "README.zh.md", PAGES_BUCKETS_ZH, catalog, errors)
 
 
 def check_incubator(catalog: dict[str, tuple[set[str], set[str]]], errors: list[str]) -> None:

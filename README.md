@@ -1,105 +1,114 @@
-# 至关重要 · AOCI-Wuch
+# AOCI-Wuch
 
-**一个可复用的 AI Agent 能力库。** 为 AI 编码助手提供经过整理的工作方法、流程与工具接入指南：先按任务查找能力，再只读取命中的说明。
+**English** | [中文](README.zh.md)
 
-**A reusable capability library for AI agents.** It gives AI coding assistants practical workflows, methods, and tool setup guides. The assistant checks the catalog for each task, then loads only the relevant capability.
+[![Site](https://img.shields.io/badge/site-skill.wuch--ai.net-545f2a?style=flat-square)](https://skill.wuch-ai.net/)
+[![Auth](https://img.shields.io/badge/subscribe-auth.html-646b75?style=flat-square)](https://skill.wuch-ai.net/auth.html)
+[![License](https://img.shields.io/badge/license-All%20Rights%20Reserved-lightgrey?style=flat-square)](LICENSE)
 
-[项目主页 / Project site](https://skill.wuch-ai.net/) · [能力索引 / Stable index](capabilities/index.md) · [待验证索引 / Experimental index](capabilities-unstable/index.md)
+**A task-first skill library for AI coding agents.**
 
-## 安装 / Install
+Reusable workflows, reasoning methods, MCP setup, UI design, mobile, Excel, and video—indexed so the assistant finds a match, then reads only what it needs.
 
-将仓库安装为当前 AI 助手可复用的 Agent Skill：
+**Site → [https://skill.wuch-ai.net](https://skill.wuch-ai.net/)** · [Subscribe / auth](https://skill.wuch-ai.net/auth.html) · [Stable index](capabilities/index.md) · [Experimental index](capabilities-unstable/index.md)
+
+## Why this library
+
+| You get | Meaning |
+| --- | --- |
+| Task → catalog → one skill | No dumping every guide into context at chat start |
+| Stable vs Experimental | Maturity is visible; experimental is never treated as proven |
+| Free + PRO | Public skills on GitHub; subscription skills via [auth](https://skill.wuch-ai.net/auth.html) |
+| Works with Cursor / similar | Install the repo as an Agent Skill, then let the agent follow `SKILL.md` |
+
+## Install
+
+Install this repository as a reusable Agent Skill:
 
 ```text
 https://github.com/CCharlie-xiu/aoci-wuch.git
 ```
 
-也可以直接告诉 AI：
+Or tell your assistant:
 
 ```text
-请将 https://github.com/CCharlie-xiu/aoci-wuch.git 安装为当前 AI 助手可复用的 Agent Skill。
+Install https://github.com/CCharlie-xiu/aoci-wuch.git as a reusable Agent Skill for this AI assistant.
 ```
 
-Install this repository as a reusable Agent Skill in your AI assistant using the repository URL above. Follow the installation flow for your assistant.
-
-## 使用方式 / How it works
+## How it works
 
 ```text
-用户任务 → 阅读能力索引 → 选择匹配能力 → 按需读取说明 → 执行任务
-User task → Read catalog → Select a match → Load its guide → Do the task
+User task → Read catalog → Select a match → Load its guide → Do the work
 ```
 
-本库不会要求 AI 在每次对话开始时载入全部能力正文。能力分为**正式**和**待验证**两类；待验证能力会明确标注，不会被当作已正式验证的能力。
+The assistant should **not** load every capability body up front. Use [capabilities/index.md](capabilities/index.md) (and the experimental index when appropriate), then open only the hit.
 
-The assistant does not need to load every capability in full at the start of a conversation. Capabilities are marked **Stable** or **Experimental**, so users can see their maturity at a glance.
+## Capability catalog
 
-## 能力目录 / Capability catalog
+### Stable
 
-### 正式能力 / Stable
-
-| 能力 | 用途 |
+| Capability | Purpose |
 | --- | --- |
-| [GitHub 应用授权](capabilities/github-authorize/) | 为指定 GitHub 应用完成授权流程 |
-| [原生移动应用搭建](https://skill.wuch-ai.net/auth.html) `PRO` | 使用 mobile-template 家族创建并维护原生双端 App（订阅能力，含 Figma/机型观感实践） <!-- pro:mobile-template-app --> |
-| [复杂设计逻辑枚举](capabilities/logic-space-enumeration/) | 推演复杂设计中的有效场景、路径与结果 |
-| [Excel 后端选择配置](capabilities/excel-capability/) | 处理 Excel 时在文件级与桌面级后端间选择并打通，默认文件级、必要时升级桌面级 |
-| [iOS 上架与 TestFlight](https://skill.wuch-ai.net/auth.html) `PRO` | 把 iOS App 从 Xcode 项目发布到 TestFlight 与 App Store（订阅能力） <!-- pro:ios-app-store-release --> |
-| [DBX 数据库接入](capabilities/dbx-mcp-setup/) | 需要看数据库时发现并打通 DBX MCP 环境，完成安装配置并验证可用 |
-| [视频画面抽帧](capabilities/video-frame-extract/) | 按自然语言要求从视频中提取画面并生成有序图片集合 |
-| [设计风格 Canvas](capabilities/wuch-design-canvas/) | 按 wuch-ai 设计锚点询问用户所需效果，确认后产出设计风格 Canvas |
-| [UI 风格提示设计](https://skill.wuch-ai.net/auth.html) `PRO` | 让 AI 先确认风格再直出可运行的界面设计（订阅能力） <!-- pro:ui-design-prompt --> |
+| [GitHub App Authorization](capabilities/github-authorize/) | Run the user authorization flow for a given GitHub App |
+| [Native Mobile App Setup](https://skill.wuch-ai.net/auth.html) `PRO` | Create and maintain iOS / Android apps with the mobile-template family <!-- pro:mobile-template-app --> |
+| [Logic Space Enumeration](capabilities/logic-space-enumeration/) | Enumerate valid scenarios, paths, and outcomes in complex designs |
+| [Excel Backend Selection](capabilities/excel-capability/) | Choose and wire file-level vs desktop Excel backends |
+| [iOS App Store & TestFlight](https://skill.wuch-ai.net/auth.html) `PRO` | Ship an Xcode app to TestFlight and the App Store <!-- pro:ios-app-store-release --> |
+| [DBX Database Setup](capabilities/dbx-mcp-setup/) | Discover, configure, and verify DBX MCP for database access |
+| [Video Frame Extraction](capabilities/video-frame-extract/) | Extract ordered stills from video from natural-language requests |
+| [Design Style Canvas](capabilities/wuch-design-canvas/) | Confirm desired effects against the wuch-ai design anchor, then ship a style Canvas |
+| [UI Style Prompt Design](https://skill.wuch-ai.net/auth.html) `PRO` | Confirm style first, then generate runnable UI <!-- pro:ui-design-prompt --> |
 
-### 待验证能力 / Experimental
+### Experimental
 
-| 能力 | 用途 |
+| Capability | Purpose |
 | --- | --- |
-| [LibTV 影像接入](capabilities-unstable/libtv-mcp-setup/) | 接入并验证 LibTV Remote MCP |
-| [Workers 站点登录防刷](capabilities-unstable/cf-workers-site-auth/) | Cloudflare Workers 上落地 GitHub OAuth / 邮件登录与限流防刷 |
+| [LibTV Media Setup](capabilities-unstable/libtv-mcp-setup/) | Configure and verify LibTV Remote MCP |
+| [Workers Site Auth & Abuse Control](capabilities-unstable/cf-workers-site-auth/) | GitHub OAuth / email login and rate limiting on Cloudflare Workers |
 
-## 仓库内容 / Repository contents
+## Repository layout
 
 ```text
-SKILL.md                 AI skill entry point
-capabilities/            正式能力 / Stable capabilities
-capabilities-unstable/   待验证能力 / Experimental capabilities
-capabilities-retired/    退役能力，仅供追溯 / Retired, for reference
-follow/                  写入、更新、晋升与退役规则 / Library maintenance rules
-scripts/                 校验与源仓库更新脚本 / Validation and update scripts
+SKILL.md                 Agent skill entry (read this first after install)
+capabilities/            Stable capabilities
+capabilities-unstable/   Experimental capabilities
+capabilities-retired/    Retired (reference only)
+follow/                  Write / update / promote / deprecate rules
+scripts/                 validate.py, release, source self-update
+index.html · auth.html   Project site (GitHub Pages → skill.wuch-ai.net)
 ```
 
-## 参与改进 / Contributing
-
-欢迎反馈缺失的工作流、错误边界或可复用的能力。新增或调整能力前，请先阅读 [`follow/write.md`](follow/write.md)；晋升、更新和退役规则见 [`follow/`](follow/)。
-
-Issues and pull requests are welcome for missing workflows, incorrect boundaries, and reusable capabilities. Read [`follow/write.md`](follow/write.md) before adding or changing a capability.
-
-## 本地校验 / Validate locally
+## Validate locally
 
 ```bash
 python3 scripts/validate.py
 ```
 
-## 更新能力库源仓库 / Update the source repository
+## Update this source checkout
 
-此流程只把 GitHub `main` 安全快进到当前源仓库，不更新任何 AI 产品中已安装的副本。先检查：
+Fast-forward this clone from GitHub `main` only—does **not** update copies already installed inside AI products:
 
 ```bash
 python3 scripts/update_skills.py check
-```
-
-只有状态为 `BEHIND` 时，才根据检查结果确认并应用更新：
-
-```bash
 python3 scripts/update_skills.py apply \
-  --expected-local <检查时的本地 commit> \
-  --expected-remote <检查时的远程 commit> \
+  --expected-local <local-commit-from-check> \
+  --expected-remote <remote-commit-from-check> \
   --confirm
 ```
 
-The update command only fast-forwards this source checkout from GitHub `main`; it does not update copies installed in AI products.
+Details: [`follow/update-skills.md`](follow/update-skills.md).
 
-## 许可 / License
+## Links
 
-保留所有权利，仅供查看与个人自用；禁止修改后再分发；不接受外部贡献。详见 [LICENSE](LICENSE)。
+- Site: [https://skill.wuch-ai.net](https://skill.wuch-ai.net/)
+- Auth / PRO: [https://skill.wuch-ai.net/auth.html](https://skill.wuch-ai.net/auth.html)
+- Repo: [https://github.com/CCharlie-xiu/aoci-wuch](https://github.com/CCharlie-xiu/aoci-wuch)
+- Related product: [wuch-ai](https://github.com/CCharlie-xiu/wuch-ai) · [https://wuch-ai.net](https://wuch-ai.net)
+- Contributing: [CONTRIBUTING.md](CONTRIBUTING.md)
+- Security: [SECURITY.md](SECURITY.md)
+- Contact: [chouxiucheng@gmail.com](mailto:chouxiucheng@gmail.com)
+- License: [LICENSE](LICENSE)
 
-All rights reserved. Personal use only; no redistribution of modified copies; external contributions are not accepted. See [LICENSE](LICENSE).
+## License
+
+All rights reserved. Personal viewing and personal use only; no redistribution of modified copies; external contributions are not accepted. See [LICENSE](LICENSE).

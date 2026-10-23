@@ -68,10 +68,10 @@ def main() -> int:
     append_index_line(ROOT / "capabilities" / "index.md", f"{args.name}[{new_tag}]{pro_flag}: {desc}")
     set_homepage_entry(args.name, args.title, args.title_en, args.icon, args.pro)
     remove_readme_row(args.name)
-    add_readme_row("capabilities", args.name, args.title, desc, args.pro)
+    add_readme_row("capabilities", args.name, args.title, desc, args.pro, title_en=args.title_en)
 
     print(f"已发布 {args.name}[{new_tag}]{pro_flag}：{src_label} → {target.relative_to(ROOT)}")
-    print("已更新公开索引 capabilities/index.md、首页 index.html、README")
+    print("已更新公开索引 capabilities/index.md、首页 index.html、README.md / README.zh.md")
     print("\n运行 python3 scripts/validate.py 后提交（先私有、后公开）：")
     print("  1. cd capabilities-pro && git add -A && git commit -m '发布 ...' && git push && cd ..")
     print("  2. git add -A && git commit -m '发布 ...' && git push")
