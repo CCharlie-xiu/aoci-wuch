@@ -58,6 +58,7 @@ https://github.com/CCharlie-xiu/aoci-wuch.git
 | [视频画面抽帧](capabilities/video-frame-extract/) | 按自然语言要求从视频中提取画面并生成有序图片集合 |
 | [设计风格 Canvas](capabilities/wuch-design-canvas/) | 按 wuch-ai 设计锚点询问用户所需效果，确认后产出设计风格 Canvas |
 | [UI 风格提示设计](https://skill.wuch-ai.net/auth.html) `PRO` | 让 AI 先确认风格再直出可运行的界面设计（订阅能力） <!-- pro:ui-design-prompt --> |
+| [轻量 SSO 登录中心](https://skill.wuch-ai.net/auth.html) `PRO` | 在自有应用间落地轻量 SSO 登录中心：授权码 + PKCE，一次登录多应用可用、令牌不跨界（订阅能力） <!-- pro:sso-login-center --> |
 
 ### 待验证能力
 
