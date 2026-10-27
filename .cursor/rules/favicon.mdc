@@ -1,0 +1,20 @@
+---
+description: 所有对外 HTML 页必须带品牌 favicon；新建页面时强制写入
+globs: "**/*.{html,htm}"
+alwaysApply: true
+---
+
+# Favicon 必带（强制）
+
+新建或改任何 HTML 页面时，`<head>` 必须包含品牌图标，禁止浏览器默认地球图标。
+
+## 标准片段
+
+```html
+<link rel="icon" type="image/png" href="/favicon-32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/favicon-16.png" sizes="16x16">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+```
+
+图标文件在仓库根目录：`favicon.ico`、`favicon-16.png`、`favicon-32.png`、`favicon.png`、`apple-touch-icon.png`（与 wuch-ai 品牌一致）。换品牌时同步替换这些文件，并核对所有 HTML 的 `<link>`。
