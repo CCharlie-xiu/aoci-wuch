@@ -77,31 +77,71 @@
       transition: border-color var(--motion-1) var(--ease-fade), background-color var(--motion-1) var(--ease-fade), color var(--motion-1) var(--ease-fade), transform var(--motion-1) var(--ease-out), box-shadow var(--motion-1) var(--ease-fade);
     }
 
-    /* Disclosure：只动 grid-template-rows + opacity（同 openui-lab .ai-tr__collapsible） */
-    .skill-disclosure {
+    /* Modal：对齐 openui-lab .dlg-backdrop / .dlg —— 遮罩淡入，卡片上浮置顶 */
+    .dlg-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 90;
       display: grid;
-      grid-template-rows: 0fr;
+      place-items: center;
+      padding: 24px;
+      background: rgba(16, 16, 20, .34);
       opacity: 0;
       pointer-events: none;
-      transition:
-        grid-template-rows var(--motion-4) var(--ease-out),
-        opacity var(--motion-2) var(--ease-fade);
+      transition: opacity var(--motion-2) var(--ease-fade);
     }
-    .skill-disclosure.is-open {
-      grid-template-rows: 1fr;
+    .dlg-backdrop.dlg-in {
       opacity: 1;
       pointer-events: auto;
     }
-    .skill-disclosure__inner {
-      min-height: 0;
-      overflow: hidden;
+    .dlg-backdrop.dlg-out {
+      opacity: 0;
+      transition-duration: var(--motion-1);
     }
-    .skill-disclosure__content {
-      transform: translateY(var(--motion-shift-y));
-      transition: transform var(--motion-4) var(--ease-out);
+    .dlg {
+      width: min(440px, 100%);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 18px 18px 14px;
+      background: #ffffff;
+      color: #221e1a;
+      border: 1px solid #cfcfce;
+      border-radius: 16px;
+      box-shadow: 0 16px 40px -12px rgba(16, 20, 26, .18);
+      opacity: 0;
+      transform: translateY(8px) scale(.985);
+      filter: blur(2px);
+      transition:
+        opacity var(--motion-3) var(--ease-out),
+        transform var(--motion-3) var(--ease-out),
+        filter var(--motion-3) var(--ease-out);
     }
-    .skill-disclosure.is-open .skill-disclosure__content {
-      transform: translateY(0);
+    .dlg-backdrop.dlg-in .dlg {
+      opacity: 1;
+      transform: none;
+      filter: none;
+    }
+    .dlg-backdrop.dlg-out .dlg {
+      transform: translateY(4px) scale(.99);
+      transition-duration: var(--motion-1);
+    }
+    .dlg__prompt {
+      margin: 0;
+      max-height: min(42vh, 280px);
+      overflow: auto;
+      padding: 10px 12px;
+      font-family: inherit;
+      font-size: 12.5px;
+      line-height: 1.65;
+      color: #221e1a;
+      white-space: pre-wrap;
+      word-break: break-word;
+      background: #f2f0ea;
+      border: 1px solid #cfcfce;
+      border-radius: 12px;
+      text-align: left;
+      user-select: all;
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -112,10 +152,11 @@
         --motion-4: 0ms;
         --motion-shift-y: 0px;
       }
-      .skill-disclosure,
-      .skill-disclosure__content,
+      .dlg-backdrop,
+      .dlg,
       .transition-craft {
         transition: none !important;
+        filter: none !important;
       }
     }
   </style>
@@ -245,30 +286,31 @@
       <span class="h-[1px] w-8 bg-line"></span>
     </div>
     <div id="capabilityList" class="flex flex-wrap items-center justify-center gap-2 sm:gap-3 max-w-4xl mx-auto"></div>
+  </section>
 
-    <!-- 挂在技能区下方：选中技能并复制安装指令后展开（openui-lab disclosure 动效） -->
-    <div id="firstUsePanel" class="skill-disclosure max-w-xl mx-auto mt-3 text-left" aria-hidden="true">
-      <div class="skill-disclosure__inner">
-        <div class="skill-disclosure__content pt-1">
-          <div class="rounded-2xl border border-line bg-surface p-3.5 space-y-2.5 shadow-sponsor">
-            <div class="flex items-center justify-between gap-2">
-              <div class="text-[11px] font-semibold text-brand tracking-wide flex items-center gap-1.5 min-w-0">
-                <i data-lucide="message-square-quote" class="w-3.5 h-3.5 shrink-0"></i>
-                <span data-i18n="firstUseLabel">首次使用提示词</span>
-                <span class="text-faint font-normal">·</span>
-                <span id="firstUseSkillName" class="text-ink font-medium truncate"></span>
-              </div>
-              <button id="copyFirstUseBtn" type="button" class="px-2.5 py-1 rounded-lg bg-surface-subtle border border-line text-[11px] font-medium text-muted hover:text-brand hover:border-brand/40 transition-craft shrink-0">
-                <span data-i18n="copyFirstUse">复制提示词</span>
-              </button>
-            </div>
-            <p class="text-[11px] text-faint leading-relaxed" data-i18n="firstUseHint">安装完成后，把下面这段发给你的 AI，它就会按选中的技能开始第一次协助。</p>
-            <pre id="firstUsePromptText" class="whitespace-pre-wrap break-words text-xs leading-relaxed text-ink bg-surface-subtle border border-line/60 rounded-xl px-3 py-2.5 font-sans select-all"></pre>
-          </div>
+  <!-- 首次使用提示词：置顶模态（复制安装指令且已选中技能后出现） -->
+  <div id="firstUseModal" class="dlg-backdrop" aria-hidden="true" role="presentation">
+    <div class="dlg" role="dialog" aria-modal="true" aria-labelledby="firstUseDialogTitle" tabindex="-1">
+      <div class="flex items-start justify-between gap-3">
+        <div class="min-w-0">
+          <h3 id="firstUseDialogTitle" class="m-0 text-sm font-medium text-ink leading-snug">
+            <span data-i18n="firstUseLabel">首次使用提示词</span>
+            <span class="text-faint font-normal"> · </span>
+            <span id="firstUseSkillName" class="text-brand"></span>
+          </h3>
+          <p class="mt-1 mb-0 text-[12px] leading-relaxed text-muted" data-i18n="firstUseHint">安装指令已复制。把下面这段发给你的 AI，即可按选中技能开始第一次协助。</p>
         </div>
+        <button id="closeFirstUseBtn" type="button" class="p-1.5 rounded-lg text-faint hover:text-ink hover:bg-[#f2f0ea] transition-craft shrink-0" aria-label="Close">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+      <pre id="firstUsePromptText" class="dlg__prompt"></pre>
+      <div class="flex justify-end gap-2 mt-1">
+        <button id="dismissFirstUseBtn" type="button" class="h-8 px-3.5 rounded-lg text-[12.5px] font-medium text-ink bg-white border border-line hover:bg-[#f2f0ea] transition-craft" data-i18n="closeDialog">关闭</button>
+        <button id="copyFirstUseBtn" type="button" class="h-8 px-3.5 rounded-lg text-[12.5px] font-medium text-white bg-brand hover:bg-brand-hover transition-craft" data-i18n="copyFirstUse">复制提示词</button>
       </div>
     </div>
-  </section>
+  </div>
 
   <!-- Footer Shell -->
   <footer class="w-full shrink-0 pt-3 pb-1 flex items-center justify-between text-xs text-muted">
@@ -294,10 +336,13 @@
     const toast = document.getElementById("toast");
     const languageToggle = document.getElementById("languageToggle");
     const capabilityList = document.getElementById("capabilityList");
-    const firstUsePanel = document.getElementById("firstUsePanel");
+    const firstUseModal = document.getElementById("firstUseModal");
+    const firstUseDialog = firstUseModal.querySelector(".dlg");
     const firstUsePromptText = document.getElementById("firstUsePromptText");
     const firstUseSkillName = document.getElementById("firstUseSkillName");
     const copyFirstUseBtn = document.getElementById("copyFirstUseBtn");
+    const closeFirstUseBtn = document.getElementById("closeFirstUseBtn");
+    const dismissFirstUseBtn = document.getElementById("dismissFirstUseBtn");
     const installPrompts = {
       zh: "请将这个 GitHub 仓库安装为当前 AI 助手可复用的 Agent Skill：https://github.com/CCharlie-xiu/aoci-wuch.git",
       en: "Install this GitHub repository as a reusable Agent Skill for this AI assistant: https://github.com/CCharlie-xiu/aoci-wuch.git"
@@ -308,18 +353,18 @@
         intro: "一套持续生长的个人能力库，让 AI 在每个新项目里，都能复用经过整理的方法与经验。", installLabel: "给 AI 助手的安装指令", copyPrompt: "复制安装指令",
         artBadge: "一直生长的能力库", artTitle: "经验，值得被带走。", artCaption: "从一个项目，到下一个项目。", capabilitiesTitle: "能力库包含技能 · INCLUDED SKILLS",
         pagesLabel: "GitHub Pages", authorLabel: "作者 CCharlie-xiu", copied: "已复制", copyAgain: "复制安装指令",
-        copiedToast: "安装指令已成功复制到剪贴板！", copiedWithSkillToast: "安装指令已复制。下方是该技能的首次使用提示词。", subscribe: "订阅授权",
-        firstUseLabel: "首次使用提示词", firstUseHint: "安装完成后，把下面这段发给你的 AI，它就会按选中的技能开始第一次协助。",
-        copyFirstUse: "复制提示词", firstUseCopiedToast: "首次使用提示词已复制到剪贴板！"
+        copiedToast: "安装指令已成功复制到剪贴板！", copiedWithSkillToast: "安装指令已复制", subscribe: "订阅授权",
+        firstUseLabel: "首次使用提示词", firstUseHint: "安装指令已复制。把下面这段发给你的 AI，即可按选中技能开始第一次协助。",
+        copyFirstUse: "复制提示词", closeDialog: "关闭", firstUseCopiedToast: "首次使用提示词已复制到剪贴板！"
       },
       en: {
         siteLabel: "Personal AI Capability Library", eyebrow: "A LIBRARY OF USEFUL WAYS", headline: "Bring good methods", headlineAccent: "into your AI.",
         intro: "A growing personal capability library that lets AI reuse carefully shaped methods and experience in every new project.", installLabel: "Install for your AI assistant", copyPrompt: "Copy install command",
         artBadge: "A library that keeps growing", artTitle: "Good experience travels.", artCaption: "From one project to the next.", capabilitiesTitle: "INCLUDED SKILLS",
         pagesLabel: "GitHub Pages", authorLabel: "By CCharlie-xiu", copied: "Copied", copyAgain: "Copy install command",
-        copiedToast: "Install command copied to clipboard!", copiedWithSkillToast: "Install command copied. First-use prompt for this skill is below.", subscribe: "Subscribe",
-        firstUseLabel: "First-use prompt", firstUseHint: "After installing, paste the prompt below to your AI so it starts with the selected skill.",
-        copyFirstUse: "Copy prompt", firstUseCopiedToast: "First-use prompt copied to clipboard!"
+        copiedToast: "Install command copied to clipboard!", copiedWithSkillToast: "Install command copied", subscribe: "Subscribe",
+        firstUseLabel: "First-use prompt", firstUseHint: "Install command copied. Paste the prompt below to your AI to start with the selected skill.",
+        copyFirstUse: "Copy prompt", closeDialog: "Close", firstUseCopiedToast: "First-use prompt copied to clipboard!"
       }
     };
     const capabilities = [
@@ -362,7 +407,8 @@
 
     let currentLanguage = "zh";
     let selectedSkillId = null;
-    let showFirstUseAfterCopy = false;
+    let firstUseModalOpen = false;
+    let firstUseCloseTimer = null;
 
     function getCapabilityById(id) {
       return capabilities.find((item) => item.id === id) || null;
@@ -419,24 +465,46 @@
       return buildDefaultFirstUsePrompt(capability, currentLanguage);
     }
 
-    function updateFirstUsePanel() {
+    function fillFirstUseContent() {
       const capability = getCapabilityById(selectedSkillId);
-      const open = Boolean(showFirstUseAfterCopy && capability);
-      if (capability) {
-        firstUseSkillName.textContent = currentLanguage === "zh" ? capability.name : capability.nameEn;
-        firstUsePromptText.textContent = getFirstUsePrompt(capability.id);
-      }
-      firstUsePanel.classList.toggle("is-open", open);
-      firstUsePanel.setAttribute("aria-hidden", open ? "false" : "true");
-      if (open) lucide.createIcons();
+      if (!capability) return false;
+      firstUseSkillName.textContent = currentLanguage === "zh" ? capability.name : capability.nameEn;
+      firstUsePromptText.textContent = getFirstUsePrompt(capability.id);
+      return true;
+    }
+
+    function openFirstUseModal() {
+      if (!fillFirstUseContent()) return;
+      clearTimeout(firstUseCloseTimer);
+      firstUseModalOpen = true;
+      firstUseModal.classList.remove("dlg-out");
+      firstUseModal.setAttribute("aria-hidden", "false");
+      // force reflow so dlg-in transition runs
+      void firstUseModal.offsetWidth;
+      firstUseModal.classList.add("dlg-in");
+      document.body.style.overflow = "hidden";
+      lucide.createIcons();
+      firstUseDialog?.focus({ preventScroll: true });
+    }
+
+    function closeFirstUseModal() {
+      if (!firstUseModalOpen && !firstUseModal.classList.contains("dlg-in")) return;
+      firstUseModalOpen = false;
+      firstUseModal.classList.remove("dlg-in");
+      firstUseModal.classList.add("dlg-out");
+      firstUseModal.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+      clearTimeout(firstUseCloseTimer);
+      firstUseCloseTimer = setTimeout(() => {
+        firstUseModal.classList.remove("dlg-out");
+      }, 160);
     }
 
     function selectSkill(id, options = {}) {
       const { syncUrl = true, replaceUrl = false, scroll = false } = options;
       selectedSkillId = getCapabilityById(id) ? id : null;
-      showFirstUseAfterCopy = false;
+      closeFirstUseModal();
       renderCapabilities();
-      updateFirstUsePanel();
       if (syncUrl) syncUrlForSkill(selectedSkillId, replaceUrl);
       if (scroll && selectedSkillId) {
         document.getElementById("capabilitiesTitle")?.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -480,7 +548,7 @@
         ? "至关重要：一套可安装到 AI 编码助手中的个人能力库。"
         : "AOCI: a personal capability library for AI coding assistants.";
       renderCapabilities();
-      updateFirstUsePanel();
+      if (firstUseModalOpen) fillFirstUseContent();
       try { localStorage.setItem("aoci-language", language); } catch {}
     }
 
@@ -504,10 +572,8 @@
       await writeClipboard(installPromptText);
 
       if (selectedSkillId) {
-        showFirstUseAfterCopy = true;
-        updateFirstUsePanel();
         showToast(translations[currentLanguage].copiedWithSkillToast);
-        document.getElementById("capabilitiesTitle")?.scrollIntoView({ behavior: "smooth", block: "center" });
+        openFirstUseModal();
       } else {
         showToast(translations[currentLanguage].copiedToast);
       }
@@ -543,6 +609,14 @@
     languageToggle.addEventListener("click", () => setLanguage(currentLanguage === "zh" ? "en" : "zh"));
     copyBtn.addEventListener("click", copyInstallPrompt);
     copyFirstUseBtn.addEventListener("click", copyFirstUsePrompt);
+    closeFirstUseBtn.addEventListener("click", closeFirstUseModal);
+    dismissFirstUseBtn.addEventListener("click", closeFirstUseModal);
+    firstUseModal.addEventListener("click", (event) => {
+      if (event.target === firstUseModal) closeFirstUseModal();
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && firstUseModalOpen) closeFirstUseModal();
+    });
     window.addEventListener("popstate", () => {
       const fromState = history.state && history.state.skill;
       selectSkill(fromState || readSkillFromUrl(), { syncUrl: false });
