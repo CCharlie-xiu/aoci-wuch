@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>至关重要</title>
+  <script>
+    (function () {
+      try {
+        var path = location.pathname || "/";
+        if (path && path !== "/") {
+          sessionStorage.setItem("aoci-skill-path", path);
+        }
+      } catch (e) {}
+      var search = location.search || "";
+      var hash = location.hash || "";
+      location.replace("/" + search + hash);
+    })();
+  </script>
+  <meta http-equiv="refresh" content="0;url=/">
+</head>
+<body>
+  <p><a href="/">返回至关重要</a></p>
+</body>
+</html>

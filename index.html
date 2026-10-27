@@ -140,6 +140,23 @@
             <i data-lucide="download" class="w-3.5 h-3.5"></i>
           </a>
         </div>
+
+        <!-- Shown after copy when a skill is selected (e.g. /ga4) -->
+        <div id="firstUsePanel" class="hidden mt-3 max-w-lg rounded-2xl border border-brand/25 bg-brand-light/60 p-3.5 text-left space-y-2.5">
+          <div class="flex items-center justify-between gap-2">
+            <div class="text-[11px] font-semibold text-brand tracking-wide flex items-center gap-1.5">
+              <i data-lucide="message-square-quote" class="w-3.5 h-3.5"></i>
+              <span data-i18n="firstUseLabel">首次使用提示词</span>
+              <span class="text-faint font-normal">·</span>
+              <span id="firstUseSkillName" class="text-ink font-medium"></span>
+            </div>
+            <button id="copyFirstUseBtn" type="button" class="px-2.5 py-1 rounded-lg bg-white/80 border border-line text-[11px] font-medium text-muted hover:text-brand hover:border-brand/40 transition-craft shrink-0">
+              <span data-i18n="copyFirstUse">复制提示词</span>
+            </button>
+          </div>
+          <p class="text-[11px] text-faint leading-relaxed" data-i18n="firstUseHint">安装完成后，把下面这段发给你的 AI，它就会按选中的技能开始第一次协助。</p>
+          <pre id="firstUsePromptText" class="whitespace-pre-wrap break-words text-xs leading-relaxed text-ink bg-white/70 border border-line/60 rounded-xl px-3 py-2.5 font-sans select-all"></pre>
+        </div>
       </div>
     </div>
 
@@ -221,6 +238,10 @@
     const toast = document.getElementById("toast");
     const languageToggle = document.getElementById("languageToggle");
     const capabilityList = document.getElementById("capabilityList");
+    const firstUsePanel = document.getElementById("firstUsePanel");
+    const firstUsePromptText = document.getElementById("firstUsePromptText");
+    const firstUseSkillName = document.getElementById("firstUseSkillName");
+    const copyFirstUseBtn = document.getElementById("copyFirstUseBtn");
     const installPrompts = {
       zh: "请将这个 GitHub 仓库安装为当前 AI 助手可复用的 Agent Skill：https://github.com/CCharlie-xiu/aoci-wuch.git",
       en: "Install this GitHub repository as a reusable Agent Skill for this AI assistant: https://github.com/CCharlie-xiu/aoci-wuch.git"
@@ -231,42 +252,161 @@
         intro: "一套持续生长的个人能力库，让 AI 在每个新项目里，都能复用经过整理的方法与经验。", installLabel: "给 AI 助手的安装指令", copyPrompt: "复制安装指令",
         artBadge: "一直生长的能力库", artTitle: "经验，值得被带走。", artCaption: "从一个项目，到下一个项目。", capabilitiesTitle: "能力库包含技能 · INCLUDED SKILLS",
         pagesLabel: "GitHub Pages", authorLabel: "作者 CCharlie-xiu", copied: "已复制", copyAgain: "复制安装指令",
-        copiedToast: "安装指令已成功复制到剪贴板！", subscribe: "订阅授权"
+        copiedToast: "安装指令已成功复制到剪贴板！", copiedWithSkillToast: "安装指令已复制。下方是该技能的首次使用提示词。", subscribe: "订阅授权",
+        firstUseLabel: "首次使用提示词", firstUseHint: "安装完成后，把下面这段发给你的 AI，它就会按选中的技能开始第一次协助。",
+        copyFirstUse: "复制提示词", firstUseCopiedToast: "首次使用提示词已复制到剪贴板！"
       },
       en: {
         siteLabel: "Personal AI Capability Library", eyebrow: "A LIBRARY OF USEFUL WAYS", headline: "Bring good methods", headlineAccent: "into your AI.",
         intro: "A growing personal capability library that lets AI reuse carefully shaped methods and experience in every new project.", installLabel: "Install for your AI assistant", copyPrompt: "Copy install command",
         artBadge: "A library that keeps growing", artTitle: "Good experience travels.", artCaption: "From one project to the next.", capabilitiesTitle: "INCLUDED SKILLS",
         pagesLabel: "GitHub Pages", authorLabel: "By CCharlie-xiu", copied: "Copied", copyAgain: "Copy install command",
-        copiedToast: "Install command copied to clipboard!", subscribe: "Subscribe"
+        copiedToast: "Install command copied to clipboard!", copiedWithSkillToast: "Install command copied. First-use prompt for this skill is below.", subscribe: "Subscribe",
+        firstUseLabel: "First-use prompt", firstUseHint: "After installing, paste the prompt below to your AI so it starts with the selected skill.",
+        copyFirstUse: "Copy prompt", firstUseCopiedToast: "First-use prompt copied to clipboard!"
       }
     };
     const capabilities = [
-      { id: "github-authorize", icon: "shield-check", name: "GitHub 应用授权", nameEn: "GitHub App Authorization" },
-      { id: "mobile-template-app", icon: "smartphone", name: "原生移动应用搭建与维护", nameEn: "Native App Setup & Practices", pro: true },
-      { id: "logic-space-enumeration", icon: "workflow", name: "复杂设计逻辑枚举", nameEn: "Complex Logic Enumeration" },
-      { id: "dbx-mcp-setup", icon: "database", name: "DBX 数据库接入", nameEn: "DBX Database MCP Setup" },
-      { id: "excel-capability", icon: "table-2", name: "Excel 后端选择配置", nameEn: "Excel Backend Configuration" },
-      { id: "libtv-mcp-setup", icon: "clapperboard", name: "LibTV 影像服务接入", nameEn: "LibTV MCP Connection" },
-      { id: "ui-design-prompt", icon: "panels-top-left", name: "UI 风格提示设计", nameEn: "UI Style Design", pro: true },
-      { id: "video-frame-extract", icon: "video", name: "视频画面抽帧", nameEn: "Video Frame Extraction" },
-      { id: "cf-workers-site-auth", icon: "cloud", name: "Workers 站点登录防刷", nameEn: "CF Workers Site Auth" },
-      { id: "ios-app-store-release", icon: "rocket", name: "iOS 上架与 TestFlight", nameEn: "iOS App Store & TestFlight", pro: true },
-      { id: "wuch-design-canvas", icon: "palette", name: "设计风格 Canvas", nameEn: "Design Style Canvas" },
-      { id: "sso-login-center", icon: "key-round", name: "轻量 SSO 登录中心", nameEn: "Lightweight SSO Login Center", pro: true },
-      { id: "ga4-analytics", icon: "chart-column", name: "GA4 埋点与分析", nameEn: "GA4 Analytics", limit: true }
+      { id: "github-authorize", icon: "shield-check", name: "GitHub 应用授权", nameEn: "GitHub App Authorization", short: "github" },
+      { id: "mobile-template-app", icon: "smartphone", name: "原生移动应用搭建与维护", nameEn: "Native App Setup & Practices", pro: true, short: "mobile" },
+      { id: "logic-space-enumeration", icon: "workflow", name: "复杂设计逻辑枚举", nameEn: "Complex Logic Enumeration", short: "logic" },
+      { id: "dbx-mcp-setup", icon: "database", name: "DBX 数据库接入", nameEn: "DBX Database MCP Setup", short: "dbx" },
+      { id: "excel-capability", icon: "table-2", name: "Excel 后端选择配置", nameEn: "Excel Backend Configuration", short: "excel" },
+      { id: "libtv-mcp-setup", icon: "clapperboard", name: "LibTV 影像服务接入", nameEn: "LibTV MCP Connection", short: "libtv" },
+      { id: "ui-design-prompt", icon: "panels-top-left", name: "UI 风格提示设计", nameEn: "UI Style Design", pro: true, short: "ui" },
+      { id: "video-frame-extract", icon: "video", name: "视频画面抽帧", nameEn: "Video Frame Extraction", short: "video" },
+      { id: "cf-workers-site-auth", icon: "cloud", name: "Workers 站点登录防刷", nameEn: "CF Workers Site Auth", short: "cf-auth" },
+      { id: "ios-app-store-release", icon: "rocket", name: "iOS 上架与 TestFlight", nameEn: "iOS App Store & TestFlight", pro: true, short: "ios" },
+      { id: "wuch-design-canvas", icon: "palette", name: "设计风格 Canvas", nameEn: "Design Style Canvas", short: "canvas" },
+      { id: "sso-login-center", icon: "key-round", name: "轻量 SSO 登录中心", nameEn: "Lightweight SSO Login Center", pro: true, short: "sso" },
+      { id: "ga4-analytics", icon: "chart-column", name: "GA4 埋点与分析", nameEn: "GA4 Analytics", limit: true, short: "ga4" }
     ];
 
+    // Short URL aliases → capability id（例如 /ga4 → ga4-analytics）
+    const skillAliases = {};
+    capabilities.forEach((capability) => {
+      skillAliases[capability.id] = capability.id;
+      if (capability.short) skillAliases[capability.short] = capability.id;
+    });
+
+    const firstUsePrompts = {
+      "ga4-analytics": {
+        zh: "我已安装「至关重要」能力库。请按 /aoci-wuch 读取能力索引，命中 ga4-analytics 后，在当前项目协助我：\n1）先确认我是开发者还是使用者；\n2）按该能力约定检查 / 完善 GA4 接入与事件上报；\n3）信息不够时，用技能里的提问模版问我。",
+        en: "I installed the AOCI capability library. Please follow /aoci-wuch, open the capability index, hit ga4-analytics, then help in this project:\n1) Confirm whether I am a developer or an end user;\n2) Check / improve GA4 setup and event tracking per the skill;\n3) If info is missing, ask me with the skill's question templates."
+      }
+    };
+
+    function buildDefaultFirstUsePrompt(capability, language) {
+      const name = language === "zh" ? capability.name : capability.nameEn;
+      if (language === "zh") {
+        return `我已安装「至关重要」能力库。请按 /aoci-wuch 读取能力索引，命中「${capability.id}」（${name}）后，按该能力说明协助我完成当前任务。`;
+      }
+      return `I installed the AOCI capability library. Please follow /aoci-wuch, open the capability index, hit "${capability.id}" (${name}), then help me with the current task per that skill.`;
+    }
+
     let currentLanguage = "zh";
+    let selectedSkillId = null;
+    let showFirstUseAfterCopy = false;
+
+    function getCapabilityById(id) {
+      return capabilities.find((item) => item.id === id) || null;
+    }
+
+    function skillPathFor(id) {
+      const capability = getCapabilityById(id);
+      return capability && capability.short ? capability.short : id;
+    }
+
+    function resolveSkillSlug(raw) {
+      if (!raw) return null;
+      const slug = String(raw).replace(/^\/+|\/+$/g, "").split("/")[0].trim().toLowerCase();
+      if (!slug || slug === "index.html" || slug === "auth.html") return null;
+      return skillAliases[slug] || null;
+    }
+
+    function readSkillFromUrl() {
+      try {
+        const stored = sessionStorage.getItem("aoci-skill-path");
+        if (stored) {
+          sessionStorage.removeItem("aoci-skill-path");
+          const fromStored = resolveSkillSlug(stored);
+          if (fromStored) return fromStored;
+        }
+      } catch {}
+
+      const params = new URLSearchParams(location.search);
+      const fromQuery = resolveSkillSlug(params.get("skill") || params.get("s"));
+      if (fromQuery) return fromQuery;
+
+      if (location.hash) {
+        const fromHash = resolveSkillSlug(location.hash.replace(/^#/, ""));
+        if (fromHash) return fromHash;
+      }
+
+      return resolveSkillSlug(location.pathname);
+    }
+
+    function syncUrlForSkill(id, replace) {
+      const path = id ? `/${skillPathFor(id)}` : "/";
+      const nextUrl = path + location.search.replace(/([?&])(skill|s)=[^&]*/g, "").replace(/^&/, "?").replace(/\?$/, "") + (location.hash || "");
+      try {
+        if (replace) history.replaceState({ skill: id }, "", nextUrl);
+        else history.pushState({ skill: id }, "", nextUrl);
+      } catch {}
+    }
+
+    function getFirstUsePrompt(id) {
+      const capability = getCapabilityById(id);
+      if (!capability) return "";
+      const custom = firstUsePrompts[id];
+      if (custom && custom[currentLanguage]) return custom[currentLanguage];
+      return buildDefaultFirstUsePrompt(capability, currentLanguage);
+    }
+
+    function updateFirstUsePanel() {
+      const capability = getCapabilityById(selectedSkillId);
+      if (!showFirstUseAfterCopy || !capability) {
+        firstUsePanel.classList.add("hidden");
+        return;
+      }
+      firstUseSkillName.textContent = currentLanguage === "zh" ? capability.name : capability.nameEn;
+      firstUsePromptText.textContent = getFirstUsePrompt(capability.id);
+      firstUsePanel.classList.remove("hidden");
+      lucide.createIcons();
+    }
+
+    function selectSkill(id, options = {}) {
+      const { syncUrl = true, replaceUrl = false, scroll = false } = options;
+      selectedSkillId = getCapabilityById(id) ? id : null;
+      showFirstUseAfterCopy = false;
+      renderCapabilities();
+      updateFirstUsePanel();
+      if (syncUrl) syncUrlForSkill(selectedSkillId, replaceUrl);
+      if (scroll && selectedSkillId) {
+        document.getElementById("capabilitiesTitle")?.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    }
 
     function renderCapabilities() {
-      capabilityList.innerHTML = capabilities.map((capability) => `
-        <div class="px-3.5 py-2 rounded-xl bg-surface border border-line/70 text-xs font-medium text-ink flex items-center gap-2 shadow-sponsor hover:border-brand/40 hover:-translate-y-0.5 transition-craft group">
+      capabilityList.innerHTML = capabilities.map((capability) => {
+        const selected = capability.id === selectedSkillId;
+        const selectedClass = selected
+          ? "border-brand bg-brand-light ring-2 ring-brand/20 shadow-sm"
+          : "bg-surface border-line/70 hover:border-brand/40 hover:-translate-y-0.5 shadow-sponsor";
+        return `
+        <button type="button" data-skill-id="${capability.id}" aria-pressed="${selected ? "true" : "false"}" class="px-3.5 py-2 rounded-xl border text-xs font-medium text-ink flex items-center gap-2 transition-craft group ${selectedClass}">
           <i data-lucide="${capability.icon}" class="w-3.5 h-3.5 text-brand group-hover:scale-110 transition-transform"></i>
           <span>${currentLanguage === "zh" ? capability.name : capability.nameEn}</span>
-          ${capability.pro ? '<a href="auth.html" class="ml-0.5 px-1.5 py-0.5 rounded-md bg-brand text-white text-[10px] font-semibold tracking-wide hover:bg-brand-hover">PRO</a>' : ""}
+          ${capability.pro ? '<a href="auth.html" class="ml-0.5 px-1.5 py-0.5 rounded-md bg-brand text-white text-[10px] font-semibold tracking-wide hover:bg-brand-hover" onclick="event.stopPropagation()">PRO</a>' : ""}
           ${(!capability.pro && capability.limit) ? '<span class="ml-0.5 px-1.5 py-0.5 rounded-md border border-line text-mute text-[10px] font-semibold tracking-wide" title="Free capability with limited scope">Limit</span>' : ""}
-        </div>`).join("");
+        </button>`;
+      }).join("");
+      capabilityList.querySelectorAll("[data-skill-id]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const id = button.getAttribute("data-skill-id");
+          selectSkill(selectedSkillId === id ? null : id, { syncUrl: true });
+        });
+      });
       lucide.createIcons();
     }
 
@@ -284,23 +424,16 @@
         ? "至关重要：一套可安装到 AI 编码助手中的个人能力库。"
         : "AOCI: a personal capability library for AI coding assistants.";
       renderCapabilities();
+      updateFirstUsePanel();
       try { localStorage.setItem("aoci-language", language); } catch {}
     }
 
-    languageToggle.addEventListener("click", () => setLanguage(currentLanguage === "zh" ? "en" : "zh"));
-    try {
-      if (localStorage.getItem("aoci-language") === "en") setLanguage("en");
-      else renderCapabilities();
-    } catch { renderCapabilities(); }
-
-    async function copyInstallPrompt() {
-      const installPromptText = document.getElementById("installPromptText").textContent.trim();
+    async function writeClipboard(text) {
       try {
-        await navigator.clipboard.writeText(installPromptText);
+        await navigator.clipboard.writeText(text);
       } catch {
-        // Fallback for strict sandbox/iframe
         const textArea = document.createElement("textarea");
-        textArea.value = installPromptText;
+        textArea.value = text;
         textArea.style.position = "fixed";
         textArea.style.opacity = "0";
         document.body.appendChild(textArea);
@@ -308,9 +441,20 @@
         document.execCommand("copy");
         document.body.removeChild(textArea);
       }
+    }
 
-      // UI Feedback
-      showToast(translations[currentLanguage].copiedToast);
+    async function copyInstallPrompt() {
+      const installPromptText = document.getElementById("installPromptText").textContent.trim();
+      await writeClipboard(installPromptText);
+
+      if (selectedSkillId) {
+        showFirstUseAfterCopy = true;
+        updateFirstUsePanel();
+        showToast(translations[currentLanguage].copiedWithSkillToast);
+      } else {
+        showToast(translations[currentLanguage].copiedToast);
+      }
+
       copyBtnText.textContent = translations[currentLanguage].copied;
       copyIcon.setAttribute("data-lucide", "check");
       lucide.createIcons();
@@ -322,6 +466,12 @@
       }, 2000);
     }
 
+    async function copyFirstUsePrompt() {
+      if (!selectedSkillId) return;
+      await writeClipboard(getFirstUsePrompt(selectedSkillId));
+      showToast(translations[currentLanguage].firstUseCopiedToast);
+    }
+
     function showToast(msg) {
       document.getElementById("toast-message").textContent = msg;
       toast.classList.remove("-translate-y-12", "opacity-0", "pointer-events-none");
@@ -330,10 +480,26 @@
       setTimeout(() => {
         toast.classList.remove("translate-y-0", "opacity-100");
         toast.classList.add("-translate-y-12", "opacity-0", "pointer-events-none");
-      }, 2200);
+      }, 2600);
     }
 
+    languageToggle.addEventListener("click", () => setLanguage(currentLanguage === "zh" ? "en" : "zh"));
     copyBtn.addEventListener("click", copyInstallPrompt);
+    copyFirstUseBtn.addEventListener("click", copyFirstUsePrompt);
+    window.addEventListener("popstate", () => {
+      const fromState = history.state && history.state.skill;
+      selectSkill(fromState || readSkillFromUrl(), { syncUrl: false });
+    });
+
+    try {
+      if (localStorage.getItem("aoci-language") === "en") currentLanguage = "en";
+    } catch {}
+
+    const bootSkill = readSkillFromUrl();
+    setLanguage(currentLanguage);
+    if (bootSkill) {
+      selectSkill(bootSkill, { syncUrl: true, replaceUrl: true, scroll: true });
+    }
   </script>
 </body>
 </html>
