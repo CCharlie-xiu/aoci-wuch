@@ -26,10 +26,9 @@ https://developers.google.com/analytics/devguides/collection/ga4
 1. 仅 Web/H5 注入 `https://www.googletagmanager.com/gtag/js?id=G-…`
 2. `gtag('config', ID, { send_page_view: false })` —— SPA 由路由统一打 `page_view`
 3. 封装 `trackGaEvent(name, params)`，自动合并公共参数
-4. User-ID：`gtag('set', { user_id })` + 必要时再 `config`；**禁止**放进事件 params
+4. User-ID：登录后 `gtag('set', { user_id })`；登出 `gtag('set', { user_id: null })`；**禁止**放进事件 params、用户属性、自定义维度
 
-官方 User-ID：  
-https://developers.google.com/analytics/devguides/collection/ga4/userid
+官方写法与限制见 `code-map.md` 第 2 节；链接见 `index.md` 页面分工 A。
 
 ## 公共参数（建议每条事件都有）
 
@@ -51,8 +50,8 @@ https://developers.google.com/analytics/devguides/collection/ga4/userid
 | --- | --- |
 | 登录成功 | `set` user_id；打官方 `login`（见 `event-design.md`） |
 | 注册完成 | 官方 `sign_up` |
-| 登出 / 踢下线 | 清会话侧身份；`user_id` 置空 |
-| 游客 | 不要用占位符冒充官方 User-ID |
+| 登出 / 踢下线 | 清会话侧身份；`user_id` 设为 `null`，不要发空串或字符串 `"null"` |
+| 游客（从未登录） | 不发 `user_id`，不要用占位符冒充 |
 
 事件名优先官方预设；业务专有名只放业务仓字典。
 

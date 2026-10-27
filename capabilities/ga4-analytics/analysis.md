@@ -4,19 +4,7 @@
 
 入口：https://analytics.google.com/
 
-配套文档：
-
-| 用途 | URL |
-| --- | --- |
-| 事件报告（怎么看事件） | https://support.google.com/analytics/answer/13316685 |
-| 实时报告 | https://support.google.com/analytics/answer/9271392 |
-| DebugView | https://support.google.com/analytics/answer/7201382 |
-| 自定义事件 | https://support.google.com/analytics/answer/12229021 |
-| 自定义维度 / 指标 | https://support.google.com/analytics/answer/10075209 |
-| 探索总览 | https://support.google.com/analytics/answer/7579450 |
-| 漏斗探索 | https://support.google.com/analytics/answer/9329390 |
-| 关键事件（转化） | https://support.google.com/analytics/answer/9267568 |
-| 电商购买报告 | https://support.google.com/analytics/answer/9214129 |
+配套文档链接见 `index.md` 页面分工 A。按用户筛选见 `user-analysis.md`；本能力没写到的走 `gap-protocol.md`。
 
 ---
 
@@ -26,7 +14,7 @@
 
 | 你想确认什么 | 打开（话术） | 官方事件 | 自定义事件 |
 | --- | --- | --- | --- |
-| 刚打的点有没有进来（联调） | 管理 → DebugView | 看事件名与参数 | 同样看事件名与参数 |
+| 刚打的点有没有进来（联调） | 管理 → 数据展示 → DebugView | 看事件名与参数 | 同样看事件名与参数 |
 | 此刻有没有量 | 报告 → 实时 → 按事件名称 | 可见 | 可见（同列表） |
 | 某事件总量 / 趋势 | 报告 → 互动度 → 事件 | 可见 | 可见；新事件可能延迟数小时 |
 | 事件详情与参数 | 互动度 → 事件 → 点进事件名 | 常见参数更易出模板 | 参数要进报表须先登记自定义维度 |
@@ -58,7 +46,7 @@
 
 ## 漏斗怎么配（通用步骤，不绑某一业务）
 
-文档：https://support.google.com/analytics/answer/9329390
+文档：`index.md` 页面分工 A「漏斗探索」。步骤中的按钮名以用户界面实际显示为准，本节为通用流程，未逐项对照官方页。
 
 ### 配置步骤（提示用户照做）
 
@@ -103,10 +91,23 @@ page_view → login → select_content → begin_checkout → purchase
 
 ### 标记关键事件（可选）
 
-要把某步当成「转化」看：管理 → 数据展示 → 事件 → 把该事件标为关键事件。  
-文档：https://support.google.com/analytics/answer/9267568
+要把某步当成「转化」看：把该事件标为关键事件（Key event）。标记入口位置见官方「关键事件」页（`index.md` 页面分工 A），菜单路径以官方页为准。  
+官方说明：任何已收集的事件都可标为关键事件；标记后，多个报告里会出现 Key events 列。
 
 ---
+
+## 症状排查
+
+| 现象 | 先查 | 依据 |
+| --- | --- | --- |
+| 事件列表里没有新事件 | 是否刚上线（可能晚数小时）；属性是否选对；DebugView 是否已见 | 本文边界；`verify.md` |
+| 自定义事件有，参数拆不开 | 参数是否登记自定义维度；是否登记在新数据之前 | 本文自定义维度节 |
+| 探索里查不到较早日期 | 数据保留期（用户级可选 2 / 14 个月）；超期数据在探索与漏斗中不显示，标准汇总报告不受影响 | 官方数据保留页 |
+| 探索数据偏少或有黄色提示 | 数据阈值、抽样（超过 1000 万事件的查询可能抽样） | 官方探索页 |
+| 漏斗某步为 0 | 事件名是否与代码一致；同义官方名与自定义名是否混用 | `code-map.md` 对账 |
+| 看不到单个用户 | 见 `user-analysis.md` 排查表 | — |
+
+未列出的现象走 `gap-protocol.md`。
 
 ## 边界
 

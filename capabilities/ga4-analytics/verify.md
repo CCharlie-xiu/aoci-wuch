@@ -2,9 +2,7 @@
 
 目标：证明「该看到的已经能看到」。角色不同，验收路径不同；跨角色对齐见 `roles-qa.md`。
 
-DebugView：https://support.google.com/analytics/answer/7201382  
-实时：https://support.google.com/analytics/answer/9271392  
-事件报告：https://support.google.com/analytics/answer/13316685
+官方页链接见 `index.md` 页面分工 A（DebugView、实时、事件报告）。
 
 ---
 
@@ -31,12 +29,15 @@ DebugView：https://support.google.com/analytics/answer/7201382
 ```text
 https://analytics.google.com/
 → 选对「账号 / 属性」
-→ 管理 → DebugView
+→ 管理 → 数据展示 → DebugView
 → 保持测试页打开，操作一次
-→ 左侧出现 page_view 或目标事件；点开核对参数
+→ 秒级流（中间列）出现 page_view 或目标事件；点开核对参数
+→ 多设备时用左上角 DEBUG DEVICE 选自己的设备
 ```
 
-代码侧需 `debug_mode: true`（或 Chrome GA Debugger）。正式包关闭 debug。
+启用 debug mode：个人设备用 Tag Assistant（tagassistant.google.com）或 GTM 预览模式；全部设备改配置。正式包关闭 debug，并过滤开发者流量。
+
+DebugView 看不到事件的原因：客户端隐私控制；开了 consent mode 但用户未同意 Analytics cookie。
 
 ### 3) 实时（可选）
 
