@@ -50,7 +50,17 @@
   </script>
 
   <style>
-    /* Let the capability list flow naturally on smaller screens. */
+    :root {
+      /* Align with openui-lab / wuch-ai motion tokens (DESIGN-ANCHOR §3.8) */
+      --motion-1: 140ms;
+      --motion-2: 180ms;
+      --motion-3: 280ms;
+      --motion-4: 320ms;
+      --ease-out: cubic-bezier(.22, 1, .36, 1);
+      --ease-fade: ease;
+      --motion-shift-y: 6px;
+    }
+
     html, body {
       min-height: 100dvh;
       background-color: #fbf9f5;
@@ -59,14 +69,54 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* Tactile Paper Texture */
     .bg-paper-grain {
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.025'/%3E%3C/svg%3E");
     }
 
-    /* Custom Smooth Micro-transitions */
     .transition-craft {
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: border-color var(--motion-1) var(--ease-fade), background-color var(--motion-1) var(--ease-fade), color var(--motion-1) var(--ease-fade), transform var(--motion-1) var(--ease-out), box-shadow var(--motion-1) var(--ease-fade);
+    }
+
+    /* Disclosure：只动 grid-template-rows + opacity（同 openui-lab .ai-tr__collapsible） */
+    .skill-disclosure {
+      display: grid;
+      grid-template-rows: 0fr;
+      opacity: 0;
+      pointer-events: none;
+      transition:
+        grid-template-rows var(--motion-4) var(--ease-out),
+        opacity var(--motion-2) var(--ease-fade);
+    }
+    .skill-disclosure.is-open {
+      grid-template-rows: 1fr;
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .skill-disclosure__inner {
+      min-height: 0;
+      overflow: hidden;
+    }
+    .skill-disclosure__content {
+      transform: translateY(var(--motion-shift-y));
+      transition: transform var(--motion-4) var(--ease-out);
+    }
+    .skill-disclosure.is-open .skill-disclosure__content {
+      transform: translateY(0);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      :root {
+        --motion-1: 0ms;
+        --motion-2: 0ms;
+        --motion-3: 0ms;
+        --motion-4: 0ms;
+        --motion-shift-y: 0px;
+      }
+      .skill-disclosure,
+      .skill-disclosure__content,
+      .transition-craft {
+        transition: none !important;
+      }
     }
   </style>
 </head>
@@ -140,23 +190,6 @@
             <i data-lucide="download" class="w-3.5 h-3.5"></i>
           </a>
         </div>
-
-        <!-- Shown after copy when a skill is selected (e.g. /ga4) -->
-        <div id="firstUsePanel" class="hidden mt-3 max-w-lg rounded-2xl border border-brand/25 bg-brand-light/60 p-3.5 text-left space-y-2.5">
-          <div class="flex items-center justify-between gap-2">
-            <div class="text-[11px] font-semibold text-brand tracking-wide flex items-center gap-1.5">
-              <i data-lucide="message-square-quote" class="w-3.5 h-3.5"></i>
-              <span data-i18n="firstUseLabel">首次使用提示词</span>
-              <span class="text-faint font-normal">·</span>
-              <span id="firstUseSkillName" class="text-ink font-medium"></span>
-            </div>
-            <button id="copyFirstUseBtn" type="button" class="px-2.5 py-1 rounded-lg bg-white/80 border border-line text-[11px] font-medium text-muted hover:text-brand hover:border-brand/40 transition-craft shrink-0">
-              <span data-i18n="copyFirstUse">复制提示词</span>
-            </button>
-          </div>
-          <p class="text-[11px] text-faint leading-relaxed" data-i18n="firstUseHint">安装完成后，把下面这段发给你的 AI，它就会按选中的技能开始第一次协助。</p>
-          <pre id="firstUsePromptText" class="whitespace-pre-wrap break-words text-xs leading-relaxed text-ink bg-white/70 border border-line/60 rounded-xl px-3 py-2.5 font-sans select-all"></pre>
-        </div>
       </div>
     </div>
 
@@ -212,6 +245,29 @@
       <span class="h-[1px] w-8 bg-line"></span>
     </div>
     <div id="capabilityList" class="flex flex-wrap items-center justify-center gap-2 sm:gap-3 max-w-4xl mx-auto"></div>
+
+    <!-- 挂在技能区下方：选中技能并复制安装指令后展开（openui-lab disclosure 动效） -->
+    <div id="firstUsePanel" class="skill-disclosure max-w-xl mx-auto mt-3 text-left" aria-hidden="true">
+      <div class="skill-disclosure__inner">
+        <div class="skill-disclosure__content pt-1">
+          <div class="rounded-2xl border border-line bg-surface p-3.5 space-y-2.5 shadow-sponsor">
+            <div class="flex items-center justify-between gap-2">
+              <div class="text-[11px] font-semibold text-brand tracking-wide flex items-center gap-1.5 min-w-0">
+                <i data-lucide="message-square-quote" class="w-3.5 h-3.5 shrink-0"></i>
+                <span data-i18n="firstUseLabel">首次使用提示词</span>
+                <span class="text-faint font-normal">·</span>
+                <span id="firstUseSkillName" class="text-ink font-medium truncate"></span>
+              </div>
+              <button id="copyFirstUseBtn" type="button" class="px-2.5 py-1 rounded-lg bg-surface-subtle border border-line text-[11px] font-medium text-muted hover:text-brand hover:border-brand/40 transition-craft shrink-0">
+                <span data-i18n="copyFirstUse">复制提示词</span>
+              </button>
+            </div>
+            <p class="text-[11px] text-faint leading-relaxed" data-i18n="firstUseHint">安装完成后，把下面这段发给你的 AI，它就会按选中的技能开始第一次协助。</p>
+            <pre id="firstUsePromptText" class="whitespace-pre-wrap break-words text-xs leading-relaxed text-ink bg-surface-subtle border border-line/60 rounded-xl px-3 py-2.5 font-sans select-all"></pre>
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- Footer Shell -->
@@ -365,14 +421,14 @@
 
     function updateFirstUsePanel() {
       const capability = getCapabilityById(selectedSkillId);
-      if (!showFirstUseAfterCopy || !capability) {
-        firstUsePanel.classList.add("hidden");
-        return;
+      const open = Boolean(showFirstUseAfterCopy && capability);
+      if (capability) {
+        firstUseSkillName.textContent = currentLanguage === "zh" ? capability.name : capability.nameEn;
+        firstUsePromptText.textContent = getFirstUsePrompt(capability.id);
       }
-      firstUseSkillName.textContent = currentLanguage === "zh" ? capability.name : capability.nameEn;
-      firstUsePromptText.textContent = getFirstUsePrompt(capability.id);
-      firstUsePanel.classList.remove("hidden");
-      lucide.createIcons();
+      firstUsePanel.classList.toggle("is-open", open);
+      firstUsePanel.setAttribute("aria-hidden", open ? "false" : "true");
+      if (open) lucide.createIcons();
     }
 
     function selectSkill(id, options = {}) {
@@ -451,6 +507,7 @@
         showFirstUseAfterCopy = true;
         updateFirstUsePanel();
         showToast(translations[currentLanguage].copiedWithSkillToast);
+        document.getElementById("capabilitiesTitle")?.scrollIntoView({ behavior: "smooth", block: "center" });
       } else {
         showToast(translations[currentLanguage].copiedToast);
       }
