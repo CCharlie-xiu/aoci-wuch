@@ -253,7 +253,8 @@
       { id: "cf-workers-site-auth", icon: "cloud", name: "Workers 站点登录防刷", nameEn: "CF Workers Site Auth" },
       { id: "ios-app-store-release", icon: "rocket", name: "iOS 上架与 TestFlight", nameEn: "iOS App Store & TestFlight", pro: true },
       { id: "wuch-design-canvas", icon: "palette", name: "设计风格 Canvas", nameEn: "Design Style Canvas" },
-      { id: "sso-login-center", icon: "key-round", name: "轻量 SSO 登录中心", nameEn: "Lightweight SSO Login Center", pro: true }
+      { id: "sso-login-center", icon: "key-round", name: "轻量 SSO 登录中心", nameEn: "Lightweight SSO Login Center", pro: true },
+      { id: "ga4-analytics", icon: "chart-column", name: "GA4 埋点与分析", nameEn: "GA4 Analytics", limit: true }
     ];
 
     let currentLanguage = "zh";
@@ -264,6 +265,7 @@
           <i data-lucide="${capability.icon}" class="w-3.5 h-3.5 text-brand group-hover:scale-110 transition-transform"></i>
           <span>${currentLanguage === "zh" ? capability.name : capability.nameEn}</span>
           ${capability.pro ? '<a href="auth.html" class="ml-0.5 px-1.5 py-0.5 rounded-md bg-brand text-white text-[10px] font-semibold tracking-wide hover:bg-brand-hover">PRO</a>' : ""}
+          ${(!capability.pro && capability.limit) ? '<span class="ml-0.5 px-1.5 py-0.5 rounded-md border border-line text-mute text-[10px] font-semibold tracking-wide" title="Free capability with limited scope">Limit</span>' : ""}
         </div>`).join("");
       lucide.createIcons();
     }

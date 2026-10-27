@@ -105,15 +105,24 @@ def check_pages(catalog: dict[str, tuple[set[str], set[str]]], errors: list[str]
     pro = {name for bucket in PAGES_BUCKETS for name in catalog.get(bucket, (set(), set()))[1]}
 
     html = (ROOT / "index.html").read_text(encoding="utf-8")
-    page_entries = {m.group(1): "pro: true" in m.group(0) for m in PAGE_ENTRY.finditer(html)}
+    page_entries = {
+        m.group(1): {
+            "pro": "pro: true" in m.group(0),
+            "limit": "limit: true" in m.group(0),
+        }
+        for m in PAGE_ENTRY.finditer(html)
+    }
     for name in sorted(live - set(page_entries)):
         fail(f"index.html：能力未出现在首页能力列表：{name}", errors)
     for name in sorted(set(page_entries) - live):
         fail(f"index.html：首页列出了不存在或已退役的能力：{name}", errors)
     for name in sorted(live & set(page_entries)):
-        if page_entries[name] != (name in pro):
+        flags = page_entries[name]
+        if flags["pro"] != (name in pro):
             expected = "需要" if name in pro else "不应"
             fail(f"index.html：{name} {expected}标记 pro: true", errors)
+        if flags["pro"] and flags["limit"]:
+            fail(f"index.html：{name} 不能同时标记 pro 与 limit（Limit 仅为免费展示样式）", errors)
 
     _check_readme_catalog(ROOT / "README.md", PAGES_BUCKETS, catalog, errors)
     _check_readme_catalog(ROOT / "README.zh.md", PAGES_BUCKETS_ZH, catalog, errors)

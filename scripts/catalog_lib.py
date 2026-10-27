@@ -75,8 +75,21 @@ def remove_index_line(index_path: Path, name: str) -> None:
     index_path.write_text("\n".join(kept) + "\n", encoding="utf-8")
 
 
-def set_homepage_entry(name: str, title: str, title_en: str | None, icon: str | None, pro: bool) -> None:
-    """Add or update a homepage card; omitted title_en / icon keep the existing values."""
+def set_homepage_entry(
+    name: str,
+    title: str,
+    title_en: str | None,
+    icon: str | None,
+    pro: bool,
+    *,
+    limit: bool = False,
+) -> None:
+    """Add or update a homepage card; omitted title_en / icon keep the existing values.
+
+    `limit` is a Pages-only badge style for free capabilities; it must never imply [PRO].
+    """
+    if pro and limit:
+        raise SystemExit("首页卡片不能同时标记 pro 与 limit（Limit 仅为免费能力的展示样式）")
     path = ROOT / "index.html"
     html = path.read_text(encoding="utf-8")
     existing = re.compile(rf'\{{\s*id:\s*"{re.escape(name)}"[^}}]*\}}')
@@ -85,7 +98,14 @@ def set_homepage_entry(name: str, title: str, title_en: str | None, icon: str | 
         old = current.group(0)
         icon = icon or (re.search(r'icon:\s*"([^"]+)"', old) or [None, "sparkles"])[1]
         title_en = title_en or (re.search(r'nameEn:\s*"([^"]+)"', old) or [None, name])[1]
-    entry = f'{{ id: "{name}", icon: "{icon or "sparkles"}", name: "{title}", nameEn: "{title_en or name}"{", pro: true" if pro else ""} }}'
+        if not limit:
+            limit = "limit: true" in old and not pro
+    flags = ""
+    if pro:
+        flags = ", pro: true"
+    elif limit:
+        flags = ", limit: true"
+    entry = f'{{ id: "{name}", icon: "{icon or "sparkles"}", name: "{title}", nameEn: "{title_en or name}"{flags} }}'
     if current:
         path.write_text(html[: current.start()] + entry + html[current.end() :], encoding="utf-8")
         return

@@ -59,6 +59,7 @@ The assistant should **not** load every capability body up front. Use [capabilit
 | [Design Style Canvas](capabilities/wuch-design-canvas/) | Confirm desired effects against the wuch-ai design anchor, then ship a style Canvas |
 | [UI Style Prompt Design](https://skill.wuch-ai.net/auth.html) `PRO` | Confirm style first, then generate runnable UI <!-- pro:ui-design-prompt --> |
 | [Lightweight SSO Login Center](https://skill.wuch-ai.net/auth.html) `PRO` | Lightweight SSO Login Center <!-- pro:sso-login-center --> |
+| [GA4 Analytics](capabilities/ga4-analytics/) | GA4 Analytics |
 
 ### Experimental
 

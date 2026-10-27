@@ -32,8 +32,16 @@ def main() -> int:
     parser.add_argument("--title", required=True, help="首页与 README 显示的中文名")
     parser.add_argument("--title-en", help="首页英文名；首页已有该能力时默认保留原值，否则同能力名")
     parser.add_argument("--icon", help="首页图标（lucide 图标名）；首页已有时默认保留原值，否则 sparkles")
+    parser.add_argument(
+        "--limit",
+        action="store_true",
+        help="首页展示 Limit 样式徽章；仍是免费能力，不写入 [PRO]、不影响正文定价",
+    )
     args = parser.parse_args()
     require_pro_clone()
+    if args.pro and args.limit:
+        print("--limit 仅用于免费能力的首页展示样式，不能与 --pro 同用", file=sys.stderr)
+        return 1
 
     sources = [
         (INCUBATOR / args.name, INCUBATOR / "index.md", "私有孵化区"),
@@ -66,11 +74,19 @@ def main() -> int:
 
     remove_index_line(src_index, args.name)
     append_index_line(ROOT / "capabilities" / "index.md", f"{args.name}[{new_tag}]{pro_flag}: {desc}")
-    set_homepage_entry(args.name, args.title, args.title_en, args.icon, args.pro)
+    set_homepage_entry(
+        args.name,
+        args.title,
+        args.title_en,
+        args.icon,
+        args.pro,
+        limit=bool(args.limit and args.free),
+    )
     remove_readme_row(args.name)
     add_readme_row("capabilities", args.name, args.title, desc, args.pro, title_en=args.title_en)
 
-    print(f"已发布 {args.name}[{new_tag}]{pro_flag}：{src_label} → {target.relative_to(ROOT)}")
+    limit_note = "（首页 Limit 展示样式，仍为免费）" if args.limit and args.free else ""
+    print(f"已发布 {args.name}[{new_tag}]{pro_flag}{limit_note}：{src_label} → {target.relative_to(ROOT)}")
     print("已更新公开索引 capabilities/index.md、首页 index.html、README.md / README.zh.md")
     print("\n运行 python3 scripts/validate.py 后提交（先私有、后公开）：")
     print("  1. cd capabilities-pro && git add -A && git commit -m '发布 ...' && git push && cd ..")
