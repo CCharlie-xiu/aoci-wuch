@@ -62,6 +62,7 @@ The assistant should **not** load every capability body up front. Use [capabilit
 | [GA4 Analytics](capabilities/ga4-analytics/) | GA4 Analytics |
 | [GitHub OAuth Login](capabilities/github-oauth-login/) | GitHub OAuth Login |
 | [Email Magic Link Login](capabilities/email-magic-link/) | Email Magic Link Login |
+| [Design Pattern OS](https://skill.wuch-ai.net/auth.html) `PRO` | Design Pattern OS <!-- pro:design-pattern-os --> |
 
 ### Experimental
 

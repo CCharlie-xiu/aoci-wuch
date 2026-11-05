@@ -28,4 +28,5 @@ sso-login-center[KA9SH][PRO]: 在自有应用间落地轻量 SSO 登录中心：
 ga4-analytics[KD8SH]: 在 H5/Web 项目落地 GA4 埋点与基础分析：接入、事件设计、联调验收、排障与看数
 github-oauth-login[KA8SH]: 把 GitHub OAuth 接到自有产品的登录与建号链路
 email-magic-link[KA8SH]: 用一次性邮件链接完成无密码登录与建号
+design-pattern-os[KD8SH][PRO]: 把 Refero 式 compact / extended / tokens 三层固化为可修复已知产品、也可设计未知产品的设计操作系统
 ```

@@ -62,6 +62,7 @@ https://github.com/CCharlie-xiu/aoci-wuch.git
 | [GA4 埋点与分析](capabilities/ga4-analytics/) | 在 H5/Web 项目落地 GA4 埋点与基础分析：接入、事件设计、联调验收、排障与看数 |
 | [GitHub 登录接入](capabilities/github-oauth-login/) | 把 GitHub OAuth 接到自有产品的登录与建号链路 |
 | [邮件魔法链接登录](capabilities/email-magic-link/) | 用一次性邮件链接完成无密码登录与建号 |
+| [设计模式操作系统](https://skill.wuch-ai.net/auth.html) `PRO` | 把 Refero 式 compact / extended / tokens 三层固化为可修复已知产品、也可设计未知产品的设计操作系统（订阅能力） <!-- pro:design-pattern-os --> |
 
 ### 待验证能力
 
