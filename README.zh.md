@@ -60,6 +60,8 @@ https://github.com/CCharlie-xiu/aoci-wuch.git
 | [UI 风格提示设计](https://skill.wuch-ai.net/auth.html) `PRO` | 让 AI 先确认风格再直出可运行的界面设计（订阅能力） <!-- pro:ui-design-prompt --> |
 | [轻量 SSO 登录中心](https://skill.wuch-ai.net/auth.html) `PRO` | 在自有应用间落地轻量 SSO 登录中心：授权码 + PKCE，一次登录多应用可用、令牌不跨界（订阅能力） <!-- pro:sso-login-center --> |
 | [GA4 埋点与分析](capabilities/ga4-analytics/) | 在 H5/Web 项目落地 GA4 埋点与基础分析：接入、事件设计、联调验收、排障与看数 |
+| [GitHub 登录接入](capabilities/github-oauth-login/) | 把 GitHub OAuth 接到自有产品的登录与建号链路 |
+| [邮件魔法链接登录](capabilities/email-magic-link/) | 用一次性邮件链接完成无密码登录与建号 |
 
 ### 待验证能力
 

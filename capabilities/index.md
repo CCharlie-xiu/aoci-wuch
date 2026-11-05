@@ -26,4 +26,6 @@ wuch-design-canvas[KD8SH]: 按 wuch-ai 设计锚点询问用户所需效果，�
 ui-design-prompt[KD9SH][PRO]: 让 AI 先确认风格再直出可运行的界面设计
 sso-login-center[KA9SH][PRO]: 在自有应用间落地轻量 SSO 登录中心：授权码 + PKCE，一次登录多应用可用、令牌不跨界
 ga4-analytics[KD8SH]: 在 H5/Web 项目落地 GA4 埋点与基础分析：接入、事件设计、联调验收、排障与看数
+github-oauth-login[KA8SH]: 把 GitHub OAuth 接到自有产品的登录与建号链路
+email-magic-link[KA8SH]: 用一次性邮件链接完成无密码登录与建号
 ```
