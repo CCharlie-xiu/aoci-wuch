@@ -63,6 +63,7 @@ The assistant should **not** load every capability body up front. Use [capabilit
 | [GitHub OAuth Login](capabilities/github-oauth-login/) | GitHub OAuth Login |
 | [Email Magic Link Login](capabilities/email-magic-link/) | Email Magic Link Login |
 | [Design Pattern OS](https://skill.wuch-ai.net/auth.html) `PRO` | Design Pattern OS <!-- pro:design-pattern-os --> |
+| [AI Conversation Kit](https://skill.wuch-ai.net/auth.html) `PRO` | AI Conversation Kit <!-- pro:ai-conversation-kit --> |
 
 ### Experimental
 
