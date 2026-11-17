@@ -63,7 +63,7 @@ https://github.com/CCharlie-xiu/aoci-wuch.git
 | [GitHub 登录接入](capabilities/github-oauth-login/) | 把 GitHub OAuth 接到自有产品的登录与建号链路 |
 | [邮件魔法链接登录](capabilities/email-magic-link/) | 用一次性邮件链接完成无密码登录与建号 |
 | [设计模式操作系统](https://skill.wuch-ai.net/auth.html) `PRO` | 把 Refero 式 compact / extended / tokens 三层固化为可修复已知产品、也可设计未知产品的设计操作系统（订阅能力） <!-- pro:design-pattern-os --> |
-| [AI 对话面整套方案](https://skill.wuch-ai.net/auth.html) `PRO` | 为 Vue/React AI 对话与 Agent 界面提供可复用的组件选型、样式体系、IndexedDB 轮次落库与 OpenAI 流式逻辑整套方案（订阅能力） <!-- pro:ai-conversation-kit --> |
+| [AI 对话面整套方案](https://skill.wuch-ai.net/auth.html) `PRO` | 为 Vue/React AI 对话与 Agent 界面提供组件选型、样式、IndexedDB 轮次落库、工具调用/Thinking 展示、创作沙盒表单与 OpenAI 流式整套方案（订阅能力） <!-- pro:ai-conversation-kit --> |
 
 ### 待验证能力
 
