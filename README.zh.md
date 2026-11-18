@@ -64,6 +64,8 @@ https://github.com/CCharlie-xiu/aoci-wuch.git
 | [邮件魔法链接登录](capabilities/email-magic-link/) | 用一次性邮件链接完成无密码登录与建号 |
 | [设计模式操作系统](https://skill.wuch-ai.net/auth.html) `PRO` | 把 Refero 式 compact / extended / tokens 三层固化为可修复已知产品、也可设计未知产品的设计操作系统（订阅能力） <!-- pro:design-pattern-os --> |
 | [AI 对话面整套方案](https://skill.wuch-ai.net/auth.html) `PRO` | 为 Vue/React AI 对话与 Agent 界面提供组件选型、样式、IndexedDB 轮次落库、工具调用/Thinking 展示、创作沙盒表单与 OpenAI 流式整套方案（订阅能力） <!-- pro:ai-conversation-kit --> |
+| [个人协作知识库](capabilities/team-know/) | 初始化并定制个人/协作知识库（三维+sketch+索引），跨宿主入库与体验引导 |
+| [对话经验上架 WorkBuddy](capabilities/wb-skill-publish/) | 把长对话或沉淀流程打包为可上架 WorkBuddy 的通用 Skill 包与发布材料 |
 
 ### 待验证能力
 
