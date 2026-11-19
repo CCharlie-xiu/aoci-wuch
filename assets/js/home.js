@@ -758,7 +758,7 @@
     if (AOCI.mountSwitchButton) AOCI.mountSwitchButton(document.getElementById("themeSwitch"));
     function jumpToInstall() {
       const bar = document.querySelector(".install-bar");
-      document.getElementById("install")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      document.getElementById("install")?.scrollIntoView({ behavior: "smooth", block: "center" });
       if (!bar) return;
       bar.classList.remove("is-flash");
       void bar.offsetWidth;
@@ -807,6 +807,51 @@
       if (localStorage.getItem("aoci-language") === "en") currentLanguage = "en";
     } catch {}
 
+    /* 主模块幻灯片吸附：同步导航高度，点击锚点居中，滚动时高亮当前段 */
+    const snapPanels = ["#install", "#foryou", "#featured", "#skills", "#how"].map((sel) => document.querySelector(sel)).filter(Boolean);
+    const navLinks = [...document.querySelectorAll(".nav-links a[href^='#']")];
+    function syncNavHeight() {
+      const nav = document.querySelector(".nav");
+      if (!nav) return;
+      document.documentElement.style.setProperty("--nav-h", `${Math.ceil(nav.getBoundingClientRect().height)}px`);
+    }
+    function scrollPanelIntoView(el, smooth = true) {
+      if (!el) return;
+      el.scrollIntoView({ block: "center", inline: "nearest", behavior: smooth && !window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "smooth" : "auto" });
+    }
+    function setActiveNav(id) {
+      navLinks.forEach((link) => {
+        const match = link.getAttribute("href") === `#${id}`;
+        link.classList.toggle("is-active", match);
+        if (match) link.setAttribute("aria-current", "true");
+        else link.removeAttribute("aria-current");
+      });
+    }
+    syncNavHeight();
+    window.addEventListener("resize", syncNavHeight, { passive: true });
+    document.querySelector(".nav-links")?.addEventListener("click", (event) => {
+      const link = event.target.closest("a[href^='#']");
+      if (!link) return;
+      const id = link.getAttribute("href").slice(1);
+      const panel = document.getElementById(id);
+      if (!panel) return;
+      event.preventDefault();
+      history.pushState(null, "", `#${id}`);
+      scrollPanelIntoView(panel, true);
+      setActiveNav(id);
+    });
+    if ("IntersectionObserver" in window && snapPanels.length) {
+      const io = new IntersectionObserver((entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (!visible?.target?.id) return;
+        if (["foryou", "featured", "skills", "how"].includes(visible.target.id)) setActiveNav(visible.target.id);
+        else setActiveNav("");
+      }, { root: null, threshold: [0.35, 0.55, 0.7], rootMargin: `-${Math.max(48, 0)}px 0px -28% 0px` });
+      snapPanels.forEach((panel) => io.observe(panel));
+    }
+
     const bootSkill = readSkillFromUrl();
     if (AOCI.mountBackgroundPaths) {
       AOCI.mountBackgroundPaths(document.getElementById("heroPaths"), {
@@ -822,7 +867,12 @@
       renderFeaturedDeck();
       renderHowLanes();
       renderCapabilities();
+      syncNavHeight();
       if (bootSkill) selectSkill(bootSkill, { syncUrl: true, replaceUrl: true, scroll: true });
+      const hashId = (location.hash || "").replace(/^#/, "");
+      if (hashId && document.getElementById(hashId) && !bootSkill) {
+        requestAnimationFrame(() => scrollPanelIntoView(document.getElementById(hashId), false));
+      }
     };
     Promise.race([fontsReady, new Promise((r) => setTimeout(r, 700))]).then(settle);
 })();

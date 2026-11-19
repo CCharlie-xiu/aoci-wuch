@@ -4,10 +4,12 @@
     .hero {
       position: relative; overflow: hidden;
       width: 100%;
-      padding: 48px 0 34px; text-align: center; scroll-margin-top: 86px;
-    }
-    @media (min-width: 1000px) and (min-height: 720px) {
-      .hero { min-height: calc(100dvh - 74px); display: flex; align-items: center; justify-content: center; padding-block: 40px; }
+      padding: 48px 0 34px; text-align: center;
+      scroll-margin-top: var(--nav-h);
+      scroll-snap-align: center;
+      scroll-snap-stop: always;
+      min-height: calc(100svh - var(--nav-h));
+      display: flex; align-items: center; justify-content: center;
     }
     .hero-paths {
       position: absolute;
@@ -115,10 +117,15 @@
 
     /* ── 原先底部：能力胶囊清单 ── */
     .skills-strip {
-      margin-top: 36px; padding: 28px 0 24px;
+      margin-top: 0; padding: 36px 0 28px;
       border-top: 1px solid rgba(34,30,26,.08);
-      text-align: center; scroll-margin-top: 74px;
-      overflow: visible;
+      text-align: center;
+      scroll-margin-top: var(--nav-h);
+      scroll-snap-align: center;
+      scroll-snap-stop: always;
+      min-height: calc(100svh - var(--nav-h));
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      overflow: visible; box-sizing: border-box;
     }
     .skills-strip-head {
       display: inline-flex; align-items: center; gap: 10px; margin-bottom: 16px;
@@ -287,7 +294,15 @@
     .agent-dot:hover { transform: translateY(-2px); z-index: 2; }
 
     /* ---------- sections ---------- */
-    .section { padding-top: 36px; scroll-margin-top: 74px; overflow: visible; }
+    .section {
+      padding-top: 36px; overflow: visible;
+      scroll-margin-top: var(--nav-h);
+      scroll-snap-align: center;
+      scroll-snap-stop: always;
+      min-height: calc(100svh - var(--nav-h));
+      display: flex; flex-direction: column; justify-content: center;
+      box-sizing: border-box;
+    }
     .section-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; margin-bottom: 18px; }
     .section-kicker { font-size: 10.5px; letter-spacing: .16em; text-transform: uppercase; color: var(--faint); font-weight: 700; }
     .section-head h2 { margin: 6px 0 0; font-family: var(--serif); font-size: clamp(24px, 3.3vw, 34px); font-weight: 400; letter-spacing: -.02em; }
@@ -844,10 +859,13 @@
 
     /* ---------- bottom CTA ---------- */
     .cta {
-      margin: 42px 0 28px; padding: 28px; border-radius: 24px;
+      margin: 24px 0 28px; padding: 28px; border-radius: 24px;
       background: var(--brand-deep); color: #f7f6ee;
       display: grid; grid-template-columns: minmax(0, 1.4fr) auto; align-items: center; gap: 20px;
       box-shadow: 0 24px 46px -28px rgba(69,80,33,.7);
+      scroll-margin-top: var(--nav-h);
+      scroll-snap-align: center;
+      scroll-snap-stop: always;
     }
     @media (max-width: 620px) { .cta { grid-template-columns: 1fr; gap: 16px; } }
     .cta h2 { margin: 0; font-family: var(--serif); font-size: clamp(24px, 3vw, 32px); font-weight: 400; }

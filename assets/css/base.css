@@ -1,8 +1,18 @@
 /* 由首页拆出，按职责分文件维护 */
     * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
+    :root { --nav-h: 74px; }
+    html {
+      scroll-behavior: smooth;
+      /* 主模块像幻灯片：松手后吸附到视口中心，不被半截卡住 */
+      scroll-snap-type: y mandatory;
+      scroll-padding-top: var(--nav-h);
+      scroll-padding-bottom: 8vh;
+    }
     /* 内容不溢出视觉边界：横向一律裁掉，杜绝 content bleeding */
     html, body { min-height: 100dvh; overflow-x: clip; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; scroll-snap-type: y proximity; }
+    }
     /* 数字/编号/代码统一表格数字等宽：1 与 0 同宽，切换与更新不抖动 */
     code, .step-num, .agent-dot, .card-foot code, .install-text, .tag { font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1; }
     body {

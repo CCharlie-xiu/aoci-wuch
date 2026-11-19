@@ -1,3 +1,4 @@
+2026-11-19 | change | 首页主模块纵向 scroll-snap（y mandatory + center），导航点击居中吸附并高亮当前段
 2026-11-19 | change | 精选牌详情：去滚动条、固定底部复制按钮、关闭钮不裁切；权限/路径展示纠正
 2026-11-19 | change | 首页/auth 替换为拆分 CSS+JS 新版站点包（assets/css、assets/js）；推送 origin/main 更新 GitHub Pages skill.wuch-ai.net
 2026-11-18 | change | auth.html Windows 安装命令改为 powershell -NoProfile -ExecutionPolicy Bypass -Command "irm '.../install.ps1?code=...' | iex"（CMD/PowerShell 均可）
