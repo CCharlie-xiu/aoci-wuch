@@ -1,3 +1,4 @@
+2026-11-19 | change | 推送 origin/main@6f8fc0f：首页锚点翻页/精选扇形牌/笔尖目录；Pages → https://skill.wuch-ai.net
 2026-11-19 | change | 首页主模块纵向 scroll-snap（y mandatory + center），导航点击居中吸附并高亮当前段
 2026-11-19 | change | 精选牌详情：去滚动条、固定底部复制按钮、关闭钮不裁切；权限/路径展示纠正
 2026-11-19 | change | 首页/auth 替换为拆分 CSS+JS 新版站点包（assets/css、assets/js）；推送 origin/main 更新 GitHub Pages skill.wuch-ai.net
