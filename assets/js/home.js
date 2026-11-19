@@ -391,20 +391,25 @@
     function paintSkeletons() {}
 
     function featuredDeckCards() {
-      return featuredIds.map((id) => getCapabilityById(id)).filter(Boolean).map((cap, index) => ({
-        id: cap.id,
-        title: currentLanguage === "zh" ? cap.name : cap.nameEn,
-        subtitle: cap.pro ? t("tagPro") : cap.limit ? t("tagLimit") : t("tagFree"),
-        image: skillArtIds.has(cap.id) ? `assets/skills/${cap.id}/1x1.png` : artFor(cap, index),
-        detailImage: artFor(cap, index),
-        description: descriptions[cap.id] ? descriptions[cap.id][currentLanguage] : "",
-        price: cap.short ? `/${cap.short}` : `/${cap.id}`,
-        specs: [
-          { label: currentLanguage === "zh" ? "路径" : "Path", value: cap.short ? `/${cap.short}` : `/${cap.id}` },
-          { label: currentLanguage === "zh" ? "权限" : "Access", value: cap.pro ? t("tagPro") : t("tagFree") },
-          { label: currentLanguage === "zh" ? "标记" : "Flag", value: cap.limit ? t("tagLimit") : (newIds.includes(cap.id) ? t("tagNew") : "—") }
-        ]
-      }));
+      return featuredIds.map((id) => getCapabilityById(id)).filter(Boolean).map((cap, index) => {
+        const path = cap.short ? `/${cap.short}` : `/${cap.id}`;
+        const access = cap.pro ? t("tagPro") : cap.limit ? t("tagLimit") : t("tagFree");
+        return {
+          id: cap.id,
+          title: currentLanguage === "zh" ? cap.name : cap.nameEn,
+          // 牌面：路径作副标，权限放右侧强调色
+          subtitle: path,
+          image: skillArtIds.has(cap.id) ? `assets/skills/${cap.id}/1x1.png` : artFor(cap, index),
+          detailImage: artFor(cap, index),
+          description: descriptions[cap.id] ? descriptions[cap.id][currentLanguage] : "",
+          price: access,
+          specs: [
+            { label: currentLanguage === "zh" ? "路径" : "Path", value: path },
+            { label: currentLanguage === "zh" ? "权限" : "Access", value: access },
+            { label: currentLanguage === "zh" ? "标记" : "Flag", value: cap.limit ? t("tagLimit") : (newIds.includes(cap.id) ? t("tagNew") : "—") }
+          ]
+        };
+      });
     }
 
     let featuredDeck = null;

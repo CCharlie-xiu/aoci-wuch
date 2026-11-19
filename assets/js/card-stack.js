@@ -91,16 +91,20 @@
       <p class="deck-live" data-deck-live aria-live="polite"></p>
       <div class="deck-details" data-deck-details hidden>
         <div class="deck-details-card" role="dialog" aria-modal="true">
-          <img class="deck-details-art" alt="">
           <button type="button" class="deck-details-close" data-deck-close aria-label="关闭"><i data-lucide="x" style="width:14px;height:14px"></i></button>
-          <div class="deck-details-body">
-            <div class="deck-details-title-row">
-              <h3 data-deck-d-title></h3>
-              <span data-deck-d-price></span>
+          <div class="deck-details-scroll">
+            <img class="deck-details-art" alt="">
+            <div class="deck-details-body">
+              <div class="deck-details-title-row">
+                <h3 data-deck-d-title></h3>
+                <span class="deck-details-badge" data-deck-d-price></span>
+              </div>
+              <p class="deck-details-sub" data-deck-d-sub></p>
+              <p class="deck-details-copy" data-deck-d-copy></p>
+              <dl class="deck-specs" data-deck-d-specs></dl>
             </div>
-            <p class="deck-details-sub" data-deck-d-sub></p>
-            <p class="deck-details-copy" data-deck-d-copy></p>
-            <dl class="deck-specs" data-deck-d-specs></dl>
+          </div>
+          <div class="deck-details-footer">
             <button type="button" class="btn btn-primary deck-details-action" data-deck-action></button>
           </div>
         </div>

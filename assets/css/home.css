@@ -303,6 +303,7 @@
     .grid-featured { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
     .grid-catalog { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
 
+    #featured.is-deck { overflow: visible; }
     #featured.is-deck .featured-intro {
       display: block; text-align: center; margin: 0 auto 10px; max-width: 32rem;
     }
@@ -312,9 +313,9 @@
       font-family: var(--serif); font-size: 15px; line-height: 1.8;
       color: var(--text-body); text-wrap: balance;
     }
-    .deck { position: relative; margin: 0 auto; width: min(16.5rem, 68vw, 100%); }
+    .deck { position: relative; z-index: 2; margin: 0 auto; width: min(16.5rem, 68vw, 100%); overflow: visible; }
     .deck-stage { position: relative; aspect-ratio: 5 / 6; width: 100%; }
-    .deck-pile { position: absolute; inset: 0; }
+    .deck-pile { position: absolute; inset: 0; overflow: visible; }
     .deck-card {
       position: absolute; inset: 0; transform-origin: bottom center;
       border: 0; padding: 0; background: none; text-align: left; cursor: grab;
@@ -376,24 +377,49 @@
       overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
     }
     .deck-details {
-      position: absolute; inset: 0; z-index: 20; display: grid; place-items: center;
-      padding: 12px; background: rgba(251,249,245,.88); backdrop-filter: blur(8px);
+      position: absolute; z-index: 20; display: grid; place-items: center;
+      /* 比牌叠略宽，详情卡不必挤进 16.5rem 窄槽 */
+      inset: -4px -42px -8px -42px;
+      padding: 10px; background: rgba(251,249,245,.9); backdrop-filter: blur(10px);
+      border-radius: 18px;
     }
     .deck-details[hidden] { display: none; }
     .deck-details-card {
-      position: relative; width: min(100%, 18rem); max-height: 100%; overflow: auto;
-      background: #fff; border: 1px solid var(--edge-soft); border-radius: 16px; padding: 8px;
+      position: relative; width: min(100%, 20rem); max-height: 100%;
+      display: flex; flex-direction: column; overflow: hidden;
+      background: #fff; border: 1px solid var(--edge-soft); border-radius: 16px;
       box-shadow: 0 24px 48px -16px rgba(34,30,26,.28);
     }
+    .deck-details-scroll {
+      flex: 1 1 auto; min-height: 0; overflow: auto;
+      padding: 8px 8px 0;
+      scrollbar-width: none; -ms-overflow-style: none;
+    }
+    .deck-details-scroll::-webkit-scrollbar { display: none; width: 0; height: 0; }
     .deck-details-art { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; object-position: center; border-radius: 12px; display: block; }
     .deck-details-close {
-      position: absolute; top: 16px; right: 16px; width: 28px; height: 28px; border: 0; border-radius: 50%;
-      background: rgba(255,255,255,.92); color: var(--muted); display: grid; place-items: center; cursor: pointer;
+      position: absolute; top: 14px; right: 14px; z-index: 3;
+      width: 30px; height: 30px; border: 0; border-radius: 50%;
+      background: rgba(255,255,255,.96); color: var(--muted);
+      border: 1px solid rgba(34,30,26,.08);
+      box-shadow: 0 4px 12px -6px rgba(34,30,26,.28);
+      display: grid; place-items: center; cursor: pointer;
     }
-    .deck-details-body { padding: 12px 8px 8px; }
-    .deck-details-title-row { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
-    .deck-details-title-row h3 { margin: 0; font-size: 16px; font-weight: 650; }
-    .deck-details-sub { margin: 4px 0 0; font-size: 12px; color: var(--faint); }
+    .deck-details-close:hover { color: var(--brand); border-color: rgba(84,95,42,.28); }
+    .deck-details-body { padding: 12px 8px 4px; }
+    .deck-details-title-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+    .deck-details-title-row h3 {
+      margin: 0; font-size: 16px; font-weight: 650; line-height: 1.35;
+      min-width: 0; flex: 1;
+    }
+    .deck-details-badge {
+      flex: none; margin-top: 2px; padding: 3px 8px; border-radius: 999px;
+      font-size: 10.5px; font-weight: 700; letter-spacing: .04em;
+      color: var(--brand); background: var(--brand-soft);
+    }
+    .deck-details-sub {
+      margin: 6px 0 0; font-family: var(--mono); font-size: 11.5px; color: var(--faint);
+    }
     .deck-details-copy { margin: 10px 0 0; font-size: 13px; line-height: 1.65; color: var(--muted); }
     .deck-specs {
       margin: 12px 0 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
@@ -402,7 +428,14 @@
     .deck-specs > div { background: #fff; padding: 8px 10px; }
     .deck-specs dt { font-size: 11px; color: var(--faint); }
     .deck-specs dd { margin: 2px 0 0; font-size: 12px; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .deck-details-action { width: 100%; margin-top: 12px; height: 36px; border-radius: 10px; }
+    .deck-details-footer {
+      flex: none; padding: 10px 8px 8px;
+      background: linear-gradient(180deg, rgba(255,255,255,0), #fff 28%);
+    }
+    .deck-details-action { width: 100%; height: 36px; border-radius: 10px; margin: 0; }
+    @media (max-width: 620px) {
+      .deck-details { inset: -2px -18px -6px -18px; }
+    }
 
     /* 横滑缩略图轨道（For you / Featured） */
     .rail-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; margin-bottom: 14px; }
