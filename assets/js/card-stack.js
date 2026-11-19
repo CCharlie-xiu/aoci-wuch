@@ -1,36 +1,26 @@
-/* Kokonut Throw Deck 物理交互的静态移植：拖、甩、键盘循环、点开详情 */
+/* 精选牌组：常驻扇形；左右滑/点两侧连续翻牌；点牌在底部选中对应技能 */
 (function (global) {
-  const TILTS = [0, -2, 1.5, -1];
-  const SLOT_Y = 9;
-  const SLOT_SCALE = 0.035;
-  const MAX_SLOT = TILTS.length - 1;
   const MAX_DRAG_ROTATION = 18;
-  const THROW_VELOCITY = 0.5;
-  const THROW_DISTANCE = 0.35;
   const TAP_SLOP = 5;
   const VELOCITY_WINDOW = 90;
-  const HOME = { k: 420, c: 30 };
   const FLIGHT = { k: 150, c: 15 };
   const RETURN = { k: 240, c: 26 };
+  const FAN_HOME = { k: 260, c: 22 };
   const TOP_Z = 1000;
 
-  function slotPose(depth) {
-    const d = Math.min(depth, MAX_SLOT);
-    return { x: 0, y: d * SLOT_Y, r: TILTS[d] || 0, s: 1 - d * SLOT_SCALE };
-  }
-  function lerpPose(a, b, t) {
+  function fanPose(offset, spread) {
+    const abs = Math.abs(offset);
     return {
-      x: a.x + (b.x - a.x) * t,
-      y: a.y + (b.y - a.y) * t,
-      r: a.r + (b.r - a.r) * t,
-      s: a.s + (b.s - a.s) * t
+      x: offset * spread,
+      y: abs * 9 + abs * abs * 1.2,
+      r: offset * 7.2,
+      s: 1 - abs * 0.05
     };
   }
   function poseTransform({ x, y, r, s }) {
     return `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0) rotate(${r.toFixed(3)}deg) scale(${s.toFixed(4)})`;
   }
-  function makeBody(depth) {
-    const pose = slotPose(depth);
+  function makeBody(pose) {
     return { ...pose, vx: 0, vy: 0, vr: 0, vs: 0, phase: "rest", out: pose, dx: 1, dy: 0, z: null, apexZ: null };
   }
   function springAxis(value, velocity, target, spring, dt) {
@@ -38,23 +28,21 @@
     const v = velocity + accel * dt;
     return [value + v * dt, v];
   }
-  function stepBody(body, target, dt) {
-    let spring = HOME;
-    if (body.phase === "out") spring = FLIGHT;
-    else if (body.phase === "return") spring = RETURN;
+  function stepBody(body, target, dt, spring) {
+    const use = spring || FAN_HOME;
     const steps = Math.max(1, Math.ceil(dt * 240));
     const h = dt / steps;
     for (let i = 0; i < steps; i++) {
-      [body.x, body.vx] = springAxis(body.x, body.vx, target.x, spring, h);
-      [body.y, body.vy] = springAxis(body.y, body.vy, target.y, spring, h);
-      [body.r, body.vr] = springAxis(body.r, body.vr, target.r, spring, h);
-      [body.s, body.vs] = springAxis(body.s, body.vs, target.s, spring, h);
+      [body.x, body.vx] = springAxis(body.x, body.vx, target.x, use, h);
+      [body.y, body.vy] = springAxis(body.y, body.vy, target.y, use, h);
+      [body.r, body.vr] = springAxis(body.r, body.vr, target.r, use, h);
+      [body.s, body.vs] = springAxis(body.s, body.vs, target.s, use, h);
     }
   }
   function isSettled(body, target) {
-    return Math.abs(body.x - target.x) < 0.1 && Math.abs(body.y - target.y) < 0.1
-      && Math.abs(body.r - target.r) < 0.02 && Math.abs(body.s - target.s) < 0.0005
-      && Math.abs(body.vx) + Math.abs(body.vy) < 2 && Math.abs(body.vr) < 1 && Math.abs(body.vs) < 0.01;
+    return Math.abs(body.x - target.x) < 0.12 && Math.abs(body.y - target.y) < 0.12
+      && Math.abs(body.r - target.r) < 0.03 && Math.abs(body.s - target.s) < 0.0008
+      && Math.abs(body.vx) + Math.abs(body.vy) < 2.5 && Math.abs(body.vr) < 1.2 && Math.abs(body.vs) < 0.012;
   }
   function clearance(w, h, ux, uy) {
     const along = Math.min(ux === 0 ? 1e9 : w / Math.abs(ux), uy === 0 ? 1e9 : h / Math.abs(uy));
@@ -71,108 +59,103 @@
   global.AOCI = global.AOCI || {};
   global.AOCI.mountCardStack = function mountCardStack(root, options) {
     let cards = options.cards || [];
-    const onAction = options.onAction;
+    const onPick = options.onPick || options.onAction;
     const onChange = options.onChange;
     const accent = options.accent || "var(--accent)";
-    const actionLabel = () => (typeof options.actionLabel === "function" ? options.actionLabel() : (options.actionLabel || "Select"));
+    const hintLabel = () => (typeof options.hintLabel === "function" ? options.hintLabel() : (options.hintLabel || "左右滑翻牌"));
     const reduce = () => window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+    root.classList.add("is-fan");
+    root.classList.remove("is-fan-armed");
     root.style.setProperty("--deck-accent", accent);
-    const hintText = () => (typeof options.hintLabel === "function" ? options.hintLabel() : (options.hintLabel || "左右滑"));
     root.innerHTML = `
       <p class="deck-hint" data-deck-hint>
         <span class="deck-hint-arrow is-left" aria-hidden="true"></span>
-        <span data-deck-hint-copy>${hintText()}</span>
+        <span data-deck-hint-copy>${hintLabel()}</span>
         <span class="deck-hint-arrow is-right" aria-hidden="true"></span>
       </p>
-      <section class="deck-stage" aria-label="精选牌组。左右滑动翻牌，循环不断。">
+      <section class="deck-stage" data-deck-stage aria-label="精选牌组。左右滑动或点两侧翻牌，点牌在底部查看。">
         <div class="deck-pile" data-deck-pile></div>
       </section>
       <p class="deck-live" data-deck-live aria-live="polite"></p>
-      <div class="deck-details" data-deck-details hidden>
-        <div class="deck-details-card" role="dialog" aria-modal="true">
-          <button type="button" class="deck-details-close" data-deck-close aria-label="关闭"><i data-lucide="x" style="width:14px;height:14px"></i></button>
-          <div class="deck-details-scroll">
-            <img class="deck-details-art" alt="">
-            <div class="deck-details-body">
-              <div class="deck-details-title-row">
-                <h3 data-deck-d-title></h3>
-                <span class="deck-details-badge" data-deck-d-price></span>
-              </div>
-              <p class="deck-details-sub" data-deck-d-sub></p>
-              <p class="deck-details-copy" data-deck-d-copy></p>
-              <dl class="deck-specs" data-deck-d-specs></dl>
-            </div>
-          </div>
-          <div class="deck-details-footer">
-            <button type="button" class="btn btn-primary deck-details-action" data-deck-action></button>
-          </div>
-        </div>
-      </div>
     `;
 
     const pile = root.querySelector("[data-deck-pile]");
+    const stage = root.querySelector("[data-deck-stage]");
     const live = root.querySelector("[data-deck-live]");
     const hintEl = root.querySelector("[data-deck-hint]");
     const hintCopy = root.querySelector("[data-deck-hint-copy]");
-    const detailsEl = root.querySelector("[data-deck-details]");
-    const dTitle = root.querySelector("[data-deck-d-title]");
-    const dSub = root.querySelector("[data-deck-d-sub]");
-    const dCopy = root.querySelector("[data-deck-d-copy]");
-    const dPrice = root.querySelector("[data-deck-d-price]");
-    const dSpecs = root.querySelector("[data-deck-d-specs]");
-    const dArt = root.querySelector(".deck-details-art");
-    const dAction = root.querySelector("[data-deck-action]");
 
     let order = cards.map((_, i) => i);
-    let bodies = cards.map((_, i) => makeBody(i));
+    let bodies = [];
     let nodes = [];
     let drag = null;
-    let progress = 0;
     let raf = 0;
     let last = 0;
     let suppressClick = false;
-    let openId = null;
     let interacted = false;
     let idleTimer = 0;
 
-    function write(index, depth) {
+    function spreadPx() {
+      const w = root.offsetWidth || 420;
+      if (w < 420) return 40;
+      if (w < 640) return 54;
+      return 68;
+    }
+    function fanOffset(index) {
+      const pos = order.indexOf(index);
+      if (pos < 0) return 0;
+      const n = order.length || 1;
+      if (pos <= Math.floor(n / 2)) return pos;
+      return pos - n;
+    }
+    function updateHint() {
+      if (hintCopy) hintCopy.textContent = hintLabel();
+    }
+
+    function write(index) {
       const node = nodes[index];
       const body = bodies[index];
       if (!(node && body)) return;
       node.style.transform = poseTransform(body);
-      node.style.zIndex = String(body.z != null ? body.z : order.length - depth);
+      const off = fanOffset(index);
+      node.style.zIndex = String(body.z != null ? body.z : 100 - Math.abs(off));
+      node.classList.toggle("is-center", off === 0);
+      node.dataset.fan = String(off);
       const state = body.phase === "drag" ? "drag" : body.phase === "rest" ? "rest" : "fly";
       if (node.dataset.state !== state) node.dataset.state = state;
     }
-    function targetFor(body, depth) {
+    function targetFor(body, index) {
       if (body.phase === "out") return body.out;
-      const pose = slotPose(depth);
-      if (depth > 0 && progress > 0) return lerpPose(pose, slotPose(depth - 1), progress * 0.6);
-      return pose;
+      return fanPose(fanOffset(index), spreadPx());
     }
-    function advance(index, depth, dt) {
+    function springFor(body) {
+      if (body.phase === "out") return FLIGHT;
+      if (body.phase === "return") return RETURN;
+      return FAN_HOME;
+    }
+    function advance(index, dt) {
       const body = bodies[index];
       if (!body) return false;
-      if (body.phase === "drag") { write(index, depth); return true; }
+      if (body.phase === "drag") { write(index); return true; }
       if (reduce() && body.phase === "out") { body.phase = "rest"; body.z = null; }
-      const target = targetFor(body, depth);
+      const target = targetFor(body, index);
       if (reduce()) Object.assign(body, target, { vx: 0, vy: 0, vr: 0, vs: 0 });
-      else stepBody(body, target, dt);
+      else stepBody(body, target, dt, springFor(body));
       if (body.phase === "out" && body.vx * body.dx + body.vy * body.dy <= 0) {
         body.phase = "return";
         body.z = body.apexZ;
       }
       const settled = isSettled(body, target);
       if (settled && body.phase !== "out") { body.phase = "rest"; body.z = null; }
-      write(index, depth);
+      write(index);
       return !settled;
     }
     function tick(now) {
       const dt = Math.min((now - last) / 1000, 1 / 30);
       last = now;
       let active = false;
-      order.forEach((index, depth) => { if (advance(index, depth, dt)) active = true; });
+      order.forEach((index) => { if (advance(index, dt)) active = true; });
       raf = active ? requestAnimationFrame(tick) : 0;
     }
     function kick() {
@@ -192,8 +175,18 @@
       if (!top) return;
       live.textContent = top.title;
     }
-    function updateHint() {
-      if (hintCopy) hintCopy.textContent = hintText();
+    function syncTopFocus() {
+      nodes.forEach((node, index) => {
+        if (!node) return;
+        const off = fanOffset(index);
+        node.tabIndex = off === 0 ? 0 : -1;
+        node.toggleAttribute("inert", off !== 0);
+        const card = cards[index];
+        node.setAttribute(
+          "aria-label",
+          `${card.title}，${card.subtitle}。${off === 0 ? "选中并在底部查看" : "旋到中间"}`
+        );
+      });
     }
 
     function commitOrder(next) {
@@ -260,41 +253,29 @@
       else bringBack();
     }
 
-    function syncTopFocus() {
-      nodes.forEach((node, index) => {
-        const isTop = order[0] === index;
-        if (!node) return;
-        node.tabIndex = isTop ? 0 : -1;
-        node.toggleAttribute("inert", !isTop);
-      });
+    function bringToFront(index) {
+      const pos = order.indexOf(index);
+      if (pos <= 0) return;
+      markInteracted();
+      commitOrder([index, ...order.slice(0, pos), ...order.slice(pos + 1)]);
     }
 
-    function openDetails(card) {
-      openId = card.id;
-      dTitle.textContent = card.title;
-      dSub.textContent = card.subtitle;
-      dCopy.textContent = card.description;
-      dPrice.textContent = card.price || "";
-      dArt.src = card.detailImage || card.image;
-      dSpecs.innerHTML = (card.specs || []).map((spec) =>
-        `<div><dt>${spec.label}</dt><dd>${spec.value}</dd></div>`
-      ).join("");
-      dAction.textContent = actionLabel();
-      detailsEl.hidden = false;
-      detailsEl.querySelector("[data-deck-close]").focus({ preventScroll: true });
-    }
-    function closeDetails() {
-      openId = null;
-      detailsEl.hidden = true;
-      const top = nodes[order[0]];
-      top?.focus({ preventScroll: true });
+    function pickCard(index) {
+      const card = cards[index];
+      if (!card) return;
+      markInteracted();
+      onPick && onPick(card);
     }
 
     function renderPile() {
-      pile.innerHTML = cards.map((card, index) => `
+      const spread = spreadPx();
+      order = cards.map((_, i) => i);
+      pile.innerHTML = cards.map((card, index) => {
+        const pose = fanPose(fanOffset(index), spread);
+        return `
         <button type="button" class="deck-card" data-deck-index="${index}" data-state="rest"
-          aria-label="${card.title}，${card.subtitle}。打开详情"
-          style="transform:${poseTransform(slotPose(index))};z-index:${cards.length - index}">
+          aria-label="${card.title}，${card.subtitle}。选中并在底部查看"
+          style="transform:${poseTransform(pose)};z-index:${100 - Math.abs(fanOffset(index))}">
           <span class="deck-card-face">
             <span class="deck-card-art"><img src="${card.image}" alt="" draggable="false"></span>
             <span class="deck-card-meta">
@@ -305,22 +286,23 @@
               ${card.price ? `<span class="deck-card-price">${card.price}</span>` : ""}
             </span>
           </span>
-        </button>
-      `).join("");
+        </button>`;
+      }).join("");
       nodes = [...pile.querySelectorAll(".deck-card")];
-      bodies = cards.map((_, i) => makeBody(i));
-      order = cards.map((_, i) => i);
+      bodies = cards.map((_, index) => makeBody(fanPose(fanOffset(index), spread)));
+      root.classList.add("is-fan");
+      updateHint();
       syncTopFocus();
       updateLive();
       nodes.forEach((node, index) => bindCard(node, index));
       kick();
-      scheduleIdleSlip();
     }
 
     function bindCard(node, index) {
       node.addEventListener("pointerdown", (event) => {
         suppressClick = false;
-        if (drag || order[0] !== index) return;
+        if (drag) return;
+        if (fanOffset(index) !== 0) return;
         if (event.pointerType === "mouse" && event.button !== 0) return;
         const body = bodies[index];
         if (!body) return;
@@ -354,100 +336,55 @@
         if (drag.samples.length > 24) drag.samples.shift();
         body.phase = "drag";
         body.x = drag.baseX + dx;
-        body.y = drag.baseY + dy;
+        body.y = drag.baseY + dy * 0.35;
         body.s = 1;
-        body.r = Math.max(-1, Math.min(1, body.x / drag.width)) * MAX_DRAG_ROTATION * drag.lever;
+        body.r = Math.max(-12, Math.min(12, dx / drag.width * 14));
         body.vx = body.vy = body.vr = body.vs = 0;
-        progress = Math.min(Math.hypot(body.x, body.y) / (drag.width * THROW_DISTANCE), 1);
         kick();
       });
       const up = (event, cancelled) => {
         if (!drag || drag.pointerId !== event.pointerId) return;
         const current = drag;
         drag = null;
-        progress = 0;
         const body = bodies[current.index];
         if (!(body && current.moved)) { kick(); return; }
         if (cancelled) { body.phase = "rest"; kick(); return; }
         suppressClick = true;
-        const { vx, vy } = releaseVelocity(current.samples);
-        const speed = Math.hypot(vx, vy);
-        const distance = Math.hypot(body.x, body.y);
-        const heading = distance > 0 ? (vx * body.x + vy * body.y) / distance : 0;
-        const fast = speed > THROW_VELOCITY && heading > -0.2;
-        const far = distance > current.width * THROW_DISTANCE && heading > -0.3;
-        if (fast || far) {
-          markInteracted();
-          const dirX = Math.abs(vx) > 0.04 ? vx : body.x;
-          if (dirX >= 0) {
-            body.phase = "rest";
-            bringBack();
-          } else {
-            throwTop(vx, vy, body.x / (distance || 1), body.y / (distance || 1));
-          }
-          return;
-        }
         body.phase = "rest";
-        body.vx = vx * 1000;
-        body.vy = vy * 1000;
-        body.vr = ((vx * 1000) / current.width) * MAX_DRAG_ROTATION * current.lever;
-        kick();
+        markInteracted();
+        if (Math.abs(body.x - current.baseX) > current.width * 0.22) {
+          if (body.x - current.baseX < 0) cycle(1);
+          else cycle(-1);
+        } else {
+          kick();
+        }
       };
       node.addEventListener("pointerup", (event) => up(event, false));
       node.addEventListener("pointercancel", (event) => up(event, true));
       node.addEventListener("lostpointercapture", (event) => up(event, true));
       node.addEventListener("click", () => {
         if (suppressClick) { suppressClick = false; return; }
-        if (order[0] === index) openDetails(cards[index]);
+        const off = fanOffset(index);
+        if (off !== 0) bringToFront(index);
+        pickCard(index);
       });
       node.addEventListener("keydown", (event) => {
         suppressClick = false;
+        if (fanOffset(index) !== 0) return;
         if (event.key === "ArrowRight" || event.key === "ArrowDown") {
           event.preventDefault();
           cycle(1);
         } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
           event.preventDefault();
           cycle(-1);
+        } else if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          pickCard(index);
         }
       });
     }
 
-    function scheduleIdleSlip() {
-      clearTimeout(idleTimer);
-      if (reduce() || interacted) return;
-      idleTimer = setTimeout(() => {
-        if (interacted) return;
-        const body = bodies[order[0]];
-        if (!body || body.phase !== "rest") return;
-        body.vx = -240;
-        body.vr = -6;
-        kick();
-        idleTimer = setTimeout(() => {
-          if (interacted) return;
-          const again = bodies[order[0]];
-          if (!again || again.phase !== "rest") return;
-          again.vx = 260;
-          again.vr = 7;
-          kick();
-        }, 640);
-      }, 900);
-    }
-
-    root.querySelector("[data-deck-close]").addEventListener("click", closeDetails);
-    detailsEl.addEventListener("click", (event) => { if (event.target === detailsEl) closeDetails(); });
-    dAction.addEventListener("click", () => {
-      const card = cards.find((item) => item.id === openId);
-      if (card) onAction && onAction(card);
-      closeDetails();
-    });
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape" && openId) {
-        event.preventDefault();
-        event.stopImmediatePropagation();
-        closeDetails();
-      }
-    });
-
+    window.addEventListener("resize", () => kick(), { passive: true });
     renderPile();
 
     return {
@@ -459,6 +396,7 @@
       destroy() {
         cancelAnimationFrame(raf);
         clearTimeout(idleTimer);
+        root.classList.remove("is-fan", "is-fan-armed");
         root.innerHTML = "";
       }
     };

@@ -20,14 +20,35 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/tokens.css">
-  <link rel="stylesheet" href="assets/css/base.css?v=snap1">
-  <link rel="stylesheet" href="assets/css/components.css?v=snap1">
-  <link rel="stylesheet" href="assets/css/home.css?v=snap1">
+  <link rel="stylesheet" href="assets/css/tokens.css?v=dark3">
+  <link rel="stylesheet" href="assets/css/base.css?v=page-ease1">
+  <link rel="stylesheet" href="assets/css/components.css?v=nav-unify1">
+  <link rel="stylesheet" href="assets/css/home.css?v=snap-mandatory1">
+  <link rel="stylesheet" href="assets/css/sailing-toc.css?v=ink-nib2">
+  <link rel="stylesheet" href="assets/css/search-palette.css?v=dark3">
   <script src="https://unpkg.com/lucide@latest" defer></script>
 </head>
-<body>
+<body class="has-sail-toc">
   <a class="skip-link" href="#install">跳到安装</a>
+
+  <aside class="sail-toc" id="sailToc" aria-label="页面目录"></aside>
+
+  <div id="searchPalette" class="search-palette" hidden>
+    <div class="search-palette-backdrop" data-sp-close></div>
+    <div class="search-palette-panel" role="dialog" aria-modal="true" aria-labelledby="searchPaletteLabel">
+      <div class="search-palette-bar">
+        <i data-lucide="search" class="search-palette-icon" aria-hidden="true"></i>
+        <input id="searchPaletteInput" type="search" enterkeyhint="search" autocomplete="off" spellcheck="false"
+          data-i18n-placeholder="searchPalettePlaceholder" placeholder="搜索"
+          aria-labelledby="searchPaletteLabel"
+          aria-controls="searchPaletteResults"
+          aria-autocomplete="list">
+        <kbd class="search-palette-esc" aria-hidden="true">ESC</kbd>
+      </div>
+      <p id="searchPaletteLabel" class="visually-hidden" data-i18n="searchPaletteLabel">搜索技能</p>
+      <div class="search-palette-results" id="searchPaletteResults" role="listbox" hidden></div>
+    </div>
+  </div>
 
   <div id="toast" class="toast" role="status" aria-live="polite">
     <i data-lucide="check-circle" style="width:15px;height:15px;color:#d8e7b4"></i>
@@ -41,29 +62,34 @@
         <span class="brand-text">至关重要</span>
         <span class="brand-sub" data-i18n="siteLabel">个人 AI 能力库</span>
       </a>
-      <nav class="nav-links" aria-label="页面导航">
+      <nav class="nav-links" id="navLinks" aria-label="页面导航">
         <a href="#foryou" data-i18n="foryouTitle">为你推荐</a>
         <a href="#featured" data-i18n="navFeatured">精选</a>
         <a href="#skills" data-i18n="navSkills">能力清单</a>
         <a href="#how" data-i18n="howTitle">怎么用</a>
       </nav>
-      <div class="nav-actions">
-        <label class="nav-search" for="skillSearch">
+      <div class="nav-search-wrap">
+        <button type="button" class="nav-search is-palette-trigger" id="skillSearchTrigger" aria-haspopup="dialog" aria-controls="searchPalette">
           <i data-lucide="search" style="width:14px;height:14px" aria-hidden="true"></i>
-          <input id="skillSearch" type="search" enterkeyhint="search" autocomplete="off" spellcheck="false"
-            data-i18n-placeholder="searchPlaceholder" placeholder="搜索技能…"
-            aria-label="搜索技能">
+          <span class="nav-search-label" data-i18n="searchPlaceholder">搜索技能…</span>
           <kbd class="nav-search-kbd" aria-hidden="true">⌘K</kbd>
-          <button type="button" class="nav-search-clear" id="skillSearchClear" hidden aria-label="清除搜索">
-            <i data-lucide="x" style="width:12px;height:12px"></i>
-          </button>
-        </label>
-        <a href="auth.html" class="btn btn-ghost btn-sm"><i data-lucide="key-round" style="width:13px;height:13px"></i><span data-i18n="subscribe">订阅授权</span></a>
+        </button>
+        <button type="button" class="nav-search-clear" id="skillSearchClear" hidden aria-label="清除搜索" title="清除搜索">
+          <i data-lucide="x" style="width:12px;height:12px" aria-hidden="true"></i>
+        </button>
+      </div>
+      <!-- 保留隐藏 input，兼容旧逻辑与无障碍回退 -->
+      <input id="skillSearch" type="search" hidden tabindex="-1" aria-hidden="true">
+      <div class="nav-actions">
+        <a href="auth.html" class="btn btn-ghost btn-sm nav-subscribe"><i data-lucide="key-round" style="width:13px;height:13px"></i><span data-i18n="subscribe">订阅授权</span></a>
         <button id="themeSwitch" type="button" class="switch-btn" data-switch-button aria-label="切换为深色" aria-pressed="false"></button>
         <button id="languageToggle" type="button" class="btn btn-ghost btn-sm" aria-label="Switch language">
           <span id="languageCurrent">中</span><span style="color:var(--faint);margin:0 1px">/</span><span id="languageNext" style="color:var(--faint)">EN</span>
         </button>
         <a href="#install" class="btn btn-primary btn-sm"><i data-lucide="download" style="width:13px;height:13px"></i><span data-i18n="navInstall">安装</span></a>
+        <button type="button" class="nav-menu-btn" id="navMenuBtn" aria-expanded="false" aria-controls="navLinks" aria-label="打开菜单">
+          <i data-lucide="menu" style="width:18px;height:18px"></i>
+        </button>
       </div>
     </div>
   </header>
@@ -144,37 +170,36 @@
         <h2 id="capabilitiesTitle" data-i18n="capabilitiesTitle">能力库包含技能</h2>
         <span class="skills-rule" aria-hidden="true"></span>
       </div>
-      <p class="skill-search-meta" id="skillSearchMeta" hidden></p>
+      <div class="skill-search-meta" id="skillSearchMeta" hidden>
+        <span class="skill-search-meta-text" id="skillSearchMetaText"></span>
+        <button type="button" class="skill-search-reset" id="skillSearchReset" data-i18n="searchClear">清除搜索</button>
+      </div>
       <div id="capabilityList" class="skill-pills"></div>
     </section>
 
-    <section class="section" id="how" aria-labelledby="howTitle">
-      <div class="section-head">
-        <div>
-          <h2 id="howTitle" data-i18n="howTitle">怎么用</h2>
-          <p data-i18n="howLead">从安装到第一次协助，只有四步。</p>
-        </div>
+    <section class="section is-how" id="how" aria-labelledby="howTitle">
+      <div class="how-copy">
+        <h2 id="howTitle" data-i18n="howTitle">怎么用</h2>
+        <p class="how-body" data-i18n="howBody">先把页顶的安装指令发给你的 AI，让它按 /aoci-wuch 读能力索引；再在清单里点一张技能，复制时会带上首次使用提示词。AI 命中索引后只打开对应目录、按需执行，新能力确认后会同步进首页与索引，库会持续长出来。</p>
       </div>
       <div id="howLanes" class="how-lanes" aria-label="首次协助回放"></div>
-    </section>
-
-    <section class="cta" aria-labelledby="ctaTitle">
-      <div>
-        <h2 id="ctaTitle" data-i18n="ctaTitle">准备好扩展你的 AI 助手了吗？</h2>
-        <p data-i18n="ctaLead">同一条安装指令就在页顶。点这里回到那一行。</p>
-      </div>
-      <button type="button" class="btn btn-light" id="jumpInstallBtn">
+      <aside class="cta" aria-labelledby="ctaTitle">
+        <div>
+          <h2 id="ctaTitle" data-i18n="ctaTitle">准备好扩展你的 AI 助手了吗？</h2>
+          <p data-i18n="ctaLead">同一条安装指令就在页顶。点这里回到那一行。</p>
+        </div>
+        <button type="button" class="btn btn-light" id="jumpInstallBtn">
           <i data-lucide="arrow-up" style="width:14px;height:14px"></i>
           <span data-i18n="ctaJump">去安装</span>
         </button>
+      </aside>
+      <footer class="footer how-footer">
+        <div class="footer-brand">
+          <span>至关重要</span><span>·</span><span data-i18n="pagesLabel">GitHub Pages</span>
+        </div>
+        <a href="https://github.com/CCharlie-xiu/aoci-wuch" target="_blank" rel="noreferrer"><span data-i18n="authorLabel">作者 CCharlie-xiu</span> <i data-lucide="external-link" style="width:11px;height:11px;vertical-align:-1px"></i></a>
+      </footer>
     </section>
-
-    <footer class="footer">
-      <div class="footer-brand">
-        <span>至关重要</span><span>·</span><span data-i18n="pagesLabel">GitHub Pages</span>
-      </div>
-      <a href="https://github.com/CCharlie-xiu/aoci-wuch" target="_blank" rel="noreferrer"><span data-i18n="authorLabel">作者 CCharlie-xiu</span> <i data-lucide="external-link" style="width:11px;height:11px;vertical-align:-1px"></i></a>
-    </footer>
   </div>
 
   <div id="sheetBackdrop" class="skill-sheet-backdrop" hidden></div>
@@ -232,15 +257,16 @@
   </div>
 
   <script src="assets/js/icons.js" defer></script>
-  <script src="assets/js/i18n.js" defer></script>
+  <script src="assets/js/i18n.js?v=deck6" defer></script>
   <script src="assets/js/data.js" defer></script>
   <script src="assets/js/smooth-drawer.js" defer></script>
-  <script src="assets/js/card-stack.js?v=deckfix1" defer></script>
+  <script src="assets/js/card-stack.js?v=deck6" defer></script>
   <script src="assets/js/ai-agent-lanes.js" defer></script>
   <script src="assets/js/marker-text.js" defer></script>
   <script src="assets/js/carousel-cards.js?v=krail8" defer></script>
   <script src="assets/js/background-paths.js?v=1" defer></script>
-  <script src="assets/js/switch-button.js" defer></script>
-  <script src="assets/js/home.js?v=snap1" defer></script>
+  <script src="assets/js/switch-button.js?v=dark3" defer></script>
+  <script src="assets/js/sailing-toc.js?v=ink-nib2" defer></script>
+  <script src="assets/js/home.js?v=page-lock2" defer></script>
 </body>
 </html>

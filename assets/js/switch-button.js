@@ -135,7 +135,7 @@
     document.documentElement.classList.toggle("dark", dark);
     document.documentElement.style.colorScheme = dark ? "dark" : "light";
     const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.content = dark ? "#161410" : "#fbf9f5";
+    if (meta) meta.content = dark ? "#24211d" : "#fbf9f5";
     if (persist) {
       try { localStorage.setItem("aoci-theme", dark ? "dark" : "light"); } catch {}
     }

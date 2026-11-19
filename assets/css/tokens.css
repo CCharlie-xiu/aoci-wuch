@@ -55,20 +55,21 @@
     }
 
     :root.dark {
-      --surface-page: #161410;
-      --surface-raised: #1f1b16;
-      --surface-sunken: #12100d;
-      --surface-brand: #2a3220;
-      --text-strong: #f3eee6;
-      --text-body: #c9c0b4;
-      --text-muted: #9a9186;
-      --accent: #c5d46a;
-      --accent-hover: #d8e7b4;
-      --edge-faint: rgba(243, 238, 230, .06);
-      --edge-soft: rgba(243, 238, 230, .12);
-      --edge-strong: rgba(197, 212, 106, .28);
-      --shadow-1: 0 1px 2px rgba(0, 0, 0, .4), 0 1px 1px rgba(0, 0, 0, .25);
-      --shadow-2: 0 8px 24px -18px rgba(0, 0, 0, .7);
-      --shadow-3: 0 18px 34px -24px rgba(0, 0, 0, .75);
+      /* 暖炭灰纸面：避免死黑 + 刺白硬对撞 */
+      --surface-page: #24211d;
+      --surface-raised: #302c27;
+      --surface-sunken: #1a1815;
+      --surface-brand: #303628;
+      --text-strong: #efeae2;
+      --text-body: #c2bab0;
+      --text-muted: #958e84;
+      --accent: #c2d074;
+      --accent-hover: #d4e09a;
+      --edge-faint: rgba(239, 234, 226, .08);
+      --edge-soft: rgba(239, 234, 226, .14);
+      --edge-strong: rgba(194, 208, 116, .34);
+      --shadow-1: 0 1px 2px rgba(0, 0, 0, .28), 0 1px 1px rgba(0, 0, 0, .18);
+      --shadow-2: 0 10px 28px -16px rgba(0, 0, 0, .55);
+      --shadow-3: 0 20px 40px -22px rgba(0, 0, 0, .62);
       color-scheme: dark;
     }

@@ -1,0 +1,200 @@
+/* 首页侧栏目录 — 笔尖 / 墨点游标（呼应 hero 马克笔） */
+.sail-toc {
+  display: none;
+  position: fixed;
+  left: max(10px, calc(50vw - 640px - 172px));
+  top: calc(var(--nav-h, 74px) + 24px);
+  z-index: 40;
+  width: 156px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.sail-toc[data-ready="true"] {
+  opacity: 1;
+}
+
+.sail-shell {
+  position: relative;
+  width: 156px;
+  min-height: 420px;
+  pointer-events: auto;
+}
+
+.sail-title {
+  margin: 0 0 18px 52px;
+  font-family: var(--serif);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--faint);
+}
+
+.sail-rail {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 56px;
+  height: 420px;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.sail-route {
+  fill: none;
+  stroke: color-mix(in srgb, var(--brand) 28%, #c9c3b6);
+  stroke-width: 1.35;
+  stroke-linecap: round;
+}
+
+.sail-dot {
+  fill: color-mix(in srgb, var(--brand) 22%, #d2cdc2);
+  stroke: none;
+  transition: fill 180ms ease, r 180ms ease;
+}
+
+.sail-dot.is-active {
+  fill: var(--brand);
+}
+
+.sail-nib {
+  position: absolute;
+  left: 4px;
+  top: 0;
+  width: 36px;
+  height: 40px;
+  pointer-events: none;
+  transform-origin: 50% 66%;
+  will-change: transform;
+  filter: drop-shadow(0 1px 1px rgba(34, 30, 26, .08));
+}
+
+.sail-nib-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+
+/* 墨点：对齐 hero 马克笔高亮色 */
+.sail-ink {
+  fill: color-mix(in srgb, #c5d46a 88%, var(--brand) 12%);
+  opacity: .9;
+}
+
+.sail-ink-core {
+  fill: none;
+  stroke: color-mix(in srgb, var(--brand) 40%, #6f7a38);
+  stroke-width: 1.05;
+  stroke-linecap: round;
+  opacity: .42;
+}
+
+.sail-tip {
+  fill: color-mix(in srgb, var(--brand) 78%, #2a3014);
+}
+
+.sail-tip-edge {
+  fill: none;
+  stroke: color-mix(in srgb, var(--paper) 70%, transparent);
+  stroke-width: 1;
+  stroke-linecap: round;
+  opacity: .65;
+}
+
+.sail-toc[data-moving="true"] .sail-ink {
+  opacity: 1;
+}
+
+.sail-links {
+  position: relative;
+  margin: 0;
+  padding: 36px 0 0 52px;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+.sail-link {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--faint);
+  font: 500 0.82rem/1.35 var(--sans);
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.32s var(--ease), color 0.2s;
+}
+
+.sail-link.is-active {
+  color: var(--ink);
+  transform: translateX(10px);
+  font-weight: 600;
+}
+
+.sail-link:hover {
+  color: var(--brand);
+}
+
+html.dark .sail-title { color: var(--muted); }
+html.dark .sail-link { color: var(--muted); }
+html.dark .sail-link.is-active { color: var(--ink); }
+html.dark .sail-link:hover { color: var(--accent); }
+html.dark .sail-route {
+  stroke: color-mix(in srgb, var(--accent) 28%, #5a564c);
+}
+html.dark .sail-dot {
+  fill: color-mix(in srgb, var(--accent) 28%, #5a564c);
+}
+html.dark .sail-dot.is-active {
+  fill: var(--accent);
+}
+html.dark .sail-ink {
+  fill: color-mix(in srgb, var(--accent) 72%, #6f7a38 28%);
+  opacity: .88;
+}
+html.dark .sail-ink-core {
+  stroke: color-mix(in srgb, var(--accent) 65%, #fff 10%);
+}
+html.dark .sail-tip {
+  fill: color-mix(in srgb, var(--accent) 55%, #1a1814);
+}
+html.dark .sail-nib {
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, .35));
+}
+
+.sail-link:focus-visible {
+  outline: 1px solid var(--ink);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sail-link {
+    transition: none;
+  }
+}
+
+@media (min-width: 1180px) {
+  .sail-toc {
+    display: block;
+  }
+
+  body.has-sail-toc .nav-links {
+    display: none !important;
+  }
+}
+
+@media (min-width: 1400px) {
+  .sail-toc {
+    left: max(16px, calc(50vw - 640px - 196px));
+    width: 168px;
+  }
+
+  .sail-shell {
+    width: 168px;
+  }
+}

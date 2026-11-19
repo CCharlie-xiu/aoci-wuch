@@ -19,16 +19,23 @@ https://developers.google.com/analytics/devguides/collection/ga4
 
 总开关关闭时：**不注入脚本、不上报、不打 Debug console**。
 
-## 注入骨架（H5）
+## 代码模版（必用 · 跟用 G2）
 
-原则：
+| 平台 | 拷贝 | 说明 |
+| --- | --- | --- |
+| Web / H5 | `templates/web/` → 项目 `src/utils/ga/` | 泰国短剧文件夹模式；见该目录 README |
+| Android | `templates/android/*.kt` | 彩铃双端 Firebase 启动沉淀 |
+| iOS | `templates/ios/*.swift` | 同上，含 DebugView 清理 |
 
-1. 仅 Web/H5 注入 `https://www.googletagmanager.com/gtag/js?id=G-…`
-2. `gtag('config', ID, { send_page_view: false })` —— SPA 由路由统一打 `page_view`
-3. 封装 `trackGaEvent(name, params)`，自动合并公共参数
-4. User-ID：登录后 `gtag('set', { user_id })`；登出 `gtag('set', { user_id: null })`；**禁止**放进事件 params、用户属性、自定义维度
+未拷贝模版、业务里直接 `gtag` / `logEvent` = **G2 失败**。
 
-官方写法与限制见 `code-map.md` 第 2 节；链接见 `index.md` 页面分工 A。
+## 注入原则（H5，模版已实现）
+
+1. 仅 Web 注入 `googletagmanager.com/gtag/js?id=G-…`（env 提供 ID）  
+2. `send_page_view: false`；公共参数 `channel` / `batch_id` / `page_path` / `app_env`  
+3. User-ID 只走 `syncGaUserId`；**禁止**进事件 params  
+
+官方限制见 `code-map.md`；链接见 `index.md` 页面分工 A。
 
 ## 公共参数（建议每条事件都有）
 

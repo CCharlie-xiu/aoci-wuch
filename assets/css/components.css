@@ -14,43 +14,86 @@
     .brand-mark { width: 30px; height: 30px; border-radius: 50%; background: var(--brand); color: #fff; display: grid; place-items: center; }
     .brand-text { font-family: var(--serif); font-size: 17px; letter-spacing: -.01em; }
     .brand-sub { font-size: 11px; color: var(--faint); font-weight: 500; margin-left: 2px; }
-    .nav-links { display: flex; align-items: center; gap: 20px; font-size: 13px; color: var(--muted); }
+    .nav-links { display: flex; align-items: center; gap: 20px; font-size: 13px; color: var(--muted); flex: 1 1 auto; min-width: 0; }
     .nav-links a { text-decoration: none; }
     .nav-links a:hover { color: var(--brand); }
-    .nav-actions { display: flex; align-items: center; gap: 8px; flex: 1; justify-content: flex-end; min-width: 0; }
+    .nav-actions { display: flex; align-items: center; gap: 8px; flex: 0 0 auto; justify-content: flex-end; }
+    /* 顶栏控件统一：同高、同圆角、同描边与轻投影 */
+    .nav-search,
+    .nav-actions .btn-sm.btn-ghost,
+    .nav-actions .switch-btn,
+    .nav-menu-btn {
+      height: 34px;
+      border-radius: 999px;
+      border: 1px solid var(--edge-soft);
+      box-shadow: var(--shadow-1);
+      background: rgba(255,255,255,.78);
+    }
+    .nav-actions .btn-sm.btn-primary {
+      height: 34px;
+      border-radius: 999px;
+    }
+    .nav-search-wrap {
+      position: relative; display: flex; align-items: center;
+      flex: 0 1 220px; min-width: 140px; max-width: 280px;
+    }
+    .nav-search-wrap:has(.nav-search-clear:not([hidden])) .nav-search {
+      padding-right: 34px;
+    }
+    .nav-search-wrap:has(.nav-search-clear:not([hidden])) .nav-search-kbd {
+      display: none;
+    }
     .nav-search {
       position: relative; display: flex; align-items: center; gap: 8px;
-      flex: 0 1 220px; min-width: 140px; max-width: 260px;
-      height: 34px; padding: 0 10px 0 11px; border-radius: 999px;
-      background: rgba(255,255,255,.78); border: 1px solid var(--edge-soft);
-      color: var(--faint); box-shadow: var(--shadow-1);
-      transition: border-color 160ms var(--ease-fade), box-shadow 180ms var(--ease-out), flex-basis 180ms var(--ease-out);
+      flex: 1; min-width: 0; width: 100%;
+      padding: 0 10px 0 11px;
+      color: var(--faint);
+      transition: border-color 160ms var(--ease-fade), box-shadow 180ms var(--ease-out), background 160ms var(--ease-fade);
+      font: inherit; text-align: left; cursor: pointer;
     }
-    .nav-search:focus-within {
-      flex-basis: 280px; max-width: 320px;
+    .nav-search.is-filtered {
+      color: var(--ink);
+      border-color: rgba(84,95,42,.38);
+      background: rgba(255,255,255,.92);
+    }
+    .nav-search.is-filtered .nav-search-label { color: var(--ink); font-weight: 650; }
+    .nav-search:hover,
+    .nav-search:focus-visible {
       border-color: rgba(84,95,42,.42);
       box-shadow: 0 0 0 3px rgba(84,95,42,.12);
       color: var(--brand);
+      outline: none;
     }
-    .nav-search input {
+    .nav-search-label {
       flex: 1; min-width: 0; border: 0; outline: 0; background: transparent;
-      font: inherit; font-size: 12.5px; font-weight: 550; color: var(--ink);
+      font: inherit; font-size: 12.5px; font-weight: 550; color: var(--faint);
       padding: 0; line-height: 1.2;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     }
-    .nav-search input::placeholder { color: var(--faint); font-weight: 500; }
     .nav-search-kbd {
       flex: none; font-family: var(--mono); font-size: 9.5px; font-weight: 700;
       letter-spacing: .03em; color: var(--faint);
       padding: 2px 5px; border-radius: 5px;
       border: 1px solid rgba(34,30,26,.1); background: var(--surface-sunken);
     }
-    .nav-search:focus-within .nav-search-kbd { display: none; }
     .nav-search-clear {
-      flex: none; width: 22px; height: 22px; border: 0; border-radius: 50%;
+      position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+      z-index: 2; flex: none; width: 22px; height: 22px; border: 0; border-radius: 50%;
       display: grid; place-items: center; cursor: pointer; padding: 0;
       background: var(--surface-sunken); color: var(--muted);
     }
+    .nav-search-clear[hidden] { display: none !important; }
     .nav-search-clear:hover { color: var(--brand); background: var(--brand-soft); }
+    .visually-hidden {
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+    }
+    .nav-menu-btn {
+      display: none; flex: none; width: 34px; padding: 0;
+      cursor: pointer; color: var(--ink); place-items: center;
+    }
+    .nav-menu-btn:hover { border-color: var(--brand); color: var(--brand); }
+    .nav.is-menu-open .nav-menu-btn { color: var(--brand); border-color: var(--brand); }
 
     /* ---------- buttons ---------- */
     .btn {
@@ -59,26 +102,42 @@
       font-size: 12.5px; font-weight: 700; line-height: 1.2;
       border: 1px solid transparent; background: none; cursor: pointer;
       text-decoration: none; white-space: nowrap;
-      transition: transform var(--motion-1) var(--ease-out), background var(--motion-1) var(--ease-fade), border-color var(--motion-1) var(--ease-fade), color var(--motion-1) var(--ease-fade);
+      transition: transform var(--motion-1) var(--ease-out), background var(--motion-1) var(--ease-fade), border-color var(--motion-1) var(--ease-fade), color var(--motion-1) var(--ease-fade), box-shadow var(--motion-1) var(--ease-fade);
     }
     .btn:hover { transform: translateY(-1px); }
     .btn:active { transform: scale(0.97); transition-duration: var(--motion-1); }
-    .btn-primary { background: var(--brand); color: #fff; box-shadow: 0 5px 16px -6px rgba(84,95,42,.42); }
+    .btn-primary { background: var(--brand); color: #fff; border-color: transparent; box-shadow: 0 5px 16px -6px rgba(84,95,42,.42); }
     .btn-primary:hover { background: var(--brand-deep); box-shadow: 0 7px 20px -6px rgba(84,95,42,.5); }
-    .btn-ghost { background: rgba(255,255,255,.72); border-color: var(--edge-soft); color: var(--ink); box-shadow: var(--shadow-1); }
+    .btn-ghost { color: var(--ink); }
     .btn-ghost:hover { border-color: var(--brand); color: var(--brand); }
-    .btn-sm { padding: 7px 12px; font-size: 11.5px; }
+    .btn-sm { padding: 0 12px; font-size: 11.5px; }
+    .nav-actions .btn-sm { min-width: 34px; }
+    .nav-actions .btn-primary {
+      background: var(--brand);
+      border-color: transparent;
+      color: #fff;
+      box-shadow: var(--shadow-1), 0 4px 12px -6px rgba(84,95,42,.4);
+    }
+    .nav-actions .btn-primary:hover {
+      background: var(--brand-deep);
+      box-shadow: 0 0 0 3px rgba(84,95,42,.12), 0 6px 14px -6px rgba(84,95,42,.45);
+    }
     .btn-light { background: #f7f6ee; color: var(--brand-deep); border-color: #f7f6ee; }
 
     .switch-btn {
       position: relative; display: inline-flex; align-items: center; justify-content: center;
-      width: 34px; height: 34px; padding: 0; flex: none;
-      border-radius: 10px; cursor: pointer; color: var(--ink);
-      background: var(--surface-raised); border: 1px solid var(--edge-soft);
-      box-shadow: var(--shadow-1);
-      transition: background-color 150ms ease-out, border-color 150ms ease-out, color 150ms ease-out;
+      width: 34px; padding: 0; flex: none;
+      cursor: pointer; color: var(--ink);
+      transition: background-color 150ms ease-out, border-color 150ms ease-out, color 150ms ease-out, box-shadow 150ms ease-out;
     }
-    .switch-btn:hover { border-color: var(--brand); color: var(--brand); }
+    .switch-btn:hover,
+    .nav-actions .btn-ghost:hover,
+    .nav-actions .btn-ghost:focus-visible {
+      border-color: rgba(84,95,42,.42);
+      box-shadow: 0 0 0 3px rgba(84,95,42,.12);
+      color: var(--brand);
+      outline: none;
+    }
     .switch-btn:active { transform: scale(0.97); }
     .switch-btn-icon { overflow: visible; display: block; }
     .switch-btn-icon [data-part="disc"] {
@@ -93,16 +152,53 @@
     html.dark .switch-btn-icon [data-part="disc"] { transform: scale(1.8); }
     html.dark .switch-btn-icon [data-part="ray"] { opacity: 0; transform: scale(0.5); }
     html.dark .nav {
-      background: rgba(22, 20, 16, .88);
+      background: color-mix(in srgb, var(--surface-page) 82%, transparent);
+      border-bottom-color: var(--edge-faint);
       box-shadow: 0 1px 0 rgba(255,255,255,.04);
     }
     html.dark .nav-search,
-    html.dark .btn-ghost { background: rgba(31, 27, 22, .78); }
+    html.dark .nav-actions .btn-sm.btn-ghost,
+    html.dark .nav-actions .switch-btn,
+    html.dark .nav-menu-btn,
+    html.dark .btn-ghost {
+      background: color-mix(in srgb, var(--surface-raised) 88%, transparent);
+      border-color: var(--edge-soft);
+    }
+    html.dark .nav-search.is-filtered {
+      background: var(--surface-raised);
+      border-color: color-mix(in srgb, var(--accent) 40%, var(--edge-soft));
+    }
+    html.dark .nav-search-kbd,
+    html.dark .nav-search-clear {
+      background: var(--surface-sunken);
+      border-color: var(--edge-faint);
+      color: var(--muted);
+    }
     html.dark .btn-primary,
     html.dark .brand-mark,
-    html.dark .btn-primary:hover { color: #1a1814; }
-    html.dark ::selection { color: #1a1814; }
-    html.dark .btn-light { background: var(--surface-sunken); color: var(--accent); border-color: var(--surface-sunken); }
+    html.dark .btn-primary:hover { color: #1c1a16; }
+    html.dark ::selection { color: #1c1a16; }
+    html.dark .btn-light {
+      background: var(--accent);
+      color: #1c1a16;
+      border-color: transparent;
+    }
+    html.dark .btn-ghost:hover {
+      background: var(--surface-brand);
+    }
+    html.dark .tag,
+    html.dark .card-preview .tag {
+      background: color-mix(in srgb, var(--surface-raised) 90%, var(--accent) 10%);
+      border-color: var(--edge-soft);
+    }
+    html.dark .footer {
+      box-shadow: inset 0 1px 0 var(--edge-faint);
+    }
+    html.dark .dlg-panel,
+    html.dark .dock-sheet {
+      background: var(--surface-raised);
+      border-color: var(--edge-soft);
+    }
 
     /* ---------- cards ---------- */
     .card {

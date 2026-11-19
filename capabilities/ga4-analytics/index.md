@@ -4,18 +4,20 @@
 
 `ga4-analytics[KD8SH]`
 
-F: 在 H5/Web 项目落地 GA4 埋点与基础分析：接入、事件设计、联调验收、排障与看数
+F: 按关卡在 Web/Android/iOS 落地 GA4：拷贝去业务化代码模版 → 首事件 DebugView 可见 → 事件设计/联调/看数
 R:
-A: 角色场景见 `roles-qa.md`（仅开发者/使用者，互相协助 + 模版问答）；再任务路由；文档 `method.md` / `setup.md` / `event-design.md` / `verify.md` / `analysis.md` / `user-analysis.md` / `code-map.md`；覆盖不到时走 `gap-protocol.md`；页面分工见下文
-S: 角色只有开发者与使用者两种（可一人兼两角或多人数人）；模版问答须在阅读本技能后发出/作答；先分清官方与自定义事件；User-ID 禁止当事件参数；DebugView ≠ 正式报表；任务超出本能力覆盖先联网查官方再答，控制台路径与官方页必须核实，未核实要标注；密钥与业务字典不进本能力
+A: 跟用 `playbook.md` + `SKILL.md`；代码模版 `templates/web|android|ios`（源：泰国短剧 ga 文件夹、彩铃双端 Firebase 启动）；协作 `roles-qa.md`；文档 `method.md` / `setup.md` / `event-design.md` / `verify.md` / `analysis.md` / `user-analysis.md` / `code-map.md`；缺口 `gap-protocol.md`
+S: 必须落模版，禁止只口说「加 gtag」；空壳直打不算完成；角色仅开发者/使用者；User-ID 禁止当事件参数；DebugView ≠ 正式报表；密钥与客户事件字典不进本能力；Measurement ID 只用 env/用户侧配置
 
 ---
 
 ## 这是什么
 
-Skill：告诉 AI **怎么把 GA4 接到能验收**，以及 **怎么在开发者 ↔ 使用者之间用模版互相协助**。
+Skill：告诉 AI **怎么把 GA4 接到能验收**（含 **可拷贝代码模版**），以及 **开发者 ↔ 使用者模版协作**。
 
-不实现 gtag 本体，不托管 Measurement ID。跨项目复用：角色场景、模版问答、官方/自定义边界、验收标准、页面分工。业务事件字典与项目路径留在业务仓，**不写入本能力**。
+- **Web 模版**：`templates/web/` ← 泰国短剧 `utils/ga` 文件夹模式  
+- **Android / iOS 模版**：`templates/android|ios/` ← 彩铃双端 Firebase Analytics 启动与封装（已去业务名）  
+- 不托管 Measurement ID；客户事件字典留业务仓，可用 `gaEvents.example-funnel.js` 作漏斗参考  
 
 ## 什么时候用
 
@@ -121,12 +123,12 @@ Skill：告诉 AI **怎么把 GA4 接到能验收**，以及 **怎么在开发�
 
 ## 怎么用
 
-1. **先定角色**（开发者 / 使用者；兼角须声明当前以哪角发言）。  
-2. 信息缺口用 `roles-qa.md` 模版：**读技能后发出提问 / 读技能后看到提问再答**。  
-3. 再走任务路由；只读需要的文件。  
-4. **路由表没覆盖**：先走 `gap-protocol.md`，不凭记忆答。  
-5. 事件预设以 `event-design.md` 的官方 A + 通用自定义 B 为准；不写入具体业务字典。  
-6. 验收走 `verify.md` 对应角色章节；看数走 `analysis.md` / `user-analysis.md`；代码对后台走 `code-map.md`。
+1. 读 `playbook.md` / `SKILL.md`，从 **G0** 问卷开始（`templates/interview.md`）。  
+2. **先定角色**（开发者 / 使用者）。  
+3. **G2 必须落代码模版**（按平台拷贝 `templates/web|android|ios`），禁止只给口述片段。  
+4. **G3** 以 DebugView 见到约定首事件为过关（`verify.md`）。  
+5. 协作问答用 `roles-qa.md`；事件设计 `event-design.md`；看数 `analysis.md` / `user-analysis.md`。  
+6. **路由表没覆盖**：`gap-protocol.md`。  
 
 ## 最不能违反什么
 

@@ -2,17 +2,16 @@
     * { box-sizing: border-box; }
     :root { --nav-h: 74px; }
     html {
-      scroll-behavior: smooth;
-      /* 主模块像幻灯片：松手后吸附到视口中心，不被半截卡住 */
-      scroll-snap-type: y mandatory;
+      /* 翻页由 JS 缓动到目录锚点；不用原生 snap（偏快、难控） */
+      scroll-snap-type: none;
       scroll-padding-top: var(--nav-h);
-      scroll-padding-bottom: 8vh;
+      scroll-padding-bottom: 0;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      html { scroll-behavior: auto; }
     }
     /* 内容不溢出视觉边界：横向一律裁掉，杜绝 content bleeding */
     html, body { min-height: 100dvh; overflow-x: clip; }
-    @media (prefers-reduced-motion: reduce) {
-      html { scroll-behavior: auto; scroll-snap-type: y proximity; }
-    }
     /* 数字/编号/代码统一表格数字等宽：1 与 0 同宽，切换与更新不抖动 */
     code, .step-num, .agent-dot, .card-foot code, .install-text, .tag { font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1; }
     body {
@@ -33,9 +32,9 @@
     }
     html.dark body::before {
       background:
-        radial-gradient(58vw 42vw at 4% 8%, rgba(197,212,106,.08), transparent 70%),
-        radial-gradient(52vw 46vw at 96% 22%, rgba(84,95,42,.16), transparent 72%),
-        radial-gradient(60vw 40vw at 50% 100%, rgba(197,212,106,.05), transparent 70%);
+        radial-gradient(58vw 42vw at 4% 8%, rgba(194,208,116,.05), transparent 72%),
+        radial-gradient(52vw 46vw at 96% 22%, rgba(84,95,42,.1), transparent 74%),
+        radial-gradient(60vw 40vw at 50% 100%, rgba(194,208,116,.035), transparent 72%);
     }
     ::selection { background: var(--brand); color: #fff; }
     a { color: inherit; }
@@ -55,13 +54,20 @@
 .brand { view-transition-name: site-brand; }
 
 .skip-link {
-  position: absolute; left: 16px; top: 12px; z-index: 80;
-  transform: translateY(-120%);
-  padding: 8px 12px; border-radius: 999px;
+  position: fixed; left: 12px; top: 12px; z-index: 80;
+  width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0); clip-path: inset(50%);
+  white-space: nowrap; border: 0;
   background: var(--accent); color: #fff; font-size: 12px; font-weight: 700;
   text-decoration: none;
 }
-.skip-link:focus { transform: none; outline: 2px solid var(--accent); outline-offset: 3px; }
+.skip-link:focus,
+.skip-link:focus-visible {
+  width: auto; height: auto; margin: 0; padding: 8px 12px;
+  overflow: visible; clip: auto; clip-path: none; white-space: normal;
+  border-radius: 999px;
+  outline: 2px solid var(--accent); outline-offset: 3px;
+}
 
 :focus-visible {
   outline: 2px solid var(--accent);

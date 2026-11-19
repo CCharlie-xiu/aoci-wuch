@@ -53,11 +53,65 @@
       return query.split(/\s+/).filter(Boolean).every((token) => blob.includes(token));
     }
 
+    function escapeHtml(value) {
+      return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function escapeRegExp(value) {
+      return String(value || "").replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    }
+
+    function highlightMatches(text, query) {
+      const source = String(text || "");
+      const tokens = normalizeSearchText(query).split(/\s+/).filter(Boolean).sort((a, b) => b.length - a.length);
+      if (!tokens.length) return escapeHtml(source);
+      const pattern = new RegExp(`(${tokens.map(escapeRegExp).join("|")})`, "gi");
+      let out = "";
+      let last = 0;
+      source.replace(pattern, (match, _g, offset) => {
+        out += escapeHtml(source.slice(last, offset));
+        out += `<u class="sp-hit">${escapeHtml(match)}</u>`;
+        last = offset + match.length;
+        return match;
+      });
+      out += escapeHtml(source.slice(last));
+      return out;
+    }
+
+    function syncSearchChrome(query) {
+      const clearBtn = document.getElementById("skillSearchClear");
+      const trigger = document.getElementById("skillSearchTrigger");
+      const label = trigger?.querySelector(".nav-search-label");
+      const active = Boolean(query);
+      if (clearBtn) {
+        clearBtn.hidden = !active;
+        clearBtn.setAttribute("aria-label", t("searchClear"));
+        clearBtn.title = t("searchClear");
+      }
+      trigger?.classList.toggle("is-filtered", active);
+      if (label) {
+        label.textContent = active ? skillSearchQuery.trim() : t("searchPlaceholder");
+      }
+    }
+
+    function clearSkillSearch() {
+      skillSearchQuery = "";
+      const hidden = document.getElementById("skillSearch");
+      if (hidden) hidden.value = "";
+      if (searchPaletteInput) searchPaletteInput.value = "";
+      applySkillSearch();
+      renderSearchPalette();
+    }
+
     function applySkillSearch() {
       const query = normalizeSearchText(skillSearchQuery);
-      const clearBtn = document.getElementById("skillSearchClear");
       const meta = document.getElementById("skillSearchMeta");
-      if (clearBtn) clearBtn.hidden = !query;
+      const metaText = document.getElementById("skillSearchMetaText");
+      syncSearchChrome(query);
       let hit = 0;
       document.querySelectorAll("#capabilityList .skill-pill[data-skill-id]").forEach((el) => {
         const cap = getCapabilityById(el.getAttribute("data-skill-id"));
@@ -76,32 +130,136 @@
         card.closest(".krail-item")?.classList.toggle("is-search-miss", !match);
       });
       if (foryouRail && foryouRail.relayout) foryouRail.relayout();
-      if (!meta) return;
-      if (!query) {
-        meta.hidden = true;
-        meta.textContent = "";
-        return;
+      if (meta) {
+        if (!query) {
+          meta.hidden = true;
+          if (metaText) metaText.textContent = "";
+        } else {
+          meta.hidden = false;
+          if (metaText) {
+            metaText.textContent = hit
+              ? t("searchResult").replace("{n}", String(hit))
+              : t("searchEmpty");
+          }
+        }
       }
-      meta.hidden = false;
-      meta.textContent = hit
-        ? t("searchResult").replace("{n}", String(hit))
-        : t("searchEmpty");
       document.querySelectorAll(".rail").forEach((rail) => updateRailNav(rail));
     }
 
-    function focusSkillSearch() {
-      const input = document.getElementById("skillSearch");
-      if (!input) return;
-      requestAnimationFrame(() => {
-        input.focus({ preventScroll: true });
-        input.select?.();
+    const searchPalette = document.getElementById("searchPalette");
+    const searchPaletteInput = document.getElementById("searchPaletteInput");
+    const searchPaletteResults = document.getElementById("searchPaletteResults");
+    let searchPaletteOpen = false;
+    let searchPaletteActive = 0;
+    let searchPaletteItems = [];
+
+    function skillSectionCrumb(capability) {
+      const root = t("searchCrumbRoot");
+      if (foryouIds.includes(capability.id)) return `${root} › ${t("foryouTitle")}`;
+      if (featuredIds.includes(capability.id)) return `${root} › ${t("navFeatured")}`;
+      return `${root} › ${t("navSkills")}`;
+    }
+
+    function collectSearchHits(query) {
+      if (!query) return [];
+      return capabilities
+        .filter((cap) => capabilityMatchesSearch(cap, query))
+        .map((cap) => {
+          const name = currentLanguage === "zh" ? cap.name : cap.nameEn;
+          const desc = descriptions[cap.id] ? descriptions[cap.id][currentLanguage] : "";
+          const path = cap.short ? `/${cap.short}` : `/${cap.id}`;
+          const lines = [path];
+          if (desc) lines.push(desc);
+          if (cap.pro) lines.push("PRO");
+          else if (cap.limit) lines.push("LIMIT");
+          return { cap, name, lines, crumb: skillSectionCrumb(cap) };
+        });
+    }
+
+    function renderSearchPalette() {
+      if (!searchPalette || !searchPaletteResults) return;
+      const query = normalizeSearchText(skillSearchQuery);
+      searchPalette.classList.toggle("is-filled", Boolean(query));
+      searchPaletteItems = collectSearchHits(query);
+      if (!query) {
+        searchPaletteResults.hidden = true;
+        searchPaletteResults.innerHTML = "";
+        searchPaletteActive = 0;
+        return;
+      }
+      searchPaletteResults.hidden = false;
+      if (!searchPaletteItems.length) {
+        searchPaletteResults.innerHTML = `<p class="sp-empty">${escapeHtml(t("searchPaletteEmpty"))}</p>`;
+        searchPaletteActive = 0;
+        return;
+      }
+      searchPaletteActive = Math.min(searchPaletteActive, searchPaletteItems.length - 1);
+      searchPaletteResults.innerHTML = searchPaletteItems.map((item, index) => {
+        const lines = item.lines
+          .slice(0, 3)
+          .map((line) => `<li>${highlightMatches(line, query)}</li>`)
+          .join("");
+        return `<button type="button" class="sp-item${index === searchPaletteActive ? " is-active" : ""}" role="option" data-sp-index="${index}" data-skill-id="${item.cap.id}" aria-selected="${index === searchPaletteActive ? "true" : "false"}">
+          <span class="sp-crumb">${highlightMatches(item.crumb, query)}</span>
+          <span class="sp-title">${highlightMatches(item.name, query)}</span>
+          <ul class="sp-sub">${lines}</ul>
+        </button>`;
+      }).join("");
+    }
+
+    function setSearchPaletteActive(index) {
+      if (!searchPaletteItems.length) return;
+      searchPaletteActive = (index + searchPaletteItems.length) % searchPaletteItems.length;
+      searchPaletteResults?.querySelectorAll(".sp-item").forEach((el, i) => {
+        el.classList.toggle("is-active", i === searchPaletteActive);
+        el.setAttribute("aria-selected", i === searchPaletteActive ? "true" : "false");
+        if (i === searchPaletteActive) el.scrollIntoView({ block: "nearest" });
       });
     }
 
-    function revealSearchResults() {
-      if (!normalizeSearchText(skillSearchQuery)) return;
-      const target = document.getElementById("foryou") || document.getElementById("skills");
-      target?.scrollIntoView({ behavior: "smooth", block: "start" });
+    function chooseSearchPaletteItem(index) {
+      const item = searchPaletteItems[index];
+      if (!item) return;
+      closeSearchPalette({ keepQuery: true });
+      selectSkill(item.cap.id, { syncUrl: true, replaceUrl: false, scroll: true });
+      document.getElementById("skills")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function openSearchPalette() {
+      if (!searchPalette || !searchPaletteInput) return;
+      searchPalette.hidden = false;
+      searchPaletteOpen = true;
+      document.body.style.overflow = "hidden";
+      searchPaletteInput.value = skillSearchQuery || "";
+      renderSearchPalette();
+      requestAnimationFrame(() => {
+        searchPalette.classList.add("is-open");
+        try { AOCI.paintIcons(); } catch {}
+        // 延后聚焦，避免按钮 click 抢回焦点
+        window.setTimeout(() => {
+          if (!searchPaletteOpen) return;
+          searchPaletteInput.focus({ preventScroll: true });
+          searchPaletteInput.select?.();
+        }, 0);
+      });
+    }
+
+    function closeSearchPalette(options = {}) {
+      const { keepQuery = false } = options;
+      if (!searchPalette) return;
+      searchPalette.classList.remove("is-open");
+      searchPaletteOpen = false;
+      document.body.style.overflow = "";
+      const finish = () => {
+        if (!searchPaletteOpen) searchPalette.hidden = true;
+      };
+      window.setTimeout(finish, 180);
+      if (!keepQuery) clearSkillSearch();
+      document.getElementById("skillSearchTrigger")?.focus?.({ preventScroll: true });
+    }
+
+    function focusSkillSearch() {
+      openSearchPalette();
     }
 
         function resolveSkillSlug(raw) {
@@ -391,22 +549,38 @@
     function paintSkeletons() {}
 
     function featuredDeckCards() {
+      const lastId = featuredIds[featuredIds.length - 1];
       return featuredIds.map((id) => getCapabilityById(id)).filter(Boolean).map((cap, index) => {
         const path = cap.short ? `/${cap.short}` : `/${cap.id}`;
         const access = cap.pro ? t("tagPro") : cap.limit ? t("tagLimit") : t("tagFree");
-        return {
+        const isLast = cap.id === lastId;
+        const base = {
           id: cap.id,
           title: currentLanguage === "zh" ? cap.name : cap.nameEn,
-          // 牌面：路径作副标，权限放右侧强调色
           subtitle: path,
           image: skillArtIds.has(cap.id) ? `assets/skills/${cap.id}/1x1.png` : artFor(cap, index),
-          detailImage: artFor(cap, index),
+          detailImage: skillArtIds.has(cap.id) ? `assets/skills/${cap.id}/1x1.png` : artFor(cap, index),
           description: descriptions[cap.id] ? descriptions[cap.id][currentLanguage] : "",
           price: access,
-          specs: [
-            { label: currentLanguage === "zh" ? "路径" : "Path", value: path },
-            { label: currentLanguage === "zh" ? "权限" : "Access", value: access },
-            { label: currentLanguage === "zh" ? "标记" : "Flag", value: cap.limit ? t("tagLimit") : (newIds.includes(cap.id) ? t("tagNew") : "—") }
+          longForm: isLast
+        };
+        if (!isLast) return base;
+        return {
+          ...base,
+          detailImage: artFor(cap, index),
+          longDescription: currentLanguage === "zh"
+            ? "从对话气泡到 Agent 泳道：组件、轮次落库、工具调用与 Thinking 展示一次配齐。装进现有 Vue / React 项目，按任务裁切，不必从零拼一版聊天壳。"
+            : "From chat bubbles to agent lanes: UI, turn storage, tool calls and Thinking—ready for Vue/React. Drop into the current app and trim to the task.",
+          highlights: currentLanguage === "zh" ? [
+            { label: "界面", value: "对话面 · Thinking · 工具调用条" },
+            { label: "落库", value: "IndexedDB 按轮次持久化" },
+            { label: "流式", value: "OpenAI 兼容 SSE / 可中断" },
+            { label: "沙盒", value: "创作表单与工具结果同屏" }
+          ] : [
+            { label: "UI", value: "Chat · Thinking · tool-call strip" },
+            { label: "Store", value: "IndexedDB turn persistence" },
+            { label: "Stream", value: "OpenAI-compatible SSE" },
+            { label: "Sandbox", value: "Forms + tool results inline" }
           ]
         };
       });
@@ -438,10 +612,8 @@
         cards: payload,
         accent: getComputedStyle(document.documentElement).getPropertyValue("--accent").trim() || "#545f2a",
         hintLabel: () => t("deckHint"),
-        actionLabel: () => t("copyPrompt"),
-        onAction: (card) => {
+        onPick: (card) => {
           selectSkill(card.id, { syncUrl: true, replaceUrl: true });
-          copyInstallPrompt();
         }
       });
     }
@@ -664,6 +836,8 @@
       }
       syncActionDock();
       if (firstUseModalOpen) fillFirstUseContent();
+      try { sailingToc?.setLanguage?.(); } catch {}
+      if (searchPaletteOpen) renderSearchPalette();
       try { localStorage.setItem("aoci-language", language); } catch {}
     }
 
@@ -734,28 +908,74 @@
 
     const skillSearchInput = document.getElementById("skillSearch");
     const skillSearchClear = document.getElementById("skillSearchClear");
+    const skillSearchTrigger = document.getElementById("skillSearchTrigger");
     const skillSearchKbd = document.querySelector(".nav-search-kbd");
-    let searchRevealTimer = null;
     if (skillSearchKbd) {
       const isApple = /Mac|iPhone|iPad|iPod/i.test(navigator.platform || "") || /Mac OS/i.test(navigator.userAgent || "");
       skillSearchKbd.textContent = isApple ? "⌘K" : "Ctrl K";
     }
-    skillSearchInput?.addEventListener("input", () => {
-      skillSearchQuery = skillSearchInput.value || "";
-      applySkillSearch();
-      clearTimeout(searchRevealTimer);
-      if (normalizeSearchText(skillSearchQuery)) {
-        searchRevealTimer = setTimeout(revealSearchResults, 280);
-      }
+    skillSearchTrigger?.addEventListener("mousedown", (event) => {
+      // 阻止按钮在 click 序列里抢走面板输入焦点
+      event.preventDefault();
     });
-    skillSearchClear?.addEventListener("click", () => {
-      skillSearchQuery = "";
-      if (skillSearchInput) skillSearchInput.value = "";
+    skillSearchTrigger?.addEventListener("click", () => openSearchPalette());
+    searchPalette?.querySelectorAll("[data-sp-close]").forEach((el) => {
+      el.addEventListener("click", () => closeSearchPalette());
+    });
+    searchPaletteInput?.addEventListener("input", () => {
+      skillSearchQuery = searchPaletteInput.value || "";
+      if (skillSearchInput) skillSearchInput.value = skillSearchQuery;
+      searchPaletteActive = 0;
       applySkillSearch();
-      skillSearchInput?.focus({ preventScroll: true });
+      renderSearchPalette();
+    });
+    searchPaletteResults?.addEventListener("click", (event) => {
+      const item = event.target.closest(".sp-item[data-sp-index]");
+      if (!item) return;
+      chooseSearchPaletteItem(Number(item.getAttribute("data-sp-index")));
+    });
+    searchPaletteResults?.addEventListener("mousemove", (event) => {
+      const item = event.target.closest(".sp-item[data-sp-index]");
+      if (!item) return;
+      const index = Number(item.getAttribute("data-sp-index"));
+      if (index !== searchPaletteActive) setSearchPaletteActive(index);
+    });
+    skillSearchClear?.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      clearSkillSearch();
+    });
+    document.getElementById("skillSearchReset")?.addEventListener("click", () => {
+      clearSkillSearch();
     });
     languageToggle.addEventListener("click", () => setLanguage(currentLanguage === "zh" ? "en" : "zh"));
     if (AOCI.mountSwitchButton) AOCI.mountSwitchButton(document.getElementById("themeSwitch"));
+    const navEl = document.querySelector(".nav");
+    const navMenuBtn = document.getElementById("navMenuBtn");
+    function setNavMenuOpen(open) {
+      if (!navEl || !navMenuBtn) return;
+      navEl.classList.toggle("is-menu-open", open);
+      navMenuBtn.setAttribute("aria-expanded", open ? "true" : "false");
+      navMenuBtn.setAttribute("aria-label", open ? "关闭菜单" : "打开菜单");
+      const icon = navMenuBtn.querySelector("[data-lucide]");
+      if (icon) {
+        icon.setAttribute("data-lucide", open ? "x" : "menu");
+        if (window.lucide?.createIcons) lucide.createIcons({ nodes: [navMenuBtn] });
+      }
+      requestAnimationFrame(() => {
+        const nav = document.querySelector(".nav");
+        if (nav) document.documentElement.style.setProperty("--nav-h", `${Math.ceil(nav.getBoundingClientRect().height)}px`);
+      });
+    }
+    navMenuBtn?.addEventListener("click", () => {
+      setNavMenuOpen(!navEl?.classList.contains("is-menu-open"));
+    });
+    document.querySelectorAll(".nav-links a").forEach((a) => {
+      a.addEventListener("click", () => setNavMenuOpen(false));
+    });
+    window.addEventListener("resize", () => {
+      if (window.matchMedia("(min-width: 1001px)").matches) setNavMenuOpen(false);
+    }, { passive: true });
     function jumpToInstall() {
       const bar = document.querySelector(".install-bar");
       document.getElementById("install")?.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -776,26 +996,44 @@
     dismissFirstUseBtn.addEventListener("click", closeFirstUseModal);
     firstUseModal.addEventListener("click", (event) => { if (event.target === firstUseModal) closeFirstUseModal(); });
     document.addEventListener("keydown", (event) => {
+      if (searchPaletteOpen) {
+        if (event.key === "Escape") {
+          event.preventDefault();
+          closeSearchPalette();
+          return;
+        }
+        if (event.key === "ArrowDown") {
+          event.preventDefault();
+          setSearchPaletteActive(searchPaletteActive + 1);
+          return;
+        }
+        if (event.key === "ArrowUp") {
+          event.preventDefault();
+          setSearchPaletteActive(searchPaletteActive - 1);
+          return;
+        }
+        if (event.key === "Enter") {
+          event.preventDefault();
+          if (searchPaletteItems.length) chooseSearchPaletteItem(searchPaletteActive);
+          return;
+        }
+      }
       if (event.key === "Escape") {
+        if (navEl?.classList.contains("is-menu-open")) { setNavMenuOpen(false); return; }
         if (firstUseModalOpen) { closeFirstUseModal(); return; }
         if (selectedSkillId && skillSheet.isExpanded()) { skillSheet.open("peek"); return; }
         if (selectedSkillId) { selectSkill(null, { syncUrl: true, replaceUrl: true }); return; }
-        if (skillSearchQuery || document.activeElement === skillSearchInput) {
-          skillSearchQuery = "";
-          if (skillSearchInput) skillSearchInput.value = "";
-          applySkillSearch();
-          skillSearchInput?.blur();
-        }
         return;
       }
       const meta = event.metaKey || event.ctrlKey;
       if (meta && (event.key === "k" || event.key === "K")) {
         const tag = (event.target && event.target.tagName) || "";
         if (tag === "INPUT" || tag === "TEXTAREA" || event.target?.isContentEditable) {
-          if (event.target !== skillSearchInput) return;
+          if (event.target !== searchPaletteInput && event.target !== skillSearchInput) return;
         }
         event.preventDefault();
-        focusSkillSearch();
+        if (searchPaletteOpen) closeSearchPalette();
+        else openSearchPalette();
       }
     });
     window.addEventListener("popstate", () => {
@@ -807,17 +1045,131 @@
       if (localStorage.getItem("aoci-language") === "en") currentLanguage = "en";
     } catch {}
 
-    /* 主模块幻灯片吸附：同步导航高度，点击锚点居中，滚动时高亮当前段 */
+    /* 主模块：JS 缓动翻页到目录锚点（不能停中间）；桌面侧栏帆船目录 */
     const snapPanels = ["#install", "#foryou", "#featured", "#skills", "#how"].map((sel) => document.querySelector(sel)).filter(Boolean);
     const navLinks = [...document.querySelectorAll(".nav-links a[href^='#']")];
+    let sailingToc = null;
+    let pageAnim = null;
+    let pageRaf = 0;
+    let wheelCarry = 0;
+    let touchStartY = 0;
+    let settleTimer = 0;
+
     function syncNavHeight() {
       const nav = document.querySelector(".nav");
       if (!nav) return;
       document.documentElement.style.setProperty("--nav-h", `${Math.ceil(nav.getBoundingClientRect().height)}px`);
     }
+    function navOffset() {
+      return parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--nav-h")) || 74;
+    }
+    function panelScrollTop(el) {
+      if (!el) return 0;
+      return Math.max(0, el.getBoundingClientRect().top + window.scrollY - navOffset());
+    }
+    function nearestPanelIndex(y = window.scrollY) {
+      if (!snapPanels.length) return 0;
+      let best = 0;
+      let bestDist = Infinity;
+      snapPanels.forEach((panel, index) => {
+        const dist = Math.abs(panelScrollTop(panel) - y);
+        if (dist < bestDist) {
+          bestDist = dist;
+          best = index;
+        }
+      });
+      return best;
+    }
+    function easeInOutCubic(t) {
+      return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    }
+    function reduceMotion() {
+      return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    }
+    function stopPageAnim() {
+      if (pageRaf) cancelAnimationFrame(pageRaf);
+      pageRaf = 0;
+      pageAnim = null;
+    }
+    function syncActiveFromPanel(id) {
+      if (["foryou", "featured", "skills", "how"].includes(id)) setActiveNav(id);
+      else setActiveNav("");
+    }
+    function tickPageAnim(now) {
+      if (!pageAnim) return;
+      if (!pageAnim.t0) pageAnim.t0 = now;
+      const t = Math.min(1, (now - pageAnim.t0) / pageAnim.duration);
+      window.scrollTo(0, pageAnim.from + (pageAnim.to - pageAnim.from) * easeInOutCubic(t));
+      if (t < 1) {
+        pageRaf = requestAnimationFrame(tickPageAnim);
+        return;
+      }
+      window.scrollTo(0, pageAnim.to);
+      const id = pageAnim.id;
+      stopPageAnim();
+      syncActiveFromPanel(id);
+    }
+    function animateToPanel(panel, { smooth = true, pushHash = false } = {}) {
+      if (!panel) return;
+      const to = panelScrollTop(panel);
+      const from = window.scrollY || 0;
+      const id = panel.id || "";
+      if (pushHash && id) {
+        try { history.pushState(null, "", `#${id}`); } catch {}
+      }
+      if (!smooth || reduceMotion() || Math.abs(to - from) < 2) {
+        stopPageAnim();
+        window.scrollTo(0, to);
+        syncActiveFromPanel(id);
+        return;
+      }
+      const distance = Math.abs(to - from);
+      stopPageAnim();
+      pageAnim = {
+        from,
+        to,
+        id,
+        t0: 0,
+        duration: Math.min(1600, Math.max(980, 720 + distance * 0.42))
+      };
+      pageRaf = requestAnimationFrame(tickPageAnim);
+    }
     function scrollPanelIntoView(el, smooth = true) {
-      if (!el) return;
-      el.scrollIntoView({ block: "center", inline: "nearest", behavior: smooth && !window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "smooth" : "auto" });
+      animateToPanel(el, { smooth });
+    }
+    function pageBy(dir) {
+      if (!snapPanels.length || pageAnim) return;
+      const next = Math.max(0, Math.min(snapPanels.length - 1, nearestPanelIndex() + dir));
+      animateToPanel(snapPanels[next], { smooth: true, pushHash: true });
+    }
+    function settleToNearestPanel() {
+      if (!snapPanels.length || pageAnim) return;
+      const index = nearestPanelIndex();
+      const panel = snapPanels[index];
+      const target = panelScrollTop(panel);
+      if (Math.abs((window.scrollY || 0) - target) < 6) {
+        syncActiveFromPanel(panel.id || "");
+        return;
+      }
+      animateToPanel(panel, { smooth: true });
+    }
+    /* 只有内部真能纵向滚的容器才放行；推荐轨/牌组上的纵向滚轮一律翻页 */
+    function shouldDeferPageWheel(event) {
+      const nested = event.target?.closest?.(
+        ".skill-sheet-details, .dlg__prompt, .dlg, .sp-results, [data-no-page-snap]"
+      );
+      if (nested) {
+        if (nested.scrollHeight <= nested.clientHeight + 1) return false;
+        const atTop = nested.scrollTop <= 0;
+        const atBottom = nested.scrollTop + nested.clientHeight >= nested.scrollHeight - 1;
+        if (event.deltaY < 0 && atTop) return false;
+        if (event.deltaY > 0 && atBottom) return false;
+        return true;
+      }
+      if (event.target?.closest?.(".krail-scroller, .rail")) {
+        return Math.abs(event.deltaX) > Math.abs(event.deltaY) || event.shiftKey;
+      }
+      return false;
     }
     function setActiveNav(id) {
       navLinks.forEach((link) => {
@@ -836,12 +1188,72 @@
       const panel = document.getElementById(id);
       if (!panel) return;
       event.preventDefault();
-      history.pushState(null, "", `#${id}`);
-      scrollPanelIntoView(panel, true);
+      animateToPanel(panel, { smooth: true, pushHash: true });
       setActiveNav(id);
+    });
+    if (typeof AOCI.mountSailingToc === "function") {
+      sailingToc = AOCI.mountSailingToc(document.getElementById("sailToc"), {
+        getLanguage: () => currentLanguage
+      });
+      document.getElementById("sailToc")?.addEventListener("click", () => stopPageAnim(), true);
+    }
+    window.addEventListener("wheel", (event) => {
+      if (!snapPanels.length) return;
+      if (shouldDeferPageWheel(event)) return;
+      if (Math.abs(event.deltaY) < Math.abs(event.deltaX)) return;
+      event.preventDefault();
+      clearTimeout(settleTimer);
+      if (pageAnim) return;
+      wheelCarry += event.deltaY;
+      if (Math.abs(wheelCarry) < 36) return;
+      const dir = wheelCarry > 0 ? 1 : -1;
+      wheelCarry = 0;
+      pageBy(dir);
+    }, { passive: false });
+    window.addEventListener("scroll", () => {
+      if (pageAnim) return;
+      clearTimeout(settleTimer);
+      settleTimer = setTimeout(settleToNearestPanel, 90);
+    }, { passive: true });
+    window.addEventListener("touchstart", (event) => {
+      if (!event.touches?.[0]) return;
+      if (shouldDeferPageWheel({ target: event.target, deltaY: 1, deltaX: 0 })) return;
+      touchStartY = event.touches[0].clientY;
+    }, { passive: true });
+    window.addEventListener("touchend", (event) => {
+      if (!snapPanels.length || pageAnim) return;
+      if (shouldDeferPageWheel({ target: event.target, deltaY: 1, deltaX: 0 })) return;
+      const y = event.changedTouches?.[0]?.clientY;
+      if (y == null) return;
+      const dy = touchStartY - y;
+      if (Math.abs(dy) < 56) {
+        settleToNearestPanel();
+        return;
+      }
+      pageBy(dy > 0 ? 1 : -1);
+    }, { passive: true });
+    window.addEventListener("keydown", (event) => {
+      if (pageAnim || firstUseModalOpen || searchPaletteOpen) return;
+      const tag = (event.target?.tagName || "").toLowerCase();
+      if (tag === "input" || tag === "textarea" || event.target?.isContentEditable) return;
+      if (event.target?.closest?.(".deck, .krail, .skill-sheet, .dlg, .aal")) return;
+      if (["PageDown", "ArrowDown", " "].includes(event.key) && !event.shiftKey) {
+        event.preventDefault();
+        pageBy(1);
+      } else if (event.key === "PageUp" || (event.key === " " && event.shiftKey) || event.key === "ArrowUp") {
+        event.preventDefault();
+        pageBy(-1);
+      } else if (event.key === "Home") {
+        event.preventDefault();
+        animateToPanel(snapPanels[0], { smooth: true, pushHash: true });
+      } else if (event.key === "End") {
+        event.preventDefault();
+        animateToPanel(snapPanels[snapPanels.length - 1], { smooth: true, pushHash: true });
+      }
     });
     if ("IntersectionObserver" in window && snapPanels.length) {
       const io = new IntersectionObserver((entries) => {
+        if (pageAnim) return;
         const visible = entries
           .filter((entry) => entry.isIntersecting)
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];

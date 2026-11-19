@@ -101,6 +101,22 @@ def main() -> int:
     text = skill.read_text(encoding="utf-8")
     data, fm_errors = parse_frontmatter(text)
     errors.extend(fm_errors)
+    # WorkBuddy uses a real YAML parser; catch colon/quote issues our light parser misses.
+    if text.startswith("---"):
+        parts = text.split("---", 2)
+        if len(parts) >= 3:
+            try:
+                import yaml  # type: ignore
+
+                loaded = yaml.safe_load(parts[1])
+                if not isinstance(loaded, dict):
+                    errors.append("frontmatter YAML did not parse to a mapping")
+                else:
+                    data = {**data, **{k: loaded[k] for k in loaded}}
+            except ImportError:
+                warns.append("PyYAML not installed; skip strict YAML parse")
+            except Exception as exc:
+                errors.append(f"frontmatter YAML parse failed: {exc}")
     for k in REQUIRED:
         if k not in data or data[k] in ("", None, []):
             errors.append(f"missing required field: {k}")
@@ -123,6 +139,13 @@ def main() -> int:
         if p.name == ".DS_Store" or p.name == ".git" or ".git" in p.parts:
             errors.append(f"remove {p.relative_to(root)} from package tree before zip")
             break
+        if p.is_file() and p.name != "PACKAGING.md":
+            # WorkBuddy: root/二级目录/文件，相对技能根最多 2 段
+            if len(p.relative_to(root).parts) > 2:
+                errors.append(
+                    f"directory too deep (max 2 levels): {p.relative_to(root)} "
+                    "(only skill-root/subdir/file allowed)"
+                )
     for w in warns:
         print(f"WARN {w}")
     if errors:
