@@ -1,0 +1,64 @@
+/* 由首页拆出，按职责分文件维护 */
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    /* 内容不溢出视觉边界：横向一律裁掉，杜绝 content bleeding */
+    html, body { min-height: 100dvh; overflow-x: clip; }
+    /* 数字/编号/代码统一表格数字等宽：1 与 0 同宽，切换与更新不抖动 */
+    code, .step-num, .agent-dot, .card-foot code, .install-text, .tag { font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: var(--sans);
+      -webkit-font-smoothing: antialiased;
+      position: relative;
+    }
+    /* 纸感底上的柔和光晕（借自 Skillry 的 blur 色团手法，换成松绿/暖青，低透明度不抢内容） */
+    body::before {
+      content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+      background:
+        radial-gradient(58vw 42vw at 4% 8%, rgba(84,95,42,.075), transparent 70%),
+        radial-gradient(52vw 46vw at 96% 22%, rgba(120,140,96,.09), transparent 72%),
+        radial-gradient(60vw 40vw at 50% 100%, rgba(84,95,42,.06), transparent 70%);
+    }
+    html.dark body::before {
+      background:
+        radial-gradient(58vw 42vw at 4% 8%, rgba(197,212,106,.08), transparent 70%),
+        radial-gradient(52vw 46vw at 96% 22%, rgba(84,95,42,.16), transparent 72%),
+        radial-gradient(60vw 40vw at 50% 100%, rgba(197,212,106,.05), transparent 70%);
+    }
+    ::selection { background: var(--brand); color: #fff; }
+    a { color: inherit; }
+
+    html, body { background-color: var(--surface-page); }
+    .wrap { width: min(1180px, calc(100% - 2rem)); margin-inline: auto; }
+
+
+@view-transition { navigation: auto; }
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 420ms;
+  animation-timing-function: cubic-bezier(.22, 1, .36, 1);
+}
+
+.brand { view-transition-name: site-brand; }
+
+.skip-link {
+  position: absolute; left: 16px; top: 12px; z-index: 80;
+  transform: translateY(-120%);
+  padding: 8px 12px; border-radius: 999px;
+  background: var(--accent); color: #fff; font-size: 12px; font-weight: 700;
+  text-decoration: none;
+}
+.skip-link:focus { transform: none; outline: 2px solid var(--accent); outline-offset: 3px; }
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.btn:focus-visible, .icon-btn:focus-visible, .skill-pill:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}

@@ -1,11 +1,17 @@
 <!doctype html>
-<html lang="zh-CN" class="min-h-full">
+<html lang="zh-CN">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#fbf9f5">
   <meta name="robots" content="noindex">
+  <meta name="view-transition" content="same-origin">
   <title>订阅授权 — 至关重要</title>
+  <script>
+    (function () {
+      try { if (localStorage.getItem("aoci-theme") === "dark") document.documentElement.classList.add("dark"); } catch (e) {}
+    })();
+  </script>
   <link rel="icon" type="image/png" href="/favicon-32.png" sizes="32x32">
   <link rel="icon" type="image/png" href="/favicon-16.png" sizes="16x16">
   <link rel="icon" href="/favicon.ico" sizes="any">
@@ -13,308 +19,115 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
-
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            bg: '#fbf9f5',
-            surface: '#ffffff',
-            'surface-subtle': '#f2f0ea',
-            ink: '#221e1a',
-            muted: '#4e4235',
-            faint: '#71695c',
-            line: '#cfcfce',
-            brand: { DEFAULT: '#545f2a', hover: '#455021', light: '#f1f4e8' }
-          },
-          fontFamily: {
-            serif: ['"Noto Serif SC"', '"Songti SC"', 'Georgia', 'serif'],
-            sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', '"PingFang SC"', '"Microsoft YaHei"', 'sans-serif'],
-            mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
-          },
-          boxShadow: {
-            'craft': '0 20px 40px -15px rgba(45, 52, 30, 0.07)',
-            'card-glow': '0 0 0 1px rgba(84, 95, 42, 0.18), 0 20px 40px -12px rgba(84, 95, 42, 0.16)'
-          }
-        }
-      }
-    }
-  </script>
-
-  <style>
-    html, body {
-      min-height: 100dvh;
-      background-color: #fbf9f5;
-      color: #221e1a;
-      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
-      -webkit-font-smoothing: antialiased;
-    }
-    .bg-paper-grain {
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.025'/%3E%3C/svg%3E");
-    }
-    .transition-craft { transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
-    .view { transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1); }
-    .view.is-leaving { opacity: 0; transform: translateY(-8px) scale(0.98); }
-    .view.is-entering { opacity: 0; transform: translateY(8px) scale(0.98); }
-    @media (prefers-reduced-motion: reduce) {
-      .view, .transition-craft { transition: none; }
-    }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/tokens.css">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/auth.css">
+  <script src="https://unpkg.com/lucide@latest" defer></script>
 </head>
-<body class="bg-paper-grain min-h-screen flex flex-col px-6 sm:px-10 py-5 sm:py-7 max-w-5xl mx-auto selection:bg-brand selection:text-white">
-
-  <div id="toast" class="fixed top-6 left-1/2 -translate-x-1/2 -translate-y-12 opacity-0 pointer-events-none z-50 transition-craft">
-    <div class="bg-brand text-white px-4 py-2 rounded-full shadow-xl flex items-center gap-2 text-xs font-medium border border-white/20">
-      <i data-lucide="check-circle" class="w-4 h-4"></i>
-      <span id="toastMessage"></span>
-    </div>
-  </div>
-
-  <header class="w-full flex items-center justify-between shrink-0">
-    <a href="./" class="inline-flex items-center gap-2.5 text-ink font-semibold text-sm hover:opacity-80 transition-opacity">
-      <div class="w-8 h-8 rounded-full border border-black/20 flex items-center justify-center text-brand bg-white/50">
-        <i data-lucide="sparkles" class="w-4 h-4"></i>
-      </div>
-      <span class="font-serif text-base tracking-tight">至关重要</span>
-    </a>
-    <a href="./" class="inline-flex items-center gap-1.5 rounded-full border border-line bg-white/70 px-3 py-1.5 text-xs font-semibold text-muted hover:border-brand hover:text-brand transition-craft">
-      <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i><span>返回首页</span>
-    </a>
-  </header>
-
-  <main id="formView" class="view my-auto py-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center w-full">
-    <div class="lg:col-span-5 space-y-5">
-      <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-amber-300 bg-amber-50 text-amber-900 text-[11px] font-semibold tracking-wide">
-        <i data-lucide="shield-alert" class="w-3.5 h-3.5 text-amber-600"></i>
-        <span>待授权</span>
-      </div>
-
-      <h1 class="font-serif text-3xl sm:text-4xl font-normal leading-tight text-ink tracking-tight">
-        解锁 <span class="text-brand">[PRO]</span><br>订阅能力
-      </h1>
-
-      <p class="text-sm text-muted leading-relaxed">
-        能力索引中标记 <code class="font-mono text-xs bg-surface-subtle px-1.5 py-0.5 rounded">[PRO]</code> 的能力需要订阅。输入订阅码完成授权后，AI 助手即可读取这些能力。
-      </p>
-
-      <ul class="space-y-2.5">
-        <li class="flex items-center gap-2.5 text-sm text-ink">
-          <span class="w-5 h-5 rounded-full bg-brand/10 text-brand flex items-center justify-center shrink-0"><i data-lucide="check" class="w-3 h-3"></i></span>
-          <span>AI 助手可直接读取全部 [PRO] 能力</span>
-        </li>
-        <li class="flex items-center gap-2.5 text-sm text-ink">
-          <span class="w-5 h-5 rounded-full bg-brand/10 text-brand flex items-center justify-center shrink-0"><i data-lucide="check" class="w-3 h-3"></i></span>
-          <span>仅限一台设备使用</span>
-        </li>
-        <li class="flex items-center gap-2.5 text-sm text-ink">
-          <span class="w-5 h-5 rounded-full bg-brand/10 text-brand flex items-center justify-center shrink-0"><i data-lucide="check" class="w-3 h-3"></i></span>
-          <span>续费后自动延长</span>
-        </li>
-      </ul>
+<body>
+  <div class="auth-page">
+    <div id="toast" class="toast" role="status" aria-live="polite">
+      <i data-lucide="check-circle" style="width:15px;height:15px;color:#d8e7b4"></i>
+      <span id="toast-message"></span>
     </div>
 
-    <div class="lg:col-span-7">
-      <form id="activateForm" class="bg-surface rounded-3xl border border-line shadow-craft p-6 sm:p-7 space-y-5">
-        <div class="flex items-center justify-between border-b border-line/60 pb-3">
-          <div class="flex items-center gap-2">
-            <span class="relative flex w-2.5 h-2.5">
-              <span class="absolute inline-flex w-full h-full rounded-full bg-amber-400 opacity-60 motion-safe:animate-ping"></span>
-              <span class="relative inline-flex w-2.5 h-2.5 rounded-full bg-amber-500"></span>
-            </span>
-            <span class="text-xs font-semibold text-ink tracking-wider">当前状态</span>
-          </div>
-          <span class="text-[11px] px-3 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300 font-semibold">未授权</span>
+    <header class="nav">
+      <div class="nav-inner">
+        <a class="brand" href="index.html" aria-label="至关重要 · 首页">
+          <span class="brand-mark"><i data-lucide="sparkles" style="width:15px;height:15px"></i></span>
+          <span class="brand-text">至关重要</span>
+        </a>
+        <div class="nav-actions" style="flex:none">
+          <button id="themeSwitch" type="button" class="switch-btn" data-switch-button aria-label="切换为深色" aria-pressed="false"></button>
+          <a href="index.html" class="btn btn-ghost btn-sm">
+            <i data-lucide="arrow-left" style="width:13px;height:13px"></i><span>返回首页</span>
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <div id="formView" class="auth-main view">
+      <div class="auth-grid">
+        <div class="auth-copy">
+          <h1>解锁订阅能力</h1>
+          <p class="lead">
+            能力索引中标记 <code>[PRO]</code> 的能力需要订阅。输入订阅码完成授权后，AI 助手即可读取这些能力。
+          </p>
+          <ul class="auth-points">
+            <li><span class="auth-check"><i data-lucide="check" style="width:12px;height:12px"></i></span>AI 助手可直接读取全部 [PRO] 能力</li>
+            <li><span class="auth-check"><i data-lucide="check" style="width:12px;height:12px"></i></span>仅限一台设备使用</li>
+            <li><span class="auth-check"><i data-lucide="check" style="width:12px;height:12px"></i></span>续费后自动延长</li>
+          </ul>
         </div>
 
-        <label class="block space-y-2">
-          <span class="flex items-center justify-between text-xs">
-            <span class="font-semibold text-faint tracking-wide">订阅码 <span class="text-rose-500">*</span></span>
-            <span class="text-[11px] text-faint font-mono">AOCI-XXXX-XXXX-XXXX</span>
-          </span>
-          <span class="relative block">
-            <input id="codeInput" required autocomplete="off" spellcheck="false" placeholder="AOCI-XXXX-XXXX-XXXX"
-              class="w-full pl-4 pr-10 py-3 bg-surface-subtle rounded-xl border border-line/60 font-mono text-sm uppercase tracking-widest text-ink placeholder:text-faint/60 focus:outline-none focus:border-brand focus:bg-white transition-craft">
-            <i data-lucide="key" class="w-4 h-4 text-faint absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none"></i>
-          </span>
-        </label>
+        <form id="activateForm" class="auth-card">
+          <div class="auth-card-head">
+            <span class="status-dot"><span class="status-pip"></span>当前状态</span>
+            <span class="status-chip">未授权</span>
+          </div>
 
-        <label class="block space-y-2">
-          <span class="text-xs font-medium text-faint">你主要用它来做什么？<span class="text-faint/70">（选填，帮助我改进能力库）</span></span>
-          <input id="purposeInput" maxlength="200" placeholder="例如：独立开发 iOS App、公司内部 AI 提效"
-            class="w-full px-4 py-3 bg-surface-subtle rounded-xl border border-line/60 text-sm text-ink placeholder:text-faint/60 focus:outline-none focus:border-brand focus:bg-white transition-craft">
-        </label>
+          <label class="auth-field">
+            <span class="label-row">
+              <span>订阅码 <span class="need">*</span></span>
+              <span>AOCI-XXXX-XXXX-XXXX</span>
+            </span>
+            <input id="codeInput" required autocomplete="off" spellcheck="false" placeholder="AOCI-XXXX-XXXX-XXXX">
+          </label>
 
-        <div class="space-y-2 pt-1">
-          <button id="activateBtn" type="submit" class="w-full py-3 bg-brand hover:bg-brand-hover active:scale-[0.98] text-white rounded-xl text-sm font-medium flex items-center justify-center gap-2 transition-craft shadow-sm disabled:opacity-60 disabled:cursor-wait">
-            <i data-lucide="key-round" class="w-4 h-4"></i>
+          <label class="auth-field">
+            <span class="label-row"><span>你主要用它来做什么？（选填）</span></span>
+            <input id="purposeInput" maxlength="200" placeholder="例如：独立开发 iOS App、公司内部 AI 提效">
+          </label>
+
+          <button id="activateBtn" type="submit" class="btn btn-primary auth-submit">
+            <i data-lucide="key-round" style="width:15px;height:15px"></i>
             <span id="activateText">验证并授权</span>
           </button>
-          <p id="message" class="hidden text-xs text-rose-700 bg-rose-50 border border-rose-200 rounded-lg px-3 py-2"></p>
-        </div>
-      </form>
+          <p id="message" class="auth-error"></p>
+        </form>
+      </div>
     </div>
-  </main>
 
-  <main id="successView" class="view hidden my-auto py-10 w-full max-w-xl mx-auto">
-    <section class="bg-surface rounded-3xl border border-brand/40 shadow-card-glow ring-8 ring-brand/5 p-6 sm:p-8 text-center space-y-6">
-      <div class="w-14 h-14 rounded-full bg-brand text-white flex items-center justify-center mx-auto shadow-lg ring-8 ring-brand-light">
-        <i data-lucide="check" class="w-7 h-7"></i>
-      </div>
+    <div id="successView" class="auth-main view hidden">
+      <section class="auth-success">
+        <div class="ok-mark"><i data-lucide="check" style="width:26px;height:26px"></i></div>
+        <h2 id="successTitle">授权成功</h2>
+        <p id="planInfo" class="plan"></p>
 
-      <div class="space-y-2">
-        <div class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-brand-light border border-brand/30 text-brand text-[11px] font-semibold">
-          <i data-lucide="badge-check" class="w-3.5 h-3.5"></i>
-          <span>已授权</span>
-        </div>
-        <h2 id="successTitle" class="font-serif text-2xl sm:text-3xl font-normal text-ink tracking-tight">授权成功</h2>
-        <p id="planInfo" class="text-xs text-muted"></p>
-      </div>
-
-      <div class="text-left space-y-2">
-        <div class="flex items-center justify-between gap-2">
-          <div class="flex items-center gap-1.5 text-xs font-medium text-faint">
-            <i data-lucide="terminal" class="w-3.5 h-3.5 text-brand"></i>
+        <div class="cmd-box">
+          <div class="cmd-head">
             <span>复制到终端运行一次即可</span>
+            <div class="os-switch">
+              <button type="button" data-os="unix" class="os-tab is-on">macOS / Linux</button>
+              <button type="button" data-os="win" class="os-tab">Windows</button>
+            </div>
           </div>
-          <div class="flex items-center gap-0.5 bg-surface-subtle p-0.5 rounded-lg border border-line/60 text-[11px] shrink-0">
-            <button type="button" data-os="unix" class="os-tab px-2 py-0.5 rounded-md font-medium transition-craft">macOS / Linux</button>
-            <button type="button" data-os="win" class="os-tab px-2 py-0.5 rounded-md font-medium transition-craft">Windows</button>
+          <div class="cmd-row">
+            <code id="licenseCmd"></code>
+            <button id="copyCmdBtn" type="button" class="btn btn-primary btn-sm">
+              <i data-lucide="copy" style="width:13px;height:13px"></i><span>复制</span>
+            </button>
           </div>
+          <p id="boundNotice" class="bound-note">此订阅码已在一台设备上激活。</p>
         </div>
-        <div class="flex items-center gap-2 p-1.5 bg-[#1f2318] rounded-2xl border border-brand/30">
-          <code id="licenseCmd" class="px-3 py-2 text-xs font-mono text-[#dfe6c8] flex-1 truncate select-all"></code>
-          <button id="copyCmdBtn" type="button" class="px-4 py-2 bg-brand hover:bg-brand-hover text-white rounded-xl text-xs font-medium flex items-center gap-1.5 shrink-0 transition-craft">
-            <i data-lucide="copy" class="w-3.5 h-3.5"></i><span>复制</span>
-          </button>
+
+        <div class="success-actions">
+          <a href="index.html" class="btn btn-primary"><i data-lucide="home" style="width:14px;height:14px"></i>返回首页</a>
+          <button id="changeCodeBtn" type="button" class="btn btn-ghost">换一个订阅码</button>
         </div>
-        <p id="boundNotice" class="hidden text-[11px] text-amber-800">此订阅码已在一台设备上激活。</p>
-      </div>
+      </section>
+    </div>
 
-      <div class="pt-2 border-t border-line/60 flex flex-col sm:flex-row items-center justify-center gap-3">
-        <a href="./" class="w-full sm:w-auto px-6 py-2.5 bg-brand hover:bg-brand-hover text-white rounded-xl text-xs font-medium flex items-center justify-center gap-2 transition-craft shadow-sm">
-          <i data-lucide="home" class="w-3.5 h-3.5"></i><span>返回首页</span>
-        </a>
-        <button id="changeCodeBtn" type="button" class="w-full sm:w-auto px-6 py-2.5 bg-surface-subtle border border-line text-ink rounded-xl text-xs font-medium hover:bg-white transition-craft">
-          换一个订阅码
-        </button>
-      </div>
-    </section>
-  </main>
+    <footer class="footer">
+      <div class="footer-brand"><span>至关重要</span><span>·</span><span>订阅授权</span></div>
+      <span>还没有订阅码？请通过 <a href="https://github.com/CCharlie-xiu" target="_blank" rel="noopener">GitHub</a> 联系作者获取。</span>
+    </footer>
+  </div>
 
-  <footer class="w-full shrink-0 pt-3 border-t border-line/50 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-faint">
-    <span class="font-serif">至关重要 · 订阅授权</span>
-    <span>还没有订阅码？请通过 <a class="text-brand underline underline-offset-2" href="https://github.com/CCharlie-xiu" target="_blank" rel="noopener">GitHub</a> 联系作者获取。</span>
-  </footer>
-
-  <script>
-    const AUTH_API = 'https://aoci-auth.aoci-wuch.workers.dev';
-    const STORAGE_KEY = 'aoci-code';
-
-    const form = document.getElementById('activateForm');
-    const codeInput = document.getElementById('codeInput');
-    const purposeInput = document.getElementById('purposeInput');
-    const activateBtn = document.getElementById('activateBtn');
-    const activateText = document.getElementById('activateText');
-    const formView = document.getElementById('formView');
-    const successView = document.getElementById('successView');
-    let activeCode = '';
-
-    codeInput.value = localStorage.getItem(STORAGE_KEY) || '';
-
-    function setMessage(el, text) {
-      el.textContent = text;
-      el.classList.toggle('hidden', !text);
-    }
-
-    function showToast(text) {
-      const toast = document.getElementById('toast');
-      document.getElementById('toastMessage').textContent = text;
-      toast.classList.remove('-translate-y-12', 'opacity-0');
-      clearTimeout(showToast.timer);
-      showToast.timer = setTimeout(() => toast.classList.add('-translate-y-12', 'opacity-0'), 1800);
-    }
-
-    function swapView(from, to) {
-      from.classList.add('is-leaving');
-      setTimeout(() => {
-        from.classList.add('hidden');
-        from.classList.remove('is-leaving');
-        to.classList.add('is-entering');
-        to.classList.remove('hidden');
-        requestAnimationFrame(() => requestAnimationFrame(() => to.classList.remove('is-entering')));
-      }, 250);
-    }
-
-    async function post(path, body) {
-      const res = await fetch(AUTH_API + path, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      });
-      const data = await res.json().catch(() => ({ ok: false, error: '服务暂时不可用' }));
-      if (!data.ok) throw new Error(data.error || '请求失败');
-      return data;
-    }
-
-    form.addEventListener('submit', async (event) => {
-      event.preventDefault();
-      activateBtn.disabled = true;
-      activateText.textContent = '验证中…';
-      setMessage(document.getElementById('message'), '');
-      try {
-        const code = codeInput.value.trim().toUpperCase();
-        const data = await post('/activate', { code, purpose: purposeInput.value.trim() });
-        activeCode = data.code;
-        localStorage.setItem(STORAGE_KEY, activeCode);
-        const expires = new Date(data.expiresAt).toLocaleDateString('zh-CN');
-        document.getElementById('planInfo').textContent = `套餐 ${data.plan} · 有效期至 ${expires}`;
-        document.getElementById('successTitle').textContent = data.bound ? '订阅有效' : '授权成功';
-        document.getElementById('boundNotice').classList.toggle('hidden', !data.bound);
-        renderCommand();
-        swapView(formView, successView);
-      } catch (err) {
-        setMessage(document.getElementById('message'), err.message);
-      } finally {
-        activateBtn.disabled = false;
-        activateText.textContent = '验证并授权';
-      }
-    });
-
-    let currentOs = /Windows/i.test(navigator.userAgent) ? 'win' : 'unix';
-
-    function renderCommand() {
-      document.getElementById('licenseCmd').textContent = currentOs === 'win'
-        ? `irm "${AUTH_API}/install.ps1?code=${activeCode}" | iex`
-        : `curl -fsSL "${AUTH_API}/install.sh?code=${activeCode}" | sh`;
-      document.querySelectorAll('.os-tab').forEach((b) => {
-        const active = b.dataset.os === currentOs;
-        b.classList.toggle('bg-brand', active);
-        b.classList.toggle('text-white', active);
-        b.classList.toggle('text-muted', !active);
-      });
-    }
-
-    document.querySelectorAll('.os-tab').forEach((b) => b.addEventListener('click', () => {
-      currentOs = b.dataset.os;
-      renderCommand();
-    }));
-
-    document.getElementById('copyCmdBtn').addEventListener('click', async () => {
-      await navigator.clipboard.writeText(document.getElementById('licenseCmd').textContent);
-      showToast('命令已复制，粘贴到终端运行即可');
-    });
-
-    document.getElementById('changeCodeBtn').addEventListener('click', () => {
-      codeInput.value = '';
-      swapView(successView, formView);
-      setTimeout(() => codeInput.focus(), 300);
-    });
-
-    lucide.createIcons();
-  </script>
+  <script src="assets/js/icons.js" defer></script>
+  <script src="assets/js/switch-button.js" defer></script>
+  <script src="assets/js/auth.js" defer></script>
 </body>
 </html>

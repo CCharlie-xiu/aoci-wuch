@@ -1,0 +1,74 @@
+/* 由首页拆出，按职责分文件维护 */
+
+    :root {
+      /* ── 色彩 Token（语义命名，不直接用色值写组件） ── */
+      --surface-page: #fbf9f5;
+      --surface-raised: #ffffff;
+      --surface-sunken: #f2f0ea;
+      --surface-brand: #f1f4e8;
+      --text-strong: #221e1a;
+      --text-body: #4e4235;
+      --text-muted: #71695c;
+      --accent: #545f2a;
+      --accent-hover: #455021;
+
+      /* 边界用「半透明墨色 + 物理投影」模拟真实纸边的明暗，不画死实线 */
+      --edge-faint: rgba(34, 30, 26, .055);
+      --edge-soft: rgba(34, 30, 26, .09);
+      --edge-strong: rgba(84, 95, 42, .24);
+      --shadow-1: 0 1px 2px rgba(34, 30, 26, .045), 0 1px 1px rgba(34, 30, 26, .03);
+      --shadow-2: 0 8px 24px -18px rgba(34, 30, 26, .35);
+      --shadow-3: 0 18px 34px -24px rgba(34, 30, 26, .38);
+
+      /* 黄金分割：容器与正文、主次栏比例统一取自 φ */
+      --phi: 1.618;
+      --phi-major: .618;
+
+      /* 兼容别名：保留旧变量名，避免任何遗漏引用失效 */
+      --paper: var(--surface-page);
+      --paper-2: var(--surface-sunken);
+      --card: var(--surface-raised);
+      --ink: var(--text-strong);
+      --muted: var(--text-body);
+      --faint: var(--text-muted);
+      --line: var(--edge-soft);
+      --brand: var(--accent);
+      --brand-deep: var(--accent-hover);
+      --brand-soft: var(--surface-brand);
+      --brand-light: var(--surface-brand);
+      --shadow-soft: var(--shadow-2);
+      --shadow-craft: var(--shadow-3);
+
+      --serif: "Noto Serif SC", "Songti SC", Georgia, serif;
+      --sans: "Noto Sans SC", -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+      /* 等宽 + 表格数字：让 1 / 0 等数字同宽，编号与时间不跳动 */
+      --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      --ease: cubic-bezier(.22, 1, .36, 1);
+
+      --motion-1: 140ms;
+      --motion-2: 180ms;
+      --motion-3: 280ms;
+      --motion-4: 320ms;
+      --ease-out: cubic-bezier(.22, 1, .36, 1);
+      --ease-fade: ease;
+      --motion-shift-y: 6px;
+    }
+
+    :root.dark {
+      --surface-page: #161410;
+      --surface-raised: #1f1b16;
+      --surface-sunken: #12100d;
+      --surface-brand: #2a3220;
+      --text-strong: #f3eee6;
+      --text-body: #c9c0b4;
+      --text-muted: #9a9186;
+      --accent: #c5d46a;
+      --accent-hover: #d8e7b4;
+      --edge-faint: rgba(243, 238, 230, .06);
+      --edge-soft: rgba(243, 238, 230, .12);
+      --edge-strong: rgba(197, 212, 106, .28);
+      --shadow-1: 0 1px 2px rgba(0, 0, 0, .4), 0 1px 1px rgba(0, 0, 0, .25);
+      --shadow-2: 0 8px 24px -18px rgba(0, 0, 0, .7);
+      --shadow-3: 0 18px 34px -24px rgba(0, 0, 0, .75);
+      color-scheme: dark;
+    }

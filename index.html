@@ -1,642 +1,246 @@
 <!doctype html>
-<html lang="zh-CN" class="min-h-full">
+<html lang="zh-CN">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#fbf9f5">
   <meta name="description" content="至关重要：一套可安装到 AI 编码助手中的个人能力库。">
+  <meta name="view-transition" content="same-origin">
   <title>至关重要 — 给 AI 一套值得复用的方法</title>
+  <script>
+    (function () {
+      try { if (localStorage.getItem("aoci-theme") === "dark") document.documentElement.classList.add("dark"); } catch (e) {}
+    })();
+  </script>
   <link rel="icon" type="image/png" href="/favicon-32.png" sizes="32x32">
   <link rel="icon" type="image/png" href="/favicon-16.png" sizes="16x16">
   <link rel="icon" href="/favicon.ico" sizes="any">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
-  <!-- Google Fonts & Lucide Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
-
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            bg: '#fbf9f5',
-            surface: '#ffffff',
-            'surface-subtle': '#f2f0ea',
-            ink: '#221e1a',
-            muted: '#4e4235',
-            faint: '#71695c',
-            line: '#cfcfce',
-            brand: {
-              DEFAULT: '#545f2a',
-              hover: '#455021',
-              light: '#f1f4e8',
-            }
-          },
-          fontFamily: {
-            serif: ['"Noto Serif SC"', '"Songti SC"', 'Georgia', 'serif'],
-            sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', '"PingFang SC"', '"Microsoft YaHei"', 'sans-serif'],
-          },
-          boxShadow: {
-            'craft': '0 20px 40px -15px rgba(45, 52, 30, 0.07)',
-            'sponsor': '0 2px 8px -2px rgba(34, 30, 26, 0.04), 0 1px 3px -1px rgba(34, 30, 26, 0.02)',
-          }
-        }
-      }
-    }
-  </script>
-
-  <style>
-    :root {
-      /* Align with openui-lab / wuch-ai motion tokens (DESIGN-ANCHOR §3.8) */
-      --motion-1: 140ms;
-      --motion-2: 180ms;
-      --motion-3: 280ms;
-      --motion-4: 320ms;
-      --ease-out: cubic-bezier(.22, 1, .36, 1);
-      --ease-fade: ease;
-      --motion-shift-y: 6px;
-    }
-
-    html, body {
-      min-height: 100dvh;
-      background-color: #fbf9f5;
-      color: #221e1a;
-      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    .bg-paper-grain {
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.025'/%3E%3C/svg%3E");
-    }
-
-    .transition-craft {
-      transition: border-color var(--motion-1) var(--ease-fade), background-color var(--motion-1) var(--ease-fade), color var(--motion-1) var(--ease-fade), transform var(--motion-1) var(--ease-out), box-shadow var(--motion-1) var(--ease-fade);
-    }
-
-    /* Modal：对齐 openui-lab .dlg-backdrop / .dlg —— 遮罩淡入，卡片上浮置顶 */
-    .dlg-backdrop {
-      position: fixed;
-      inset: 0;
-      z-index: 90;
-      display: grid;
-      place-items: center;
-      padding: 24px;
-      background: rgba(16, 16, 20, .34);
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity var(--motion-2) var(--ease-fade);
-    }
-    .dlg-backdrop.dlg-in {
-      opacity: 1;
-      pointer-events: auto;
-    }
-    .dlg-backdrop.dlg-out {
-      opacity: 0;
-      transition-duration: var(--motion-1);
-    }
-    .dlg {
-      width: min(440px, 100%);
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      padding: 18px 18px 14px;
-      background: #ffffff;
-      color: #221e1a;
-      border: 1px solid #cfcfce;
-      border-radius: 16px;
-      box-shadow: 0 16px 40px -12px rgba(16, 20, 26, .18);
-      opacity: 0;
-      transform: translateY(8px) scale(.985);
-      filter: blur(2px);
-      transition:
-        opacity var(--motion-3) var(--ease-out),
-        transform var(--motion-3) var(--ease-out),
-        filter var(--motion-3) var(--ease-out);
-    }
-    .dlg-backdrop.dlg-in .dlg {
-      opacity: 1;
-      transform: none;
-      filter: none;
-    }
-    .dlg-backdrop.dlg-out .dlg {
-      transform: translateY(4px) scale(.99);
-      transition-duration: var(--motion-1);
-    }
-    .dlg__prompt {
-      margin: 0;
-      max-height: min(42vh, 280px);
-      overflow: auto;
-      padding: 10px 12px;
-      font-family: inherit;
-      font-size: 12.5px;
-      line-height: 1.65;
-      color: #221e1a;
-      white-space: pre-wrap;
-      word-break: break-word;
-      background: #f2f0ea;
-      border: 1px solid #cfcfce;
-      border-radius: 12px;
-      text-align: left;
-      user-select: all;
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      :root {
-        --motion-1: 0ms;
-        --motion-2: 0ms;
-        --motion-3: 0ms;
-        --motion-4: 0ms;
-        --motion-shift-y: 0px;
-      }
-      .dlg-backdrop,
-      .dlg,
-      .transition-craft {
-        transition: none !important;
-        filter: none !important;
-      }
-    }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/tokens.css">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/home.css?v=paths2">
+  <script src="https://unpkg.com/lucide@latest" defer></script>
 </head>
-<body class="bg-paper-grain min-h-screen flex flex-col px-6 sm:px-12 py-5 sm:py-7 max-w-7xl mx-auto selection:bg-brand selection:text-white">
+<body>
+  <a class="skip-link" href="#install">跳到安装</a>
 
-  <!-- Toast Notification Overlay -->
-  <div id="toast" class="fixed top-6 left-1/2 -translate-x-1/2 z-50 transform -translate-y-12 opacity-0 transition-all duration-300 pointer-events-none">
-    <div class="bg-brand text-white px-5 py-2.5 rounded-full shadow-lg flex items-center gap-2.5 text-xs font-medium border border-white/20">
-      <i data-lucide="check-circle" class="w-4 h-4 text-emerald-300"></i>
-      <span id="toast-message">安装指令已成功复制</span>
-    </div>
+  <div id="toast" class="toast" role="status" aria-live="polite">
+    <i data-lucide="check-circle" style="width:15px;height:15px;color:#d8e7b4"></i>
+    <span id="toast-message">安装指令已成功复制到剪贴板！</span>
   </div>
 
-  <!-- Header Header Shell -->
-  <header class="w-full flex items-center justify-between shrink-0">
-    <a href="#" class="inline-flex items-center gap-3 text-ink font-semibold text-sm hover:opacity-80 transition-opacity">
-      <div class="w-8 h-8 rounded-full border border-black/20 flex items-center justify-center text-brand bg-white/50">
-        <i data-lucide="sparkles" class="w-4 h-4"></i>
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a class="brand" href="index.html" data-home aria-label="至关重要 · 首页">
+        <span class="brand-mark"><i data-lucide="sparkles" style="width:15px;height:15px"></i></span>
+        <span class="brand-text">至关重要</span>
+        <span class="brand-sub" data-i18n="siteLabel">个人 AI 能力库</span>
+      </a>
+      <nav class="nav-links" aria-label="页面导航">
+        <a href="#foryou" data-i18n="foryouTitle">为你推荐</a>
+        <a href="#featured" data-i18n="navFeatured">精选</a>
+        <a href="#skills" data-i18n="navSkills">能力清单</a>
+        <a href="#how" data-i18n="howTitle">怎么用</a>
+      </nav>
+      <div class="nav-actions">
+        <label class="nav-search" for="skillSearch">
+          <i data-lucide="search" style="width:14px;height:14px" aria-hidden="true"></i>
+          <input id="skillSearch" type="search" enterkeyhint="search" autocomplete="off" spellcheck="false"
+            data-i18n-placeholder="searchPlaceholder" placeholder="搜索技能…"
+            aria-label="搜索技能">
+          <kbd class="nav-search-kbd" aria-hidden="true">⌘K</kbd>
+          <button type="button" class="nav-search-clear" id="skillSearchClear" hidden aria-label="清除搜索">
+            <i data-lucide="x" style="width:12px;height:12px"></i>
+          </button>
+        </label>
+        <a href="auth.html" class="btn btn-ghost btn-sm"><i data-lucide="key-round" style="width:13px;height:13px"></i><span data-i18n="subscribe">订阅授权</span></a>
+        <button id="themeSwitch" type="button" class="switch-btn" data-switch-button aria-label="切换为深色" aria-pressed="false"></button>
+        <button id="languageToggle" type="button" class="btn btn-ghost btn-sm" aria-label="Switch language">
+          <span id="languageCurrent">中</span><span style="color:var(--faint);margin:0 1px">/</span><span id="languageNext" style="color:var(--faint)">EN</span>
+        </button>
+        <a href="#install" class="btn btn-primary btn-sm"><i data-lucide="download" style="width:13px;height:13px"></i><span data-i18n="navInstall">安装</span></a>
       </div>
-      <span class="font-serif text-base tracking-tight">至关重要</span>
-    </a>
-
-      <div class="flex items-center gap-4">
-        <span class="hidden sm:inline text-xs text-muted font-medium tracking-wide" data-i18n="siteLabel">个人 AI 能力库</span>
-        <a href="auth.html" class="inline-flex items-center gap-1.5 rounded-full border border-line bg-white/70 px-3 py-1.5 text-xs font-semibold text-muted hover:border-brand hover:text-brand transition-craft"><i data-lucide="key-round" class="w-3.5 h-3.5"></i><span data-i18n="subscribe">订阅授权</span></a>
-        <button id="languageToggle" type="button" aria-label="Switch language" class="rounded-full border border-line bg-white/70 px-3 py-1.5 text-xs font-semibold text-muted hover:border-brand hover:text-brand transition-craft"><span id="languageCurrent">中</span><span class="mx-1 text-faint">/</span><span id="languageNext" class="text-faint">EN</span></button>
-      </div>
+    </div>
   </header>
 
-  <!-- Hero Main Section (Fits in First View) -->
-  <main class="my-auto py-2 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+  <section class="hero" id="install" aria-labelledby="heroTitle">
+    <div class="hero-paths" id="heroPaths" aria-hidden="true"></div>
+    <div class="hero-inner">
+        <h1 id="heroTitle" class="marker-text">
+          <span data-i18n-html="headlineHtml">把<mark data-mark="highlight" data-mark-color="#c5d46a">好方法</mark></span><br>
+          <em data-i18n-html="headlineAccentHtml"><span data-mark="underline" data-mark-color="#545f2a">带进你的</span> <span data-mark="circle" data-mark-color="#545f2a">AI</span>。</em>
+        </h1>
+        <p class="lead" data-i18n="intro">一套持续生长的个人能力库，让 AI 在每个新项目里，都能复用经过整理的方法与经验。</p>
 
-    <!-- Hero Left Column: Title & Description -->
-    <div class="lg:col-span-6 space-y-5">
-      <div class="inline-flex items-center gap-2 text-[11px] font-semibold text-muted tracking-widest uppercase">
-        <span class="w-6 h-[1px] bg-brand"></span>
-        <span data-i18n="eyebrow">A LIBRARY OF USEFUL WAYS</span>
-      </div>
-
-      <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl font-normal leading-[1.12] text-ink tracking-tight">
-        <span data-i18n="headline">把好方法</span><br>
-        <span class="text-brand" data-i18n="headlineAccent">带进你的 AI。</span>
-      </h1>
-
-      <p class="text-sm sm:text-base text-muted max-w-md leading-relaxed font-normal">
-        <span data-i18n="intro">一套持续生长的个人能力库，让 AI 在每个新项目里，都能复用经过整理的方法与经验。</span>
-      </p>
-
-      <!-- AI Skill installation prompt and repository download -->
-      <div class="pt-3">
-        <div class="text-[11px] font-medium text-faint mb-2 flex items-center gap-1.5">
-          <i data-lucide="terminal" class="w-3.5 h-3.5 text-brand"></i>
-          <span data-i18n="installLabel">给 AI 助手的安装指令</span>
+        <div class="icon-wall-wrap" aria-hidden="true">
+          <div class="icon-marquee"><div class="icon-track" id="iconWallA"></div></div>
+          <div class="icon-marquee"><div class="icon-track reverse" id="iconWallB"></div></div>
         </div>
 
-        <div class="flex items-center gap-2 p-1.5 bg-surface rounded-2xl border border-line shadow-sm max-w-lg hover:border-brand/50 transition-craft">
-          <!-- Copyable AI Skill installation prompt -->
-          <div class="px-3 py-2 bg-surface-subtle rounded-xl text-xs font-mono text-muted truncate flex-1 flex items-center gap-2 border border-line/40 select-all">
-            <i data-lucide="link" class="w-3.5 h-3.5 text-brand shrink-0"></i>
-            <span id="installPromptText" class="truncate">请将这个 GitHub 仓库安装为当前 AI 助手可复用的 Agent Skill：https://github.com/CCharlie-xiu/aoci-wuch.git</span>
+        <div class="install">
+          <div class="install-label">
+            <span class="install-prompt" aria-hidden="true">&gt;_</span>
+            <span data-i18n="installLabel">给 AI 助手的安装指令</span>
           </div>
-
-          <!-- One-click Copy Button -->
-          <button id="copyBtn" type="button" class="px-4 py-2.5 bg-brand hover:bg-brand-hover active:scale-[0.98] text-white rounded-xl text-xs font-medium flex items-center gap-1.5 shrink-0 transition-craft shadow-sm">
-            <i id="copyIcon" data-lucide="copy" class="w-3.5 h-3.5"></i>
-            <span id="copyBtnText" data-i18n="copyPrompt">复制安装指令</span>
-          </button>
-
-          <!-- Direct Zip Download Icon Action -->
-          <a href="https://github.com/CCharlie-xiu/aoci-wuch/archive/refs/heads/main.zip" download title="下载 ZIP 压缩包" class="p-2.5 bg-surface-subtle hover:bg-white text-muted hover:text-ink rounded-xl border border-line/50 transition-craft shrink-0">
-            <i data-lucide="download" class="w-3.5 h-3.5"></i>
-          </a>
-        </div>
-      </div>
-    </div>
-
-    <!-- Hero Right Column: SVG Illustration Card -->
-    <div class="lg:col-span-6 hidden sm:block">
-      <div class="relative w-full h-[280px] sm:h-[340px] lg:h-[390px] rounded-3xl overflow-hidden border border-line bg-[#dfe4d8] shadow-craft">
-
-        <!-- Mountain Landscape SVG Art -->
-        <svg class="absolute inset-0 w-full h-full object-cover" viewBox="0 0 720 720" preserveAspectRatio="xMidYMid slice" role="img" aria-label="层叠山野景观插画">
-          <defs>
-            <linearGradient id="sky" x1="0" y1="0" x2="0.1" y2="1">
-              <stop offset="0" stop-color="#cbd2c3" />
-              <stop offset="1" stop-color="#e8e9df" />
-            </linearGradient>
-            <linearGradient id="sun" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0" stop-color="#e8d9bd" />
-              <stop offset="1" stop-color="#d3c39f" />
-            </linearGradient>
-          </defs>
-          <rect width="720" height="720" fill="url(#sky)" />
-          <circle cx="505" cy="205" r="88" fill="url(#sun)" opacity="0.9" />
-          <path d="M0 386 121 288l92 79 128-161 116 139 78-74 185 141v308H0Z" fill="#a2ad9a" opacity="0.7" />
-          <path d="m0 450 143-115 102 77 156-130 116 119 80-53 123 83v289H0Z" fill="#74866d" />
-          <path d="m0 522 135-76 104 46 135-75 118 64 109-79 119 83v235H0Z" fill="#505c4a" />
-          <path d="M0 585c114-58 215-65 324-14 100 46 213 28 396-55v204H0Z" fill="#343f30" />
-          <path d="M0 626c130-30 230-14 330 26 115 45 250 30 390-24v92H0Z" fill="#283225" />
-          <path d="M0 421c87-18 141-7 212 30m147-99c65-21 103-14 161 18m43 71c51-12 96-9 157 14" fill="none" stroke="#dfe3d7" stroke-opacity="0.7" stroke-width="2" />
-        </svg>
-
-        <!-- Top Badge -->
-        <div class="absolute top-4 left-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-black/10 bg-white/80 backdrop-blur-md text-muted text-xs">
-          <i data-lucide="trending-up" class="w-3.5 h-3.5 text-brand"></i>
-          <span data-i18n="artBadge">一直生长的能力库</span>
-        </div>
-
-        <!-- Bottom Caption Overlay -->
-        <div class="absolute inset-x-5 bottom-5 flex items-end justify-between gap-4 text-white">
-          <div>
-            <strong class="block font-serif text-xl sm:text-2xl font-normal tracking-tight" data-i18n="artTitle">经验，值得被带走。</strong>
-            <span class="text-xs text-white/80" data-i18n="artCaption">从一个项目，到下一个项目。</span>
+          <div class="install-bar">
+            <div class="install-text" id="installTextBox" title="">
+              <i data-lucide="link" style="width:13px;height:13px"></i>
+              <span id="installPromptText">请将这个 GitHub 仓库安装为当前 AI 助手可复用的 Agent Skill：https://github.com/CCharlie-xiu/aoci-wuch.git</span>
+            </div>
+            <button id="copyBtn" type="button" class="btn btn-primary js-copy-btn">
+              <i id="copyIcon" class="js-copy-icon" data-lucide="copy" style="width:14px;height:14px"></i>
+              <span id="copyBtnText" class="js-copy-label" data-i18n="copyPrompt">复制安装指令</span>
+            </button>
+            <a href="https://github.com/CCharlie-xiu/aoci-wuch/archive/refs/heads/main.zip" download class="icon-btn" title="下载 ZIP" aria-label="下载 ZIP 压缩包"><i data-lucide="download" style="width:15px;height:15px"></i></a>
           </div>
-          <span class="text-[11px] tracking-widest font-mono text-white/70">LIBRARY · 01</span>
         </div>
-      </div>
-    </div>
 
-  </main>
-
-  <section class="shrink-0 pt-4 border-t border-line/50 text-center pb-6" aria-labelledby="capabilitiesTitle">
-    <div class="inline-flex items-center gap-2 mb-3">
-      <span class="h-[1px] w-8 bg-line"></span>
-      <h2 id="capabilitiesTitle" class="text-[11px] font-semibold text-faint tracking-widest uppercase" data-i18n="capabilitiesTitle">能力库包含技能 · INCLUDED SKILLS</h2>
-      <span class="h-[1px] w-8 bg-line"></span>
+        <div class="works">
+          <span class="works-label" data-i18n="worksWith">适用于</span>
+          <span class="agent-dots">
+            <span class="agent-dot" title="Claude Code"><img src="assets/agents/claude-code.svg" alt="Claude Code" width="20" height="20"></span>
+            <span class="agent-dot" title="Codex"><img src="assets/agents/codex.svg" alt="Codex" width="20" height="20"></span>
+            <span class="agent-dot" title="Cursor"><img src="assets/agents/cursor.svg" alt="Cursor" width="20" height="20"></span>
+            <span class="agent-dot" title="Gemini CLI"><img src="assets/agents/gemini-cli.svg" alt="Gemini CLI" width="20" height="20"></span>
+            <span class="agent-dot" title="WorkBuddy"><img src="assets/agents/workbuddy.svg" alt="WorkBuddy" width="20" height="20"></span>
+            <span class="agent-dot" title="+5" data-i18n-title="moreAgents">+5</span>
+          </span>
+        </div>
     </div>
-    <div id="capabilityList" class="flex flex-wrap items-center justify-center gap-2 sm:gap-3 max-w-4xl mx-auto"></div>
   </section>
 
-  <!-- 首次使用提示词：置顶模态（复制安装指令且已选中技能后出现） -->
+  <div class="wrap">
+    <section class="section" id="foryou" aria-labelledby="foryouTitle">
+      <div class="rail-head krail-head">
+        <div>
+          <h2 id="foryouTitle" data-i18n="foryouTitle">为你推荐</h2>
+        </div>
+        <div class="krail-toolbar">
+          <span id="foryouCount" class="krail-count" aria-live="polite">01 / 00</span>
+          <button type="button" class="krail-nav" id="foryouPrev" aria-label="上一张"><i data-lucide="chevron-left" style="width:16px;height:16px"></i></button>
+          <button type="button" class="krail-nav" id="foryouNext" aria-label="下一张"><i data-lucide="chevron-right" style="width:16px;height:16px"></i></button>
+          <a href="#skills" class="btn btn-ghost btn-sm"><span data-i18n="viewAll">查看全部</span> <i data-lucide="arrow-right" style="width:13px;height:13px"></i></a>
+        </div>
+      </div>
+      <div id="foryouGrid" class="krail" aria-busy="true"></div>
+    </section>
+
+    <section class="section is-deck" id="featured" aria-labelledby="featuredTitle">
+      <div class="section-head featured-intro">
+        <h2 id="featuredTitle" data-i18n="featuredTitle">精选能力</h2>
+        <p class="featured-verse" data-i18n="featuredLead">把舍不得的方法叠成一副牌。抽一张，今晚只做这一件。</p>
+      </div>
+      <div id="featuredDeck" class="deck"></div>
+    </section>
+
+    <section class="skills-strip" id="skills" aria-labelledby="capabilitiesTitle">
+      <div class="skills-strip-head">
+        <span class="skills-rule" aria-hidden="true"></span>
+        <h2 id="capabilitiesTitle" data-i18n="capabilitiesTitle">能力库包含技能</h2>
+        <span class="skills-rule" aria-hidden="true"></span>
+      </div>
+      <p class="skill-search-meta" id="skillSearchMeta" hidden></p>
+      <div id="capabilityList" class="skill-pills"></div>
+    </section>
+
+    <section class="section" id="how" aria-labelledby="howTitle">
+      <div class="section-head">
+        <div>
+          <h2 id="howTitle" data-i18n="howTitle">怎么用</h2>
+          <p data-i18n="howLead">从安装到第一次协助，只有四步。</p>
+        </div>
+      </div>
+      <div id="howLanes" class="how-lanes" aria-label="首次协助回放"></div>
+    </section>
+
+    <section class="cta" aria-labelledby="ctaTitle">
+      <div>
+        <h2 id="ctaTitle" data-i18n="ctaTitle">准备好扩展你的 AI 助手了吗？</h2>
+        <p data-i18n="ctaLead">同一条安装指令就在页顶。点这里回到那一行。</p>
+      </div>
+      <button type="button" class="btn btn-light" id="jumpInstallBtn">
+          <i data-lucide="arrow-up" style="width:14px;height:14px"></i>
+          <span data-i18n="ctaJump">去安装</span>
+        </button>
+    </section>
+
+    <footer class="footer">
+      <div class="footer-brand">
+        <span>至关重要</span><span>·</span><span data-i18n="pagesLabel">GitHub Pages</span>
+      </div>
+      <a href="https://github.com/CCharlie-xiu/aoci-wuch" target="_blank" rel="noreferrer"><span data-i18n="authorLabel">作者 CCharlie-xiu</span> <i data-lucide="external-link" style="width:11px;height:11px;vertical-align:-1px"></i></a>
+    </footer>
+  </div>
+
+  <div id="sheetBackdrop" class="skill-sheet-backdrop" hidden></div>
+  <div id="actionDock" class="skill-sheet" role="dialog" aria-modal="true" aria-labelledby="dockName" aria-hidden="true">
+    <div class="skill-sheet-handle" data-sheet-drag aria-hidden="true"><span></span></div>
+    <div class="skill-sheet-peek" data-sheet-drag>
+      <div class="skill-sheet-head">
+        <div class="skill-sheet-copy-block">
+          <p class="dock-kicker" data-i18n="selected">已选中</p>
+          <h2 class="dock-name" id="dockName"></h2>
+          <p class="dock-desc" id="dockDesc"></p>
+        </div>
+        <button type="button" class="dock-clear" id="dockClear" aria-label="取消选择"><i data-lucide="x" style="width:15px;height:15px"></i></button>
+      </div>
+      <button type="button" class="btn btn-primary skill-sheet-cta js-copy-btn">
+        <i class="js-copy-icon" data-lucide="copy" style="width:15px;height:15px"></i>
+        <span class="js-copy-label" data-i18n="copyPrompt">复制安装指令</span>
+      </button>
+      <span class="inline-check" id="dockCheck"><i data-lucide="check" style="width:13px;height:13px"></i><span data-i18n="copied">已复制</span></span>
+      <button type="button" class="skill-sheet-more" id="dockExpand" aria-expanded="false">
+        <span id="dockExpandLabel" data-i18n="sheetDetails">技能详情</span>
+        <i data-lucide="chevron-up" style="width:14px;height:14px"></i>
+      </button>
+    </div>
+    <div class="skill-sheet-details" id="dockDetails" inert>
+      <div class="skill-sheet-meta">
+        <span id="dockTags"></span>
+        <code id="dockPath"></code>
+      </div>
+      <p class="skill-sheet-prompt-label" data-i18n="firstUseLabel">首次使用提示词</p>
+      <pre class="skill-sheet-prompt" id="dockPrompt"></pre>
+      <a id="dockAuth" class="btn btn-ghost skill-sheet-auth" href="auth.html" hidden><span data-i18n="goAuth">去授权</span></a>
+    </div>
+  </div>
+
   <div id="firstUseModal" class="dlg-backdrop" aria-hidden="true" role="presentation">
     <div class="dlg" role="dialog" aria-modal="true" aria-labelledby="firstUseDialogTitle" tabindex="-1">
-      <div class="flex items-start justify-between gap-3">
-        <div class="min-w-0">
-          <h3 id="firstUseDialogTitle" class="m-0 text-sm font-medium text-ink leading-snug">
+      <div class="dlg-head">
+        <div>
+          <h3 id="firstUseDialogTitle">
             <span data-i18n="firstUseLabel">首次使用提示词</span>
-            <span class="text-faint font-normal"> · </span>
-            <span id="firstUseSkillName" class="text-brand"></span>
+            <span class="dlg-sep"> · </span>
+            <span id="firstUseSkillName"></span>
           </h3>
-          <p class="mt-1 mb-0 text-[12px] leading-relaxed text-muted" data-i18n="firstUseHint">安装指令已复制。把下面这段发给你的 AI，即可按选中技能开始第一次协助。</p>
+          <p class="dlg-hint" data-i18n="firstUseHint">安装指令已复制。把下面这段发给你的 AI，即可按选中技能开始第一次协助。</p>
         </div>
-        <button id="closeFirstUseBtn" type="button" class="p-1.5 rounded-lg text-faint hover:text-ink hover:bg-[#f2f0ea] transition-craft shrink-0" aria-label="Close">
-          <i data-lucide="x" class="w-4 h-4"></i>
-        </button>
+        <button id="closeFirstUseBtn" type="button" class="dlg-close" aria-label="关闭"><i data-lucide="x" style="width:16px;height:16px"></i></button>
       </div>
       <pre id="firstUsePromptText" class="dlg__prompt"></pre>
-      <div class="flex justify-end gap-2 mt-1">
-        <button id="dismissFirstUseBtn" type="button" class="h-8 px-3.5 rounded-lg text-[12.5px] font-medium text-ink bg-white border border-line hover:bg-[#f2f0ea] transition-craft" data-i18n="closeDialog">关闭</button>
-        <button id="copyFirstUseBtn" type="button" class="h-8 px-3.5 rounded-lg text-[12.5px] font-medium text-white bg-brand hover:bg-brand-hover transition-craft" data-i18n="copyFirstUse">复制提示词</button>
+      <div class="dlg-actions">
+        <button id="dismissFirstUseBtn" type="button" class="dlg-btn" data-i18n="closeDialog">关闭</button>
+        <button id="copyFirstUseBtn" type="button" class="dlg-btn dlg-btn-primary" data-i18n="copyFirstUse">复制提示词</button>
       </div>
     </div>
   </div>
 
-  <!-- Footer Shell -->
-  <footer class="w-full shrink-0 pt-3 pb-1 flex items-center justify-between text-xs text-muted">
-    <div class="flex items-center gap-2">
-      <span class="font-serif">至关重要</span>
-      <span class="text-faint">·</span>
-      <span data-i18n="pagesLabel">GitHub Pages</span>
-    </div>
-
-    <a href="https://github.com/CCharlie-xiu/aoci-wuch" target="_blank" rel="noreferrer" class="inline-flex items-center gap-1 hover:text-ink transition-colors underline decoration-muted/40 underline-offset-4">
-      <span data-i18n="authorLabel">作者 CCharlie-xiu</span>
-      <i data-lucide="external-link" class="w-3 h-3"></i>
-    </a>
-  </footer>
-
-  <script>
-    // Initialize icons
-    lucide.createIcons();
-
-    const copyBtn = document.getElementById("copyBtn");
-    const copyBtnText = document.getElementById("copyBtnText");
-    const copyIcon = document.getElementById("copyIcon");
-    const toast = document.getElementById("toast");
-    const languageToggle = document.getElementById("languageToggle");
-    const capabilityList = document.getElementById("capabilityList");
-    const firstUseModal = document.getElementById("firstUseModal");
-    const firstUseDialog = firstUseModal.querySelector(".dlg");
-    const firstUsePromptText = document.getElementById("firstUsePromptText");
-    const firstUseSkillName = document.getElementById("firstUseSkillName");
-    const copyFirstUseBtn = document.getElementById("copyFirstUseBtn");
-    const closeFirstUseBtn = document.getElementById("closeFirstUseBtn");
-    const dismissFirstUseBtn = document.getElementById("dismissFirstUseBtn");
-    const installPrompts = {
-      zh: "请将这个 GitHub 仓库安装为当前 AI 助手可复用的 Agent Skill：https://github.com/CCharlie-xiu/aoci-wuch.git",
-      en: "Install this GitHub repository as a reusable Agent Skill for this AI assistant: https://github.com/CCharlie-xiu/aoci-wuch.git"
-    };
-    const translations = {
-      zh: {
-        siteLabel: "个人 AI 能力库", eyebrow: "A LIBRARY OF USEFUL WAYS", headline: "把好方法", headlineAccent: "带进你的 AI。",
-        intro: "一套持续生长的个人能力库，让 AI 在每个新项目里，都能复用经过整理的方法与经验。", installLabel: "给 AI 助手的安装指令", copyPrompt: "复制安装指令",
-        artBadge: "一直生长的能力库", artTitle: "经验，值得被带走。", artCaption: "从一个项目，到下一个项目。", capabilitiesTitle: "能力库包含技能 · INCLUDED SKILLS",
-        pagesLabel: "GitHub Pages", authorLabel: "作者 CCharlie-xiu", copied: "已复制", copyAgain: "复制安装指令",
-        copiedToast: "安装指令已成功复制到剪贴板！", copiedWithSkillToast: "安装指令已复制", subscribe: "订阅授权",
-        firstUseLabel: "首次使用提示词", firstUseHint: "安装指令已复制。把下面这段发给你的 AI，即可按选中技能开始第一次协助。",
-        copyFirstUse: "复制提示词", closeDialog: "关闭", firstUseCopiedToast: "首次使用提示词已复制到剪贴板！"
-      },
-      en: {
-        siteLabel: "Personal AI Capability Library", eyebrow: "A LIBRARY OF USEFUL WAYS", headline: "Bring good methods", headlineAccent: "into your AI.",
-        intro: "A growing personal capability library that lets AI reuse carefully shaped methods and experience in every new project.", installLabel: "Install for your AI assistant", copyPrompt: "Copy install command",
-        artBadge: "A library that keeps growing", artTitle: "Good experience travels.", artCaption: "From one project to the next.", capabilitiesTitle: "INCLUDED SKILLS",
-        pagesLabel: "GitHub Pages", authorLabel: "By CCharlie-xiu", copied: "Copied", copyAgain: "Copy install command",
-        copiedToast: "Install command copied to clipboard!", copiedWithSkillToast: "Install command copied", subscribe: "Subscribe",
-        firstUseLabel: "First-use prompt", firstUseHint: "Install command copied. Paste the prompt below to your AI to start with the selected skill.",
-        copyFirstUse: "Copy prompt", closeDialog: "Close", firstUseCopiedToast: "First-use prompt copied to clipboard!"
-      }
-    };
-    const capabilities = [
-      { id: "github-authorize", icon: "shield-check", name: "GitHub 应用授权", nameEn: "GitHub App Authorization", short: "github" },
-      { id: "mobile-template-app", icon: "smartphone", name: "原生移动应用搭建与维护", nameEn: "Native App Setup & Practices", pro: true, short: "mobile" },
-      { id: "logic-space-enumeration", icon: "workflow", name: "复杂设计逻辑枚举", nameEn: "Complex Logic Enumeration", short: "logic" },
-      { id: "dbx-mcp-setup", icon: "database", name: "DBX 数据库接入", nameEn: "DBX Database MCP Setup", short: "dbx" },
-      { id: "excel-capability", icon: "table-2", name: "Excel 后端选择配置", nameEn: "Excel Backend Configuration", short: "excel" },
-      { id: "libtv-mcp-setup", icon: "clapperboard", name: "LibTV 影像服务接入", nameEn: "LibTV MCP Connection", short: "libtv" },
-      { id: "ui-design-prompt", icon: "panels-top-left", name: "UI 风格提示设计", nameEn: "UI Style Design", pro: true, short: "ui" },
-      { id: "video-frame-extract", icon: "video", name: "视频画面抽帧", nameEn: "Video Frame Extraction", short: "video" },
-      { id: "cf-workers-site-auth", icon: "cloud", name: "Workers 站点登录防刷", nameEn: "CF Workers Site Auth", short: "cf-auth" },
-      { id: "ios-app-store-release", icon: "rocket", name: "iOS 上架与 TestFlight", nameEn: "iOS App Store & TestFlight", pro: true, short: "ios" },
-      { id: "wuch-design-canvas", icon: "palette", name: "设计风格 Canvas", nameEn: "Design Style Canvas", short: "canvas" },
-      { id: "sso-login-center", icon: "key-round", name: "轻量 SSO 登录中心", nameEn: "Lightweight SSO Login Center", pro: true, short: "sso" },
-      { id: "ga4-analytics", icon: "chart-column", name: "GA4 埋点与分析", nameEn: "GA4 Analytics", limit: true, short: "ga4" },
-      { id: "github-oauth-login", icon: "github", name: "GitHub 登录接入", nameEn: "GitHub OAuth Login" },
-      { id: "email-magic-link", icon: "mail", name: "邮件魔法链接登录", nameEn: "Email Magic Link Login" },
-      { id: "design-pattern-os", icon: "layout-template", name: "设计模式操作系统", nameEn: "Design Pattern OS", pro: true },
-      { id: "ai-conversation-kit", icon: "message-square", name: "AI 对话面整套方案", nameEn: "AI Conversation Kit", pro: true },
-      { id: "team-know", icon: "library", name: "个人协作知识库", nameEn: "Team Know Kit" },
-      { id: "wb-skill-publish", icon: "package", name: "对话经验上架 WorkBuddy", nameEn: "WorkBuddy Skill Publish" }
-    ];
-
-    // Short URL aliases → capability id（例如 /ga4 → ga4-analytics）
-    const skillAliases = {};
-    capabilities.forEach((capability) => {
-      skillAliases[capability.id] = capability.id;
-      if (capability.short) skillAliases[capability.short] = capability.id;
-    });
-
-    const firstUsePrompts = {
-      "ga4-analytics": {
-        zh: "我已安装「至关重要」能力库。请按 /aoci-wuch 读取能力索引，命中 ga4-analytics 后，在当前项目协助我：\n1）先确认我是开发者还是使用者；\n2）按该能力约定检查 / 完善 GA4 接入与事件上报；\n3）信息不够时，用技能里的提问模版问我。",
-        en: "I installed the AOCI capability library. Please follow /aoci-wuch, open the capability index, hit ga4-analytics, then help in this project:\n1) Confirm whether I am a developer or an end user;\n2) Check / improve GA4 setup and event tracking per the skill;\n3) If info is missing, ask me with the skill's question templates."
-      }
-    };
-
-    function buildDefaultFirstUsePrompt(capability, language) {
-      const name = language === "zh" ? capability.name : capability.nameEn;
-      if (language === "zh") {
-        return `我已安装「至关重要」能力库。请按 /aoci-wuch 读取能力索引，命中「${capability.id}」（${name}）后，按该能力说明协助我完成当前任务。`;
-      }
-      return `I installed the AOCI capability library. Please follow /aoci-wuch, open the capability index, hit "${capability.id}" (${name}), then help me with the current task per that skill.`;
-    }
-
-    let currentLanguage = "zh";
-    let selectedSkillId = null;
-    let firstUseModalOpen = false;
-    let firstUseCloseTimer = null;
-
-    function getCapabilityById(id) {
-      return capabilities.find((item) => item.id === id) || null;
-    }
-
-    function skillPathFor(id) {
-      const capability = getCapabilityById(id);
-      return capability && capability.short ? capability.short : id;
-    }
-
-    function resolveSkillSlug(raw) {
-      if (!raw) return null;
-      const slug = String(raw).replace(/^\/+|\/+$/g, "").split("/")[0].trim().toLowerCase();
-      if (!slug || slug === "index.html" || slug === "auth.html") return null;
-      return skillAliases[slug] || null;
-    }
-
-    function readSkillFromUrl() {
-      try {
-        const stored = sessionStorage.getItem("aoci-skill-path");
-        if (stored) {
-          sessionStorage.removeItem("aoci-skill-path");
-          const fromStored = resolveSkillSlug(stored);
-          if (fromStored) return fromStored;
-        }
-      } catch {}
-
-      const params = new URLSearchParams(location.search);
-      const fromQuery = resolveSkillSlug(params.get("skill") || params.get("s"));
-      if (fromQuery) return fromQuery;
-
-      if (location.hash) {
-        const fromHash = resolveSkillSlug(location.hash.replace(/^#/, ""));
-        if (fromHash) return fromHash;
-      }
-
-      return resolveSkillSlug(location.pathname);
-    }
-
-    function syncUrlForSkill(id, replace) {
-      const path = id ? `/${skillPathFor(id)}` : "/";
-      const nextUrl = path + location.search.replace(/([?&])(skill|s)=[^&]*/g, "").replace(/^&/, "?").replace(/\?$/, "") + (location.hash || "");
-      try {
-        if (replace) history.replaceState({ skill: id }, "", nextUrl);
-        else history.pushState({ skill: id }, "", nextUrl);
-      } catch {}
-    }
-
-    function getFirstUsePrompt(id) {
-      const capability = getCapabilityById(id);
-      if (!capability) return "";
-      const custom = firstUsePrompts[id];
-      if (custom && custom[currentLanguage]) return custom[currentLanguage];
-      return buildDefaultFirstUsePrompt(capability, currentLanguage);
-    }
-
-    function fillFirstUseContent() {
-      const capability = getCapabilityById(selectedSkillId);
-      if (!capability) return false;
-      firstUseSkillName.textContent = currentLanguage === "zh" ? capability.name : capability.nameEn;
-      firstUsePromptText.textContent = getFirstUsePrompt(capability.id);
-      return true;
-    }
-
-    function openFirstUseModal() {
-      if (!fillFirstUseContent()) return;
-      clearTimeout(firstUseCloseTimer);
-      firstUseModalOpen = true;
-      firstUseModal.classList.remove("dlg-out");
-      firstUseModal.setAttribute("aria-hidden", "false");
-      // force reflow so dlg-in transition runs
-      void firstUseModal.offsetWidth;
-      firstUseModal.classList.add("dlg-in");
-      document.body.style.overflow = "hidden";
-      lucide.createIcons();
-      firstUseDialog?.focus({ preventScroll: true });
-    }
-
-    function closeFirstUseModal() {
-      if (!firstUseModalOpen && !firstUseModal.classList.contains("dlg-in")) return;
-      firstUseModalOpen = false;
-      firstUseModal.classList.remove("dlg-in");
-      firstUseModal.classList.add("dlg-out");
-      firstUseModal.setAttribute("aria-hidden", "true");
-      document.body.style.overflow = "";
-      clearTimeout(firstUseCloseTimer);
-      firstUseCloseTimer = setTimeout(() => {
-        firstUseModal.classList.remove("dlg-out");
-      }, 160);
-    }
-
-    function selectSkill(id, options = {}) {
-      const { syncUrl = true, replaceUrl = false, scroll = false } = options;
-      selectedSkillId = getCapabilityById(id) ? id : null;
-      closeFirstUseModal();
-      renderCapabilities();
-      if (syncUrl) syncUrlForSkill(selectedSkillId, replaceUrl);
-      if (scroll && selectedSkillId) {
-        document.getElementById("capabilitiesTitle")?.scrollIntoView({ behavior: "smooth", block: "center" });
-      }
-    }
-
-    function renderCapabilities() {
-      capabilityList.innerHTML = capabilities.map((capability) => {
-        const selected = capability.id === selectedSkillId;
-        const selectedClass = selected
-          ? "border-brand bg-brand-light ring-2 ring-brand/20 shadow-sm"
-          : "bg-surface border-line/70 hover:border-brand/40 hover:-translate-y-0.5 shadow-sponsor";
-        return `
-        <button type="button" data-skill-id="${capability.id}" aria-pressed="${selected ? "true" : "false"}" class="px-3.5 py-2 rounded-xl border text-xs font-medium text-ink flex items-center gap-2 transition-craft group ${selectedClass}">
-          <i data-lucide="${capability.icon}" class="w-3.5 h-3.5 text-brand group-hover:scale-110 transition-transform"></i>
-          <span>${currentLanguage === "zh" ? capability.name : capability.nameEn}</span>
-          ${capability.pro ? '<a href="auth.html" class="ml-0.5 px-1.5 py-0.5 rounded-md bg-brand text-white text-[10px] font-semibold tracking-wide hover:bg-brand-hover" onclick="event.stopPropagation()">PRO</a>' : ""}
-          ${(!capability.pro && capability.limit) ? '<span class="ml-0.5 px-1.5 py-0.5 rounded-md border border-line text-mute text-[10px] font-semibold tracking-wide" title="Free capability with limited scope">Limit</span>' : ""}
-        </button>`;
-      }).join("");
-      capabilityList.querySelectorAll("[data-skill-id]").forEach((button) => {
-        button.addEventListener("click", () => {
-          const id = button.getAttribute("data-skill-id");
-          selectSkill(selectedSkillId === id ? null : id, { syncUrl: true });
-        });
-      });
-      lucide.createIcons();
-    }
-
-    function setLanguage(language) {
-      currentLanguage = language;
-      document.documentElement.lang = language === "zh" ? "zh-CN" : "en";
-      document.querySelectorAll("[data-i18n]").forEach((element) => {
-        element.textContent = translations[language][element.dataset.i18n];
-      });
-      document.getElementById("languageCurrent").textContent = language === "zh" ? "中" : "EN";
-      document.getElementById("languageNext").textContent = language === "zh" ? "EN" : "中";
-      document.getElementById("installPromptText").textContent = installPrompts[language];
-      document.title = language === "zh" ? "至关重要 — 给 AI 一套值得复用的方法" : "AOCI — Reusable methods for your AI";
-      document.querySelector('meta[name="description"]').content = language === "zh"
-        ? "至关重要：一套可安装到 AI 编码助手中的个人能力库。"
-        : "AOCI: a personal capability library for AI coding assistants.";
-      renderCapabilities();
-      if (firstUseModalOpen) fillFirstUseContent();
-      try { localStorage.setItem("aoci-language", language); } catch {}
-    }
-
-    async function writeClipboard(text) {
-      try {
-        await navigator.clipboard.writeText(text);
-      } catch {
-        const textArea = document.createElement("textarea");
-        textArea.value = text;
-        textArea.style.position = "fixed";
-        textArea.style.opacity = "0";
-        document.body.appendChild(textArea);
-        textArea.select();
-        document.execCommand("copy");
-        document.body.removeChild(textArea);
-      }
-    }
-
-    async function copyInstallPrompt() {
-      const installPromptText = document.getElementById("installPromptText").textContent.trim();
-      await writeClipboard(installPromptText);
-
-      if (selectedSkillId) {
-        showToast(translations[currentLanguage].copiedWithSkillToast);
-        openFirstUseModal();
-      } else {
-        showToast(translations[currentLanguage].copiedToast);
-      }
-
-      copyBtnText.textContent = translations[currentLanguage].copied;
-      copyIcon.setAttribute("data-lucide", "check");
-      lucide.createIcons();
-
-      setTimeout(() => {
-        copyBtnText.textContent = translations[currentLanguage].copyAgain;
-        copyIcon.setAttribute("data-lucide", "copy");
-        lucide.createIcons();
-      }, 2000);
-    }
-
-    async function copyFirstUsePrompt() {
-      if (!selectedSkillId) return;
-      await writeClipboard(getFirstUsePrompt(selectedSkillId));
-      showToast(translations[currentLanguage].firstUseCopiedToast);
-    }
-
-    function showToast(msg) {
-      document.getElementById("toast-message").textContent = msg;
-      toast.classList.remove("-translate-y-12", "opacity-0", "pointer-events-none");
-      toast.classList.add("translate-y-0", "opacity-100");
-
-      setTimeout(() => {
-        toast.classList.remove("translate-y-0", "opacity-100");
-        toast.classList.add("-translate-y-12", "opacity-0", "pointer-events-none");
-      }, 2600);
-    }
-
-    languageToggle.addEventListener("click", () => setLanguage(currentLanguage === "zh" ? "en" : "zh"));
-    copyBtn.addEventListener("click", copyInstallPrompt);
-    copyFirstUseBtn.addEventListener("click", copyFirstUsePrompt);
-    closeFirstUseBtn.addEventListener("click", closeFirstUseModal);
-    dismissFirstUseBtn.addEventListener("click", closeFirstUseModal);
-    firstUseModal.addEventListener("click", (event) => {
-      if (event.target === firstUseModal) closeFirstUseModal();
-    });
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape" && firstUseModalOpen) closeFirstUseModal();
-    });
-    window.addEventListener("popstate", () => {
-      const fromState = history.state && history.state.skill;
-      selectSkill(fromState || readSkillFromUrl(), { syncUrl: false });
-    });
-
-    try {
-      if (localStorage.getItem("aoci-language") === "en") currentLanguage = "en";
-    } catch {}
-
-    const bootSkill = readSkillFromUrl();
-    setLanguage(currentLanguage);
-    if (bootSkill) {
-      selectSkill(bootSkill, { syncUrl: true, replaceUrl: true, scroll: true });
-    }
-  </script>
+  <script src="assets/js/icons.js" defer></script>
+  <script src="assets/js/i18n.js" defer></script>
+  <script src="assets/js/data.js" defer></script>
+  <script src="assets/js/smooth-drawer.js" defer></script>
+  <script src="assets/js/card-stack.js" defer></script>
+  <script src="assets/js/ai-agent-lanes.js" defer></script>
+  <script src="assets/js/marker-text.js" defer></script>
+  <script src="assets/js/carousel-cards.js?v=krail8" defer></script>
+  <script src="assets/js/background-paths.js?v=1" defer></script>
+  <script src="assets/js/switch-button.js" defer></script>
+  <script src="assets/js/home.js?v=krail9" defer></script>
 </body>
 </html>
