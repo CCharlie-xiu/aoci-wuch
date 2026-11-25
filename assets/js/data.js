@@ -21,7 +21,8 @@
       { id: "design-pattern-os", icon: "layout-template", name: "设计模式操作系统", nameEn: "Design Pattern OS", pro: true },
       { id: "ai-conversation-kit", icon: "message-square", name: "AI 对话面整套方案", nameEn: "AI Conversation Kit", pro: true },
       { id: "team-know", icon: "library", name: "个人协作知识库", nameEn: "Team Know Kit" },
-      { id: "wb-skill-publish", icon: "package", name: "对话经验上架 WorkBuddy", nameEn: "WorkBuddy Skill Publish" }
+      { id: "wb-skill-publish", icon: "package", name: "对话经验上架 WorkBuddy", nameEn: "WorkBuddy Skill Publish" },
+      { id: "ux-test-report", icon: "clipboard-list", name: "体验侧测试报告", nameEn: "UX Test Report" }
     ];
 
     // 展示用一句话，摘自 capabilities/index.md（仅用于卡片文案，不改动能力数据）
@@ -44,7 +45,8 @@
       "design-pattern-os": { zh: "把 compact / extended / tokens 固化为设计操作系统", en: "Turn compact / extended / tokens into a design OS." },
       "ai-conversation-kit": { zh: "Vue/React 对话与 Agent 界面的整套方案", en: "A full kit for Vue/React chat and agent interfaces." },
       "team-know": { zh: "初始化三维 + sketch + 索引的知识库，跨宿主入库", en: "Set up a 3D + sketch + index knowledge base across hosts." },
-      "wb-skill-publish": { zh: "把长对话与沉淀流程打包成可上架的 Skill 包", en: "Package conversations into a publishable WorkBuddy Skill." }
+      "wb-skill-publish": { zh: "把长对话与沉淀流程打包成可上架的 Skill 包", en: "Package conversations into a publishable WorkBuddy Skill." },
+      "ux-test-report": { zh: "改动收成怎么测/怎样算过/代码期望三列报告，交付 md+html", en: "Ship how-to-test / pass / code-expect reports as Markdown + HTML." }
     };
 
     /* 约 50 词检索字段：同义词 / 场景词 / 英文别名，供搜索命中（不展示在卡片上） */
@@ -67,12 +69,13 @@
       "design-pattern-os": "设计模式 操作系统 compact extended tokens Refero 设计系统 可修复 产品设计 组件规范 设计语言",
       "ai-conversation-kit": "AI 对话 Chat Agent 界面 Vue React 流式 OpenAI 工具调用 Thinking 沙盒 聊天组件 会话落库",
       "team-know": "知识库 协作 三维 sketch 索引 入库 笔记 经验沉淀 跨宿主 Cursor 团队知识 个人库",
-      "wb-skill-publish": "WorkBuddy Skill 上架 发布 打包 对话经验 能力包 市场 validate 发布清单 技能商品"
+      "wb-skill-publish": "WorkBuddy Skill 上架 发布 打包 对话经验 能力包 市场 validate 发布清单 技能商品",
+      "ux-test-report": "测试报告 体验侧 验收 怎么测 怎样算过 代码期望 用例 HTML Markdown QA"
     };
 
     const featuredIds = ["team-know", "wb-skill-publish", "ui-design-prompt", "wuch-design-canvas", "ga4-analytics", "mobile-template-app", "ai-conversation-kit"];
     const foryouIds = ["team-know", "ga4-analytics", "wuch-design-canvas", "github-authorize", "video-frame-extract", "design-pattern-os", "logic-space-enumeration", "dbx-mcp-setup", "email-magic-link"];
-    const newIds = ["team-know", "wb-skill-publish"];
+    const newIds = ["ux-test-report", "team-know", "wb-skill-publish"];
     const palette = [
       ["#e6ecd9", "#f5f3e9"], ["#dbe7e1", "#f1f4ee"], ["#eee3d4", "#f8f3e9"],
       ["#e4e0d1", "#f4f2e8"], ["#e7e9dc", "#f6f4ea"], ["#dfe8d6", "#f3f5e9"]
@@ -84,7 +87,7 @@
       "excel-capability", "ga4-analytics", "github-authorize", "github-oauth-login",
       "ios-app-store-release", "logic-space-enumeration", "mobile-template-app",
       "sso-login-center", "team-know", "ui-design-prompt", "video-frame-extract",
-      "wb-skill-publish", "wuch-design-canvas"
+      "ux-test-report", "wb-skill-publish", "wuch-design-canvas"
     ]);
     const artFor = (capability, index) => skillArtIds.has(capability.id)
       ? `assets/skills/${capability.id}/16x9.png`

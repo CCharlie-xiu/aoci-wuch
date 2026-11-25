@@ -66,6 +66,7 @@ https://github.com/CCharlie-xiu/aoci-wuch.git
 | [AI 对话面整套方案](https://skill.wuch-ai.net/auth.html) `PRO` | 为 Vue/React AI 对话与 Agent 界面提供组件选型、样式、IndexedDB 轮次落库、工具调用/Thinking 展示、创作沙盒表单与 OpenAI 流式整套方案（订阅能力） <!-- pro:ai-conversation-kit --> |
 | [个人协作知识库](capabilities/team-know/) | 初始化并定制个人/协作知识库（三维+sketch+索引），跨宿主入库与体验引导 |
 | [对话经验上架 WorkBuddy](capabilities/wb-skill-publish/) | 把长对话或沉淀流程打包为可上架 WorkBuddy 的通用 Skill 包与发布材料 |
+| [体验侧测试报告](capabilities/ux-test-report/) | 把近几日产品改动收成体验侧测试报告：怎么测 / 怎样算过 / 代码期望三列；交付 Markdown + 自包含 HTML（不绑 IDE） |
 
 ### 待验证能力
 

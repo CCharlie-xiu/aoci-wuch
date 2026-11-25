@@ -90,7 +90,11 @@ def set_homepage_entry(
     """
     if pro and limit:
         raise SystemExit("首页卡片不能同时标记 pro 与 limit（Limit 仅为免费能力的展示样式）")
-    path = ROOT / "index.html"
+    # 优先写 assets/js/data.js（拆分后的首页）；否则回退 index.html 内联数组
+    candidates = [ROOT / "assets" / "js" / "data.js", ROOT / "index.html"]
+    path = next((p for p in candidates if p.is_file() and "const capabilities = [" in p.read_text(encoding="utf-8")), None)
+    if path is None:
+        raise SystemExit("找不到 const capabilities = [...]（index.html 或 assets/js/data.js）")
     html = path.read_text(encoding="utf-8")
     existing = re.compile(rf'\{{\s*id:\s*"{re.escape(name)}"[^}}]*\}}')
     current = existing.search(html)
@@ -111,7 +115,7 @@ def set_homepage_entry(
         return
     match = re.search(r"(const capabilities = \[\n)(.*?)(\n\s*\];)", html, re.S)
     if not match:
-        raise SystemExit("index.html 中找不到 const capabilities = [...]")
+        raise SystemExit(f"{path.relative_to(ROOT)} 中找不到 const capabilities = [...]")
     body = match.group(2).rstrip()
     if not body.endswith(","):
         body += ","

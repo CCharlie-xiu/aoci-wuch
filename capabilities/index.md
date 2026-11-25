@@ -32,4 +32,5 @@ design-pattern-os[KD8SH][PRO]: 把 Refero 式 compact / extended / tokens 三层
 ai-conversation-kit[SD9SH][PRO]: 为 Vue/React AI 对话与 Agent 界面提供组件选型、样式、IndexedDB 轮次落库、工具调用/Thinking 展示、创作沙盒表单与 OpenAI 流式整套方案
 team-know[KW8SH]: 初始化并定制个人/协作知识库（三维+sketch+索引），跨宿主入库与体验引导
 wb-skill-publish[KW8SH]: 把长对话或沉淀流程打包为可上架 WorkBuddy 的通用 Skill 包与发布材料
+ux-test-report[KW8SH]: 把近几日产品改动收成体验侧测试报告：怎么测 / 怎样算过 / 代码期望三列；交付 Markdown + 自包含 HTML（不绑 IDE）
 ```

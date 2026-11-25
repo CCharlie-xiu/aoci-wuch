@@ -66,6 +66,7 @@ The assistant should **not** load every capability body up front. Use [capabilit
 | [AI Conversation Kit](https://skill.wuch-ai.net/auth.html) `PRO` | AI Conversation Kit <!-- pro:ai-conversation-kit --> |
 | [Team Know Kit](capabilities/team-know/) | Team Know Kit |
 | [WorkBuddy Skill Publish](capabilities/wb-skill-publish/) | WorkBuddy Skill Publish |
+| [UX Test Report](capabilities/ux-test-report/) | UX Test Report |
 
 ### Experimental
 

@@ -104,13 +104,17 @@ def check_pages(catalog: dict[str, tuple[set[str], set[str]]], errors: list[str]
     live = {name for bucket in PAGES_BUCKETS for name in catalog.get(bucket, (set(), set()))[0]}
     pro = {name for bucket in PAGES_BUCKETS for name in catalog.get(bucket, (set(), set()))[1]}
 
-    html = (ROOT / "index.html").read_text(encoding="utf-8")
+    # 首页能力列表可能在 index.html 内联，或拆到 assets/js/data.js
+    page_src = (ROOT / "index.html").read_text(encoding="utf-8")
+    data_js = ROOT / "assets" / "js" / "data.js"
+    if data_js.is_file():
+        page_src += "\n" + data_js.read_text(encoding="utf-8")
     page_entries = {
         m.group(1): {
             "pro": "pro: true" in m.group(0),
             "limit": "limit: true" in m.group(0),
         }
-        for m in PAGE_ENTRY.finditer(html)
+        for m in PAGE_ENTRY.finditer(page_src)
     }
     for name in sorted(live - set(page_entries)):
         fail(f"index.html：能力未出现在首页能力列表：{name}", errors)
